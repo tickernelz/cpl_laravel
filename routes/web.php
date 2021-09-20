@@ -76,7 +76,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('mk/edit/{id}/post', [Edit::class, 'mk']);
         // Mata Kuliah
         Route::get('krs', [KRSController::class, 'index'])->name('krs');
-        Route::get('carinim', [KRSController::class, 'carinim'])->name('carinim');
+        Route::get('carimhs', [KRSController::class, 'carimhs'])->name('carimhs');
         Route::get('krs/cari', [KRSController::class, 'cari'])->name('krscari');
         Route::post('tambah-krs', [KRSController::class, 'store']);
         Route::post('hapus-krs', [KRSController::class, 'hapus']);

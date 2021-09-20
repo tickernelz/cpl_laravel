@@ -4,6 +4,10 @@
     {{'Kelola KRS'}}
 @endsection
 
+@section('head')
+    <link href="{{asset('assets/css/custom.css')}}" rel="stylesheet" type="text/css">
+@endsection
+
 @section('container')
     <div id="layout-wrapper">
         @include('partial.topbar')
@@ -17,7 +21,8 @@
                             <div class="col-lg-6" style="float:none;margin:auto;">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="get" action="{{URL::to('krs/cari')}}">
+                                        <form name="autocomplete-textbox" id="autocomplete-textbox" method="get"
+                                              action="{{URL::to('krs/cari')}}">
                                             @if (Session::has('success'))
                                                 <div class="alert alert-success mb-3" role="alert">
                                                     {{ Session::get('success') }}
@@ -50,8 +55,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label">NIM</label>
                                                 <input type="text" name="nim" id="nim"
-                                                       class="form-control" onkeyup="checkAvailability2()" required>
-                                                <div id="nim_list"></div>
+                                                       class="form-control" required>
                                             </div>
                                             <button type="submit" id="btn-cari"
                                                     class="btn btn-primary btn-lg w-100 waves-effect waves-light">
@@ -71,28 +75,5 @@
             <!-- END layout-wrapper -->
             @endsection
             @section('js')
-                <script type="text/javascript">
-                    $(document).ready(function () {
-
-                        $('#nim').on('keyup', function () {
-                            var query = $(this).val();
-                            $.ajax({
-                                url: "{{ route('carinim') }}",
-                                type: "GET",
-                                data: {'nim': query},
-                                success: function (data) {
-                                    $('#nim_list').html(data);
-                                }
-                            })
-                            // end of ajax call
-                        });
-
-
-                        $(document).on('click', 'li', function () {
-                            var value = $(this).text();
-                            $('#nim').val(value);
-                            $('#nim_list').html("");
-                        });
-                    });
-                </script>
+                <script src="{{ asset('assets/js/auto.js') }}"></script>
 @endsection

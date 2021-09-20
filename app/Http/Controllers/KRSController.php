@@ -7,7 +7,6 @@ use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\TahunAjaran;
 use Crypt;
-use DB;
 use Illuminate\Http\Request;
 
 class KRSController extends Controller
@@ -55,6 +54,15 @@ class KRSController extends Controller
 
             return $output;
         }
+    }
+
+    public function carimhs(Request $request)
+    {
+        $res = Mahasiswa::select("nim")
+            ->where("nim", "LIKE", "%{$request->term}%")
+            ->get();
+
+        return response()->json($res);
     }
 
     public function cari(Request $request)

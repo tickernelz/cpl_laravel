@@ -27,6 +27,8 @@
     <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css">
     <!-- App Css-->
     <link href="{{asset('assets/css/app.css')}}" id="app-style" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{asset('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')}}">
+    @yield('head')
 
 </head>
 
@@ -35,6 +37,7 @@
 </body>
 <!-- JAVASCRIPT -->
 <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('https://code.jquery.com/ui/1.12.1/jquery-ui.js')}}"></script>
 <script src="{{asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('assets/libs/metismenu/metisMenu.min.js')}}"></script>
 <script src="{{asset('assets/libs/simplebar/simplebar.min.js')}}"></script>

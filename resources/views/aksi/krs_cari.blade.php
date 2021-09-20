@@ -3,6 +3,11 @@
 @section('title')
     {{'Kelola KRS'}}
 @endsection
+
+@section('head')
+    <link href="{{asset('assets/css/custom.css')}}" rel="stylesheet" type="text/css">
+@endsection
+
 @section('container')
     <div id="layout-wrapper">
         @include('partial.topbar')
@@ -49,7 +54,6 @@
                                                 <label class="form-label">NIM</label>
                                                 <input type="text" name="nim" id="nim"
                                                        class="form-control" value="{{ Request::get('nim') }}" required>
-                                                <div id="nim_list"></div>
                                             </div>
                                             <button type="submit" id="btn-cari"
                                                     class="btn btn-primary btn-lg w-100 waves-effect waves-light">
@@ -170,6 +174,7 @@
             <!-- END layout-wrapper -->
             @endsection
             @section('js')
+                <script src="{{ asset('assets/js/auto.js') }}"></script>
                 <script type="text/javascript">
                     $.ajaxSetup({headers: {'csrftoken': '{{ csrf_token() }}'}});
 
@@ -215,26 +220,5 @@
                             });
                         }
                     }
-
-                    $(document).ready(function () {
-                        $('#nim').on('keyup', function () {
-                            var query = $(this).val();
-                            $.ajax({
-                                url: "{{ route('carinim') }}",
-                                type: "GET",
-                                data: {'nim': query},
-                                success: function (data) {
-                                    $('#nim_list').html(data);
-                                }
-                            })
-                            // end of ajax call
-                        });
-
-                        $(document).on('click', 'li', function () {
-                            var value = $(this).text();
-                            $('#nim').val(value);
-                            $('#nim_list').html("");
-                        });
-                    });
                 </script>
 @endsection
