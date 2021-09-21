@@ -27,35 +27,6 @@ class KRSController extends Controller
 
     //end index()
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return string
-     */
-    public function carinim(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = Mahasiswa::where('nim', 'LIKE', $request->get('nim') . '%')
-                ->get();
-
-            $output = '';
-
-            if (count($data) > 0) {
-                $output = '<ul class="list-group mt-2" style="display: block; position: relative; z-index: 1">';
-
-                foreach ($data as $row) {
-                    $output .= '<li class="list-group-item">' . $row->nim . '</li>';
-                }
-
-                $output .= '</ul>';
-            } else {
-                $output .= '<li class="list-group-item">' . 'NIM Tidak Ditemukan' . '</li>';
-            }
-
-            return $output;
-        }
-    }
-
     public function carimhs(Request $request)
     {
         $res = Mahasiswa::select("nim")
@@ -74,6 +45,7 @@ class KRSController extends Controller
         $id_sem = Crypt::decrypt($request->semester);
         $nim = $request->nim;
         $id_mhs = Mahasiswa::where('nim', $nim)->value('id');
+        $nama_mhs = Mahasiswa::where('nim', $nim)->value('nama');
         $ada_mhs = Mahasiswa::where('nim', $nim)->get();
         $tampil = KRS::with('mahasiswa', 'tahun_ajaran', 'mata_kuliah')->whereRaw("tahun_ajaran_id = '$id_ta' AND mahasiswa_id = '$id_mhs' AND semester = '$id_sem'")->get();
         $arraymk = $tampil->pluck('mata_kuliah_id')->toArray();
@@ -94,6 +66,7 @@ class KRSController extends Controller
                     'id_ta' => $id_ta,
                     'id_sem' => $id_sem,
                     'id_mhs' => $id_mhs,
+                    'nama_mhs' => $nama_mhs
                 ]
             );
         }

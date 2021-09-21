@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title')
-    {{'Kelola KRS'}}
+    {{'Kelola KRS'}} ({{ $nama_mhs  }})
 @endsection
 
 @section('head')
