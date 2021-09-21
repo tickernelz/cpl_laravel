@@ -71,10 +71,23 @@
                                         <button type="button"
                                                 class="btn btn-primary btn-lg waves-effect waves-light mb-4"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#tambahkrs">Tambah
+                                                data-bs-target="#tambahbobot">Tambah
                                             Bobot
                                         </button>
-                                        <div class="modal fade" id="tambahkrs" tabindex="-1" role="dialog"
+                                        @if ($total_bobot < 100)
+                                            <div class="alert alert-warning" role="alert">
+                                                <strong>Waduh!</strong> Total Bobot Belum Mencapai 100 nih.
+                                            </div>
+                                        @elseif($total_bobot === 100)
+                                            <div class="alert alert-success" role="alert">
+                                                <strong>Kerja Bagus!</strong> Total Bobot Sudah Mencapai 100.
+                                            </div>
+                                        @elseif($total_bobot > 100)
+                                            <div class="alert alert-danger" role="alert">
+                                                <strong>Loh!</strong> Total Bobot Jangan Melebihi 100.
+                                            </div>
+                                        @endif
+                                        <div class="modal fade" id="tambahbobot" tabindex="-1" role="dialog"
                                              aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-scrollable">
                                                 <div class="modal-content">
@@ -84,54 +97,58 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
-                                                    <form method="post" action="{{URL::to('btp/post')}}">
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Kode CPMK</label>
-                                                                <input type="text" name="cpmk" id="cpmk"
-                                                                       class="form-control" required>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Teknik Penilaian</label>
-                                                                <input type="text" name="teknik" id="teknik"
-                                                                       class="form-control" required>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Kategori</label>
-                                                                <select class="form-select" name="kategori"
-                                                                        id="kategori">
-                                                                    <option value="1">Tugas</option>
-                                                                    <option value="2">UTS</option>
-                                                                    <option value="3">UAS</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Dosen</label>
-                                                                <select class="form-select" name="dosen"
-                                                                        id="dosen">
-                                                                    @foreach($da as $d)
-                                                                        <option
-                                                                            value="{{ $d->id }}">{{$d->nama}}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Bobot</label>
-                                                                <input type="number" name="bobot" id="bobot"
-                                                                       class="form-control" required>
-                                                            </div>
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Kode CPMK</label>
+                                                            <select class="form-select" name="cpmk"
+                                                                    id="cpmk">
+                                                                @foreach($cpmk_mk as $d)
+                                                                    <option
+                                                                        value="{{ $d->id }}">{{$d->kode_cpmk}}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Tutup
-                                                            </button>
-                                                            <button type="submit" id="btn-submit"
-                                                                    class="btn btn-primary">
-                                                                Simpan
-                                                            </button>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Teknik Penilaian</label>
+                                                            <input type="text" name="teknik" id="teknik"
+                                                                   class="form-control" required>
                                                         </div>
-                                                    </form>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Kategori</label>
+                                                            <select class="form-select" name="kategori"
+                                                                    id="kategori">
+                                                                <option value="1">Tugas</option>
+                                                                <option value="2">UTS</option>
+                                                                <option value="3">UAS</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Dosen</label>
+                                                            <select class="form-select" name="dosen"
+                                                                    id="dosen">
+                                                                @foreach($da as $d)
+                                                                    <option
+                                                                        value="{{ $d->id }}">{{$d->nama}}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Bobot</label>
+                                                            <input type="number" name="bobot" id="bobot"
+                                                                   class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Tutup
+                                                        </button>
+                                                        <button type="button" id="btn-submit" onclick="tambahFunc()"
+                                                                class="btn btn-primary">
+                                                            Simpan
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <!-- /.modal-content -->
                                             </div>
@@ -194,6 +211,51 @@
             @endsection
             @section('js')
                 <script type="text/javascript">
-                    $.ajaxSetup({headers: {'csrftoken': '{{ csrf_token() }}'}});
+                    function tambahFunc() {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ URL::to('tambah-btp') }}",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
+                                id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
+                                id_cpmk: $('#cpmk').val(),
+                                id_dosen: $('#dosen').val(),
+                                teknik: $('#teknik').val(),
+                                semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
+                                kategori: $('#kategori').val(),
+                                bobot: $('#bobot').val()
+                            },
+                            dataType: 'json',
+                            success: function (res) {
+                                $("#tambahbobot").modal('hide');
+                                location.reload();
+                            },
+                            error: function (data) {
+                                alert('Gagal Input!')
+                                console.log(data);
+                            }
+                        });
+                    }
+
+                    function hapusFunc(id) {
+                        if (confirm("Hapus Bobot?") === true) {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ url('hapus-btp') }}",
+                                data: {
+                                    _token: "{{ csrf_token() }}",
+                                    id: id
+                                },
+                                dataType: 'json',
+                                success: function (res) {
+                                    location.reload();
+                                },
+                                error: function (data) {
+                                    console.log(data);
+                                }
+                            });
+                        }
+                    }
                 </script>
 @endsection
