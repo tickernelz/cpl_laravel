@@ -16,7 +16,7 @@
                             <div class="col-lg-6" style="float:none;margin:auto;">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="get" action="{{URL::to('krs/cari')}}">
+                                        <form method="get" action="{{URL::to('btp/cari')}}">
                                             <div class="mb-3">
                                                 <label class="form-label">Tahun Ajaran</label>
                                                 <select class="form-select" name="tahunajaran" id="tahunajaran">
@@ -76,58 +76,62 @@
                                         </button>
                                         <div class="modal fade" id="tambahkrs" tabindex="-1" role="dialog"
                                              aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                                            <div class="modal-dialog modal-dialog-scrollable">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="tambahkrsTitle">
-                                                            Pilih Mata Kuliah</h5>
+                                                        <h5 class="modal-title" id="tambahbobotTitle">
+                                                            Tambah Bobot Penilaian</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        <div class="table-rep-plugin">
-                                                            <div class="table-responsive mb-0"
-                                                                 data-bs-pattern="priority-columns">
-                                                                <table id="datatable2" class="table table-striped">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th>Kode Mata Kuliah</th>
-                                                                        <th>Nama Mata Kuliah</th>
-                                                                        <th class="text-center">Aksi</th>
-                                                                    </tr>
-                                                                    </thead>
-
-                                                                    <tbody>
-                                                                    @if(isset($dataselain))
-                                                                        @foreach($dataselain as $ds)
-                                                                            <tr>
-                                                                                <td>{{ $ds->kode }}</td>
-                                                                                <td>{{ $ds->nama }}</td>
-                                                                                <td class="text-center"
-                                                                                    style="width: 100px">
-                                                                                    <a href="javascript:void(0)"
-                                                                                       data-toggle="tooltip"
-                                                                                       onClick="tambahFunc({{ $ds->id }})"
-                                                                                       data-original-title="Edit"
-                                                                                       class="btn btn-secondary btn-sm edit"
-                                                                                       title="Tambah">
-                                                                                        <i class="fas fa-plus-square"></i>
-                                                                                    </a>
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endforeach
-                                                                    @else
-                                                                    @endif
-                                                                    </tbody>
-                                                                </table>
+                                                    <form method="post" action="{{URL::to('btp/post')}}">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Kode CPMK</label>
+                                                                <input type="text" name="cpmk" id="cpmk"
+                                                                       class="form-control" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Teknik Penilaian</label>
+                                                                <input type="text" name="teknik" id="teknik"
+                                                                       class="form-control" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Kategori</label>
+                                                                <select class="form-select" name="kategori"
+                                                                        id="kategori">
+                                                                    <option value="1">Tugas</option>
+                                                                    <option value="2">UTS</option>
+                                                                    <option value="3">UAS</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Dosen</label>
+                                                                <select class="form-select" name="dosen"
+                                                                        id="dosen">
+                                                                    @foreach($da as $d)
+                                                                        <option
+                                                                            value="{{ $d->id }}">{{$d->nama}}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Bobot</label>
+                                                                <input type="number" name="bobot" id="bobot"
+                                                                       class="form-control" required>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Tutup
-                                                        </button>
-                                                    </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Tutup
+                                                            </button>
+                                                            <button type="submit" id="btn-submit"
+                                                                    class="btn btn-primary">
+                                                                Simpan
+                                                            </button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                                 <!-- /.modal-content -->
                                             </div>
@@ -140,8 +144,11 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Nomor</th>
-                                                    <th>Kode Mata Kuliah</th>
-                                                    <th>Nama Mata Kuliah</th>
+                                                    <th>Kode CPMK</th>
+                                                    <th>Dosen</th>
+                                                    <th>Nama Teknik Penilaian</th>
+                                                    <th>Kategori</th>
+                                                    <th>Bobot</th>
                                                     <th class="text-center">Aksi</th>
                                                 </tr>
                                                 </thead>
@@ -150,8 +157,17 @@
                                                 @foreach($data as $li)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $li->mata_kuliah->kode }}</td>
-                                                        <td>{{ $li->mata_kuliah->nama }}</td>
+                                                        <td>{{ $li->cpmk->kode_cpmk }}</td>
+                                                        <td>{{ $li->dosen_admin->nama }}</td>
+                                                        <td>{{ $li->nama }}</td>
+                                                        @if ($li->kategori === '1')
+                                                            <td>Tugas</td>
+                                                        @elseif($li->kategori === '2')
+                                                            <td>UTS</td>
+                                                        @elseif($li->kategori === '3')
+                                                            <td>UTS</td>
+                                                        @endif
+                                                        <td>{{ $li->bobot }}</td>
                                                         <td class="text-center" style="width: 100px">
                                                             <a href="javascript:void(0)"
                                                                class="btn btn-secondary btn-sm edit"
@@ -179,48 +195,5 @@
             @section('js')
                 <script type="text/javascript">
                     $.ajaxSetup({headers: {'csrftoken': '{{ csrf_token() }}'}});
-                </script>
-                <script type="text/javascript">
-                    function tambahFunc(id) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ url('tambah-krs') }}",
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                                id_mk: id,
-                                id_mhs: {{ Crypt::decrypt(Request::get('nim')) }},
-                                id_ta: {{ Crypt::decrypt(Request::get('tahunajaran')) }},
-                                sem: {{Crypt::decrypt(Request::get('semester'))}}
-                            },
-                            dataType: 'json',
-                            success: function (res) {
-                                $("#tambahkrs").modal('hide');
-                                location.reload();
-                            },
-                            error: function (data) {
-                                console.log(data);
-                            }
-                        });
-                    }
-
-                    function hapusFunc(id) {
-                        if (confirm("Hapus Mata Kuliah?") == true) {
-                            $.ajax({
-                                type: "POST",
-                                url: "{{ url('hapus-krs') }}",
-                                data: {
-                                    _token: "{{ csrf_token() }}",
-                                    id: id
-                                },
-                                dataType: 'json',
-                                success: function (res) {
-                                    location.reload();
-                                },
-                                error: function (data) {
-                                    console.log(data);
-                                }
-                            });
-                        }
-                    }
                 </script>
 @endsection

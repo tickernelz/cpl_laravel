@@ -36,15 +36,16 @@ class BtpController extends Controller
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
-        $tampil = Btp::with('tahun_ajaran', 'mata_kuliah')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->get();
-        $arraymk = $tampil->pluck('mata_kuliah_id')->toArray();
-        /*if (isset($tampil)) {
-            $tampilselain = MataKuliah::whereNotIn('id', $arraymk)->get();
-        } else {
-            $tampilselain = MataKuliah::get();
-        }*/
+        $tampil = Btp::with(
+            'tahun_ajaran',
+            'mata_kuliah',
+            'cpmk',
+            'dosen_admin'
+        )->whereRaw(
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
+        )->get();
 
-        return view('aksi.krs_cari', [
+        return view('aksi.btp_cari', [
             'data' => $tampil,
             'ta' => $ta,
             'cpmk' => $cpmk,

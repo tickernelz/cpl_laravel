@@ -17,7 +17,7 @@
                             <div class="col-lg-6" style="float:none;margin:auto;">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="get" action="{{URL::to('krs/cari')}}">
+                                        <form method="get" action="{{URL::to('btp/cari')}}">
                                             <div class="mb-3">
                                                 <label class="form-label">Tahun Ajaran</label>
                                                 <select class="form-select" name="tahunajaran" id="tahunajaran">
@@ -39,7 +39,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Mata Kuliah</label>
-                                                <select class="form-select" name="nim" id="nim">
+                                                <select class="form-select" name="mk" id="mk">
                                                     @foreach($mk as $m)
                                                         <option
                                                             value="{{ Crypt::encrypt($m->id) }}">{{$m->nama}}</option>
