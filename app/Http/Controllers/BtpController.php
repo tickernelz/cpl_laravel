@@ -71,19 +71,31 @@ class BtpController extends Controller
         $semester = $request->semester;
         $kategori = $request->kategori;
         $bobot = $request->bobot;
-        $btp = Btp::Create(
-            [
-                'tahun_ajaran_id' => $id_ta,
-                'mata_kuliah_id' => $id_mk,
-                'cpmk_id' => $id_cpmk,
-                'dosen_admin_id' => $id_dosen,
-                'nama' => $teknik,
-                'semester' => $semester,
-                'kategori' => $kategori,
-                'bobot' => $bobot,
-            ]
-        );
-        return Response()->json($btp);
+        $tampil = Btp::with(
+            'tahun_ajaran',
+            'mata_kuliah',
+            'cpmk',
+            'dosen_admin'
+        )->whereRaw(
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
+        )->get();
+        $sum_bobot = $tampil->sum('bobot') + $bobot;
+        if ($sum_bobot <= 100) {
+            $btp = Btp::Create(
+                [
+                    'tahun_ajaran_id' => $id_ta,
+                    'mata_kuliah_id' => $id_mk,
+                    'cpmk_id' => $id_cpmk,
+                    'dosen_admin_id' => $id_dosen,
+                    'nama' => $teknik,
+                    'semester' => $semester,
+                    'kategori' => $kategori,
+                    'bobot' => $bobot,
+                ]
+            );
+            return Response()->json($btp);
+        }
+        return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
     }
 
     public function hapus(Request $request)

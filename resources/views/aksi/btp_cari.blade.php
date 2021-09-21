@@ -76,15 +76,17 @@
                                         </button>
                                         @if ($total_bobot < 100)
                                             <div class="alert alert-warning" role="alert">
-                                                <strong>Waduh!</strong> Total Bobot Belum Mencapai 100 nih.
+                                                <strong>Waduh!</strong> Total Bobot Masih {{$total_bobot}} nih, <strong>Tambah</strong> {{ 100-$total_bobot }}
+                                                Lagi.
                                             </div>
                                         @elseif($total_bobot === 100)
                                             <div class="alert alert-success" role="alert">
                                                 <strong>Kerja Bagus!</strong> Total Bobot Sudah Mencapai 100.
                                             </div>
-                                        @elseif($total_bobot > 100)
+                                        @endif
+                                        @if (Session::has('error'))
                                             <div class="alert alert-danger" role="alert">
-                                                <strong>Loh!</strong> Total Bobot Jangan Melebihi 100.
+                                                {{ Session::get('error') }}
                                             </div>
                                         @endif
                                         <div class="modal fade" id="tambahbobot" tabindex="-1" role="dialog"
@@ -232,7 +234,7 @@
                                 location.reload();
                             },
                             error: function (data) {
-                                alert('Gagal Input!')
+                                alert('Total Bobot Yang Ditambahkan Melebihi 100!')
                                 console.log(data);
                             }
                         });
