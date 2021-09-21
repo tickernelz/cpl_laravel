@@ -17,7 +17,10 @@
                             <div class="card">
                                 <div class="card-body">
                                     <a href="{{ Request::url() }}/tambah">
-                                        <button type="button" class="btn btn-primary btn-lg waves-effect waves-light mb-4">Tambah Admin</button>
+                                        <button type="button"
+                                                class="btn btn-primary btn-lg waves-effect waves-light mb-4">Tambah
+                                            Admin
+                                        </button>
                                     </a>
                                     <div class="table-rep-plugin">
                                         <div class="table-responsive mb-0" data-bs-pattern="priority-columns">
@@ -26,6 +29,7 @@
                                                 <tr>
                                                     <th>Nomor</th>
                                                     <th>NIP</th>
+                                                    <th>Username</th>
                                                     <th>Nama</th>
                                                     <th>Status</th>
                                                     <th class="text-center">Aksi</th>
@@ -37,14 +41,17 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $adm->nip }}</td>
+                                                        <td>{{ $adm->user->username }}</td>
                                                         <td>{{ $adm->nama }}</td>
                                                         <td>{{ $adm->user->status }}</td>
                                                         <td class="text-center" style="width: 100px">
-                                                            <a href="{{ Request::url() }}/edit/{{ $adm->id }}" class="btn btn-secondary btn-sm edit"
+                                                            <a href="{{ Request::url() }}/edit/{{ $adm->id }}"
+                                                               class="btn btn-secondary btn-sm edit"
                                                                title="Edit">
                                                                 <i class="fas fa-pencil-alt"></i>
                                                             </a>
-                                                            <a href="{{ Request::url() }}/hapus/{{ $adm->user->id }}" class="btn btn-secondary btn-sm edit"
+                                                            <a href="{{ Request::url() }}/hapus/{{ $adm->user->id }}"
+                                                               class="btn btn-secondary btn-sm edit"
                                                                onclick="checkDelete()" title="Delete">
                                                                 <i class="fas fa-trash"></i>
                                                             </a>
