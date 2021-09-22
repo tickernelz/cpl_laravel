@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Btp;
+use App\Models\Bobotcpl;
 use Illuminate\Database\Seeder;
 
-class BtpSeeder extends Seeder
+class BobotcplSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,28 +14,26 @@ class BtpSeeder extends Seeder
      */
     public function run()
     {
-        Btp::create([
+        Bobotcpl::create([
             'id' => '1',
             'tahun_ajaran_id' => '1',
             'mata_kuliah_id' => '1',
+            'cpl_id' => '1',
             'cpmk_id' => '1',
-            'dosen_admin_id' => '1',
-            'nama' => 'Tugas 1',
+            'btp_id' => '1',
             'semester' => '1',
-            'kategori' => '1',
-            'bobot' => '20',
+            'bobot_cpl' => '20',
         ]);
 
-        Btp::create([
+        Bobotcpl::create([
             'id' => '2',
             'tahun_ajaran_id' => '2',
             'mata_kuliah_id' => '2',
+            'cpl_id' => '2',
             'cpmk_id' => '2',
-            'dosen_admin_id' => '2',
-            'nama' => 'UTS',
+            'btp_id' => '2',
             'semester' => '2',
-            'kategori' => '1',
-            'bobot' => '30',
+            'bobot_cpl' => '30',
         ]);
     }
 }

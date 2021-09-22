@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CplSeeder::class,
             CpmkSeeder::class,
             BtpSeeder::class,
+            BobotcplSeeder::class,
         ]);
     }
 }

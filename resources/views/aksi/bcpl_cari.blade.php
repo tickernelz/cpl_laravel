@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title')
-    {{'Kelola Bobot Teknik Penilaian'}}
+    {{'Kelola Bobot CPL'}}
 @endsection
 @section('container')
     <div id="layout-wrapper">
@@ -16,7 +16,7 @@
                             <div class="col-lg-6" style="float:none;margin:auto;">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="get" action="{{URL::to('btp/cari')}}">
+                                        <form method="get" action="{{URL::to('bcpl/cari')}}">
                                             <div class="mb-3">
                                                 <label class="form-label">Tahun Ajaran</label>
                                                 <select class="form-select" name="tahunajaran" id="tahunajaran">
@@ -95,7 +95,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="tambahbobotTitle">
-                                                            Tambah Bobot Penilaian</h5>
+                                                            Tambah Bobot CPL</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
@@ -112,24 +112,21 @@
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label class="form-label">Teknik Penilaian</label>
-                                                            <input type="text" name="teknik" id="teknik"
-                                                                   class="form-control" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Kategori</label>
-                                                            <select class="form-select" name="kategori"
-                                                                    id="kategori">
-                                                                <option value="1">Tugas</option>
-                                                                <option value="2">UTS</option>
-                                                                <option value="3">UAS</option>
+                                                            <label class="form-label">Kode CPL</label>
+                                                            <select class="form-select" name="cpl"
+                                                                    id="cpl">
+                                                                @foreach($cpl as $d)
+                                                                    <option
+                                                                        value="{{ $d->id }}">{{$d->kode_cpl}}
+                                                                    </option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label class="form-label">Dosen</label>
-                                                            <select class="form-select" name="dosen"
-                                                                    id="dosen">
-                                                                @foreach($da as $d)
+                                                            <label class="form-label">Nama Teknik</label>
+                                                            <select class="form-select" name="btp"
+                                                                    id="btp">
+                                                                @foreach($btp as $d)
                                                                     <option
                                                                         value="{{ $d->id }}">{{$d->nama}}
                                                                     </option>
@@ -139,7 +136,7 @@
                                                         <div class="mb-3">
                                                             <label class="form-label">Bobot</label>
                                                             <input type="number" name="bobot" id="bobot"
-                                                                   class="form-control" required>
+                                                                   required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -162,7 +159,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="editbobotTitle">
-                                                            Edit Bobot Penilaian</h5>
+                                                            Edit Bobot CPL</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
@@ -184,26 +181,12 @@
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label class="form-label">Teknik Penilaian</label>
-                                                            <input type="text" name="teknik1" id="teknik1"
-                                                                   class="form-control" required>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Kategori</label>
-                                                            <select class="form-select" name="kategori1"
-                                                                    id="kategori1">
-                                                                <option value="1">Tugas</option>
-                                                                <option value="2">UTS</option>
-                                                                <option value="3">UAS</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Dosen</label>
-                                                            <select class="form-select" name="dosen1"
-                                                                    id="dosen1">
-                                                                @foreach($da as $d)
+                                                            <label class="form-label">Kode CPL</label>
+                                                            <select class="form-select" name="cpl1"
+                                                                    id="cpl1">
+                                                                @foreach($cpl as $d)
                                                                     <option
-                                                                        value="{{ $d->id }}">{{$d->nama}}
+                                                                        value="{{ $d->id }}">{{$d->kode_cpl}}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -236,9 +219,8 @@
                                                 <tr>
                                                     <th>Nomor</th>
                                                     <th>Kode CPMK</th>
-                                                    <th>Dosen</th>
-                                                    <th>Nama Teknik Penilaian</th>
-                                                    <th>Kategori</th>
+                                                    <th>Kode CPL</th>
+                                                    <th>Nama Teknik</th>
                                                     <th>Bobot</th>
                                                     <th class="text-center">Aksi</th>
                                                 </tr>
@@ -249,16 +231,9 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $li->cpmk->kode_cpmk }}</td>
-                                                        <td>{{ $li->dosen_admin->nama }}</td>
-                                                        <td>{{ $li->nama }}</td>
-                                                        @if ($li->kategori === 1)
-                                                            <td>Tugas</td>
-                                                        @elseif($li->kategori === 2)
-                                                            <td>UTS</td>
-                                                        @elseif($li->kategori === 3)
-                                                            <td>UAS</td>
-                                                        @endif
-                                                        <td>{{ $li->bobot }}</td>
+                                                        <td>{{ $li->cpl->kode_cpl }}</td>
+                                                        <td>{{ $li->btp->nama }}</td>
+                                                        <td>{{ $li->bobot_cpl }}</td>
                                                         <td class="text-center" style="width: 100px">
                                                             <a href="javascript:void(0)"
                                                                class="btn btn-secondary btn-sm edit"
@@ -289,20 +264,20 @@
             <!-- END layout-wrapper -->
             @endsection
             @section('js')
+                <script src="{{asset('assets/js/custom/form-advanced.js')}}"></script>
                 <script type="text/javascript">
                     function tambahFunc() {
                         $.ajax({
                             type: "POST",
-                            url: "{{ URL::to('tambah-btp') }}",
+                            url: "{{ URL::to('tambah-bcpl') }}",
                             data: {
                                 _token: "{{ csrf_token() }}",
                                 id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
                                 id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
                                 id_cpmk: $('#cpmk').val(),
-                                id_dosen: $('#dosen').val(),
-                                teknik: $('#teknik').val(),
+                                id_cpl: $('#cpl').val(),
+                                id_btp: $('#btp').val(),
                                 semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
-                                kategori: $('#kategori').val(),
                                 bobot: $('#bobot').val()
                             },
                             dataType: 'json',
@@ -320,17 +295,15 @@
                     function simpaneditFunc() {
                         $.ajax({
                             type: "POST",
-                            url: "{{ URL::to('edit-btp') }}",
+                            url: "{{ URL::to('edit-bcpl') }}",
                             data: {
                                 _token: "{{ csrf_token() }}",
                                 id: $('#id1').val(),
                                 id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
                                 id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
                                 id_cpmk: $('#cpmk1').val(),
-                                id_dosen: $('#dosen1').val(),
-                                teknik: $('#teknik1').val(),
+                                id_cpl: $('#cpl1').val(),
                                 semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
-                                kategori: $('#kategori1').val(),
                                 bobot: $('#bobot1').val()
                             },
                             dataType: 'json',
@@ -348,7 +321,7 @@
                     function editFunc(id) {
                         $.ajax({
                             type: "GET",
-                            url: "{{ URL::to('get-btp') }}",
+                            url: "{{ URL::to('get-bcpl') }}",
                             dataType: "JSON",
                             data: {id: id},
                             success: function (data) {
@@ -356,9 +329,7 @@
                                     $('#editbobot').modal('show');
                                     $('[name="id1"]').val(obj.id);
                                     $('[name="cpmk1"]').val(obj.cpmk_id);
-                                    $('[name="teknik1"]').val(obj.nama);
-                                    $('[name="kategori1"]').val(obj.kategori);
-                                    $('[name="dosen1"]').val(obj.dosen_admin_id);
+                                    $('[name="cpl1"]').val(obj.cpl_id);
                                     $('[name="bobot1"]').val(obj.bobot);
                                 });
                             }
@@ -370,7 +341,7 @@
                         if (confirm("Hapus Bobot?") === true) {
                             $.ajax({
                                 type: "POST",
-                                url: "{{ url('hapus-btp') }}",
+                                url: "{{ url('hapus-bcpl') }}",
                                 data: {
                                     _token: "{{ csrf_token() }}",
                                     id: id

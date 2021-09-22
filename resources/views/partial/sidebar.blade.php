@@ -74,6 +74,13 @@
                             <span>Bobot Teknik Penilaian</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{URL::to('bcpl')}}"
+                           class="waves-effect {{ Request::routeIs('bcpl') ? 'active' : '' }}">
+                            <i class="ti-ruler-pencil"></i>
+                            <span>Bobot CPL</span>
+                        </a>
+                    </li>
                     @endhasanyrole
             </ul>
         </div>

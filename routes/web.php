@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BobotcplController;
 use App\Http\Controllers\BtpController;
 use App\Http\Controllers\CplController;
 use App\Http\Controllers\CpmkController;
@@ -103,6 +104,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('get-btp', [BtpController::class, 'getBtp']);
         Route::post('edit-btp', [BtpController::class, 'edit']);
         Route::post('hapus-btp', [BtpController::class, 'hapus']);
+        // Bobot CPL
+        Route::get('bcpl', [BobotcplController::class, 'index'])->name('bcpl');
+        Route::get('bcpl/cari', [BobotcplController::class, 'cari'])->name('bcplcari');
+        Route::post('tambah-bcpl', [BobotcplController::class, 'store']);
+        Route::get('get-bcpl', [BobotcplController::class, 'get']);
+        Route::post('edit-bcpl', [BobotcplController::class, 'edit']);
+        Route::post('hapus-bcpl', [BobotcplController::class, 'hapus']);
     });
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
