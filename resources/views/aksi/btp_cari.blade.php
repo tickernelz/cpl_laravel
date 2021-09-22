@@ -256,7 +256,7 @@
                                                         @elseif($li->kategori === '2')
                                                             <td>UTS</td>
                                                         @elseif($li->kategori === '3')
-                                                            <td>UTS</td>
+                                                            <td>UAS</td>
                                                         @endif
                                                         <td>{{ $li->bobot }}</td>
                                                         <td class="text-center" style="width: 100px">
@@ -311,7 +311,7 @@
                                 location.reload();
                             },
                             error: function (data) {
-                                alert('Total Bobot Yang Ditambahkan Melebihi 100!')
+                                alert('Gagal Input! Cek Total Bobot dan Pastikan Inputan Terisi Semua')
                                 console.log(data);
                             }
                         });
@@ -339,7 +339,7 @@
                                 location.reload();
                             },
                             error: function (data) {
-                                alert('Total Bobot Yang Ditambahkan Melebihi 100!')
+                                alert('Gagal Input! Cek Total Bobot dan Pastikan Inputan Terisi Semua')
                                 console.log(data);
                             }
                         });
