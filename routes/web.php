@@ -100,6 +100,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('btp', [BtpController::class, 'index'])->name('btp');
         Route::get('btp/cari', [BtpController::class, 'cari'])->name('btpcari');
         Route::post('tambah-btp', [BtpController::class, 'store']);
+        Route::get('get-btp', [BtpController::class, 'getBtp']);
+        Route::post('edit-btp', [BtpController::class, 'edit']);
         Route::post('hapus-btp', [BtpController::class, 'hapus']);
     });
     Route::get('home', [HomeController::class, 'index'])->name('home');

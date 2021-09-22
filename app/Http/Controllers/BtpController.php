@@ -27,6 +27,13 @@ class BtpController extends Controller
         ]);
     }
 
+    public function getBtp(Request $request)
+    {
+        $id_btp = $request->id;
+        $databtp = Btp::whereId($id_btp)->get();
+        return Response()->json($databtp);
+    }
+
     public function cari(Request $request)
     {
         $ta = TahunAjaran::get();
@@ -94,6 +101,42 @@ class BtpController extends Controller
                 ]
             );
             return Response()->json($btp);
+        }
+        return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
+    }
+
+    public function edit(Request $request)
+    {
+        $id = $request->id;
+        $id_ta = $request->id_ta;
+        $id_mk = $request->id_mk;
+        $id_cpmk = $request->id_cpmk;
+        $id_dosen = $request->id_dosen;
+        $teknik = $request->teknik;
+        $semester = $request->semester;
+        $kategori = $request->kategori;
+        $bobot = $request->bobot;
+        $tampil = Btp::with(
+            'tahun_ajaran',
+            'mata_kuliah',
+            'cpmk',
+            'dosen_admin'
+        )->whereRaw(
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
+        )->get();
+        $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot') + $bobot;
+        if ($sum_bobot <= 100) {
+            $btp = Btp::find($id);
+            $btp->tahun_ajaran_id = $id_ta;
+            $btp->mata_kuliah_id = $id_mk;
+            $btp->cpmk_id = $id_cpmk;
+            $btp->dosen_admin_id = $id_dosen;
+            $btp->nama = (string)$teknik;
+            $btp->semester = (string)$semester;
+            $btp->kategori = (string)$kategori;
+            $btp->bobot = $bobot;
+            $save = $btp->save();
+            return Response()->json($save);
         }
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
     }

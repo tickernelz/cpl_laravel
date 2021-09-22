@@ -156,6 +156,78 @@
                                             </div>
                                             <!-- /.modal-dialog -->
                                         </div>
+                                        <div class="modal fade" id="editbobot" tabindex="-1" role="dialog"
+                                             aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editbobotTitle">
+                                                            Edit Bobot Penilaian</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">ID</label>
+                                                            <input type="text" name="id1" id="id1"
+                                                                   class="form-control" readonly>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Kode CPMK</label>
+                                                            <select class="form-select" name="cpmk1"
+                                                                    id="cpmk1">
+                                                                @foreach($cpmk_mk as $d)
+                                                                    <option
+                                                                        value="{{ $d->id }}">{{$d->kode_cpmk}}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Teknik Penilaian</label>
+                                                            <input type="text" name="teknik1" id="teknik1"
+                                                                   class="form-control" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Kategori</label>
+                                                            <select class="form-select" name="kategori1"
+                                                                    id="kategori1">
+                                                                <option value="1">Tugas</option>
+                                                                <option value="2">UTS</option>
+                                                                <option value="3">UAS</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Dosen</label>
+                                                            <select class="form-select" name="dosen1"
+                                                                    id="dosen1">
+                                                                @foreach($da as $d)
+                                                                    <option
+                                                                        value="{{ $d->id }}">{{$d->nama}}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Bobot</label>
+                                                            <input type="number" name="bobot1" id="bobot1"
+                                                                   class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Tutup
+                                                        </button>
+                                                        <button type="button" id="btn-submit" onclick="simpaneditFunc()"
+                                                                class="btn btn-primary">
+                                                            Simpan
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
                                     </div>
                                     <div class="table-rep-plugin">
                                         <div class="table-responsive mb-0" data-bs-pattern="priority-columns">
@@ -188,6 +260,11 @@
                                                         @endif
                                                         <td>{{ $li->bobot }}</td>
                                                         <td class="text-center" style="width: 100px">
+                                                            <a href="javascript:void(0)"
+                                                               class="btn btn-secondary btn-sm edit"
+                                                               onclick="editFunc({{ $li->id }})" title="Delete">
+                                                                <i class="fas fa-pencil-alt"></i>
+                                                            </a>
                                                             <a href="javascript:void(0)"
                                                                class="btn btn-secondary btn-sm edit"
                                                                onclick="hapusFunc({{ $li->id }})" title="Delete">
@@ -238,6 +315,55 @@
                                 console.log(data);
                             }
                         });
+                    }
+
+                    function simpaneditFunc() {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ URL::to('edit-btp') }}",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                id: $('#id1').val(),
+                                id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
+                                id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
+                                id_cpmk: $('#cpmk1').val(),
+                                id_dosen: $('#dosen1').val(),
+                                teknik: $('#teknik1').val(),
+                                semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
+                                kategori: $('#kategori1').val(),
+                                bobot: $('#bobot1').val()
+                            },
+                            dataType: 'json',
+                            success: function (res) {
+                                $("#editbobot").modal('hide');
+                                location.reload();
+                            },
+                            error: function (data) {
+                                alert('Total Bobot Yang Ditambahkan Melebihi 100!')
+                                console.log(data);
+                            }
+                        });
+                    }
+
+                    function editFunc(id) {
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ URL::to('get-btp') }}",
+                            dataType: "JSON",
+                            data: {id: id},
+                            success: function (data) {
+                                $.map(data, function (obj) {
+                                    $('#editbobot').modal('show');
+                                    $('[name="id1"]').val(obj.id);
+                                    $('[name="cpmk1"]').val(obj.cpmk_id);
+                                    $('[name="teknik1"]').val(obj.nama);
+                                    $('[name="kategori1"]').val(obj.kategori);
+                                    $('[name="dosen1"]').val(obj.dosen_admin_id);
+                                    $('[name="bobot1"]').val(obj.bobot);
+                                });
+                            }
+                        });
+                        return false;
                     }
 
                     function hapusFunc(id) {
