@@ -8,6 +8,10 @@
         t("input[name='bobot']").TouchSpin({
             buttondown_class: "btn btn-primary",
             buttonup_class: "btn btn-primary"
+        });
+        t("input[name='bobot1']").TouchSpin({
+            buttondown_class: "btn btn-primary",
+            buttonup_class: "btn btn-primary"
         })
     }, t.AdvancedForm = new e, t.AdvancedForm.Constructor = e
 }(window.jQuery), function () {

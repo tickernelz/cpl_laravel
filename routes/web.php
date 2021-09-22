@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('bcpl/cari', [BobotcplController::class, 'cari'])->name('bcplcari');
         Route::post('tambah-bcpl', [BobotcplController::class, 'store']);
         Route::get('get-bcpl', [BobotcplController::class, 'get']);
+        Route::get('cek-teknik', [BobotcplController::class, 'cekTeknik']);
         Route::post('edit-bcpl', [BobotcplController::class, 'edit']);
         Route::post('hapus-bcpl', [BobotcplController::class, 'hapus']);
     });

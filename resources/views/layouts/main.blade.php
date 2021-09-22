@@ -33,6 +33,13 @@
     <!-- App Css-->
     <link href="{{asset('assets/css/app.css')}}" id="app-style" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{asset('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')}}">
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
     @yield('head')
 
 </head>

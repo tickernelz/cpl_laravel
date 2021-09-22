@@ -35,6 +35,18 @@ class BobotcplController extends Controller
         return Response()->json($data);
     }
 
+    public function cekTeknik(Request $request)
+    {
+        $id_ta = Crypt::decrypt($request->id_ta);
+        $id_sem = Crypt::decrypt($request->semester);
+        $id_mk = Crypt::decrypt($request->id_mk);
+        $cpmk = $request->cpmk;
+        $tampil = Btp::whereRaw(
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND cpmk_id = '$cpmk'"
+        )->get();
+        return Response()->json($tampil);
+    }
+
     public function cari(Request $request)
     {
         $ta = TahunAjaran::get();
@@ -114,30 +126,29 @@ class BobotcplController extends Controller
         $id_ta = $request->id_ta;
         $id_mk = $request->id_mk;
         $id_cpmk = $request->id_cpmk;
-        $id_dosen = $request->id_dosen;
-        $teknik = $request->teknik;
+        $id_cpl = $request->id_cpl;
+        $id_btp = $request->id_btp;
         $semester = $request->semester;
-        $kategori = $request->kategori;
         $bobot = $request->bobot;
-        $tampil = Btp::with(
+        $tampil = Bobotcpl::with(
             'tahun_ajaran',
             'mata_kuliah',
             'cpmk',
-            'dosen_admin'
+            'cpl',
+            'btp'
         )->whereRaw(
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
         )->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot_cpl') + $bobot;
         if ($sum_bobot <= 100) {
-            $btp = Btp::find($id);
+            $btp = Bobotcpl::find($id);
             $btp->tahun_ajaran_id = $id_ta;
             $btp->mata_kuliah_id = $id_mk;
             $btp->cpmk_id = $id_cpmk;
-            $btp->dosen_admin_id = $id_dosen;
-            $btp->nama = (string)$teknik;
+            $btp->cpl_id = $id_cpl;
+            $btp->btp_id = $id_btp;
             $btp->semester = (string)$semester;
-            $btp->kategori = (string)$kategori;
-            $btp->bobot = $bobot;
+            $btp->bobot_cpl = $bobot;
             $save = $btp->save();
             return Response()->json($save);
         }
@@ -147,7 +158,7 @@ class BobotcplController extends Controller
     public function hapus(Request $request)
     {
         $id = $request->id;
-        $hapus = Btp::find($id)->delete();
+        $hapus = Bobotcpl::find($id)->delete();
 
         return Response()->json($hapus);
     }

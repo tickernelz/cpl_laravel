@@ -3,6 +3,7 @@
 @section('title')
     {{'Kelola Bobot CPL'}}
 @endsection
+
 @section('container')
     <div id="layout-wrapper">
         @include('partial.topbar')
@@ -103,7 +104,7 @@
                                                         <div class="mb-3">
                                                             <label class="form-label">Kode CPMK</label>
                                                             <select class="form-select" name="cpmk"
-                                                                    id="cpmk">
+                                                                    id="cpmk" onclick="cekTeknik()">
                                                                 @foreach($cpmk_mk as $d)
                                                                     <option
                                                                         value="{{ $d->id }}">{{$d->kode_cpmk}}
@@ -126,16 +127,14 @@
                                                             <label class="form-label">Nama Teknik</label>
                                                             <select class="form-select" name="btp"
                                                                     id="btp">
-                                                                @foreach($btp as $d)
-                                                                    <option
-                                                                        value="{{ $d->id }}">{{$d->nama}}
-                                                                    </option>
-                                                                @endforeach
+                                                                <option value="">-- Pilih Kode CPMK Terlebih Dahulu --
+                                                                </option>
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Bobot</label>
-                                                            <input type="number" name="bobot" id="bobot"
+                                                            <input type="number" name="bobot"
+                                                                   id="bobot"
                                                                    required>
                                                         </div>
                                                     </div>
@@ -172,7 +171,7 @@
                                                         <div class="mb-3">
                                                             <label class="form-label">Kode CPMK</label>
                                                             <select class="form-select" name="cpmk1"
-                                                                    id="cpmk1">
+                                                                    id="cpmk1" onclick="cekTeknik2()">
                                                                 @foreach($cpmk_mk as $d)
                                                                     <option
                                                                         value="{{ $d->id }}">{{$d->kode_cpmk}}
@@ -192,9 +191,17 @@
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
+                                                            <label class="form-label">Nama Teknik</label>
+                                                            <select class="form-select" name="btp1"
+                                                                    id="btp1">
+                                                                <option value="">-- Pilih Kode CPMK Terlebih Dahulu --
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
                                                             <label class="form-label">Bobot</label>
                                                             <input type="number" name="bobot1" id="bobot1"
-                                                                   class="form-control" required>
+                                                                   required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -266,6 +273,54 @@
             @section('js')
                 <script src="{{asset('assets/js/custom/form-advanced.js')}}"></script>
                 <script type="text/javascript">
+                    function cekTeknik() {
+                        $.ajax({
+                            url: "{{ URL::to('cek-teknik') }}",
+                            data: {
+                                id_ta: '{{ Request::get('tahunajaran') }}',
+                                id_mk: '{{ Request::get('mk') }}',
+                                semester: '{{ Request::get('semester') }}',
+                                cpmk: $("#cpmk").val()
+                            },
+                            type: "GET",
+                            success: function (data) {
+                                $('#btp option:gt(0)').remove();
+                                $.each(data, function (i, item) {
+                                    $('#btp').append($('<option>', {
+                                        value: item.id,
+                                        text: item.nama
+                                    }));
+                                });
+                            },
+                            error: function () {
+                            }
+                        });
+                    }
+
+                    function cekTeknik2() {
+                        $.ajax({
+                            url: "{{ URL::to('cek-teknik') }}",
+                            data: {
+                                id_ta: '{{ Request::get('tahunajaran') }}',
+                                id_mk: '{{ Request::get('mk') }}',
+                                semester: '{{ Request::get('semester') }}',
+                                cpmk: $("#cpmk1").val()
+                            },
+                            type: "GET",
+                            success: function (data) {
+                                $('#btp1 option:gt(0)').remove();
+                                $.each(data, function (i, item) {
+                                    $('#btp1').append($('<option>', {
+                                        value: item.id,
+                                        text: item.nama
+                                    }));
+                                });
+                            },
+                            error: function () {
+                            }
+                        });
+                    }
+
                     function tambahFunc() {
                         $.ajax({
                             type: "POST",
@@ -287,6 +342,10 @@
                             },
                             error: function (data) {
                                 alert('Gagal Input! Cek Total Bobot dan Pastikan Inputan Terisi Semua')
+                                $("#cpmk").val('')
+                                $("#cpl").val('')
+                                $("#btp").val('')
+                                $("#bobot").val('')
                                 console.log(data);
                             }
                         });
@@ -303,6 +362,7 @@
                                 id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
                                 id_cpmk: $('#cpmk1').val(),
                                 id_cpl: $('#cpl1').val(),
+                                id_btp: $('#btp1').val(),
                                 semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
                                 bobot: $('#bobot1').val()
                             },
@@ -330,7 +390,7 @@
                                     $('[name="id1"]').val(obj.id);
                                     $('[name="cpmk1"]').val(obj.cpmk_id);
                                     $('[name="cpl1"]').val(obj.cpl_id);
-                                    $('[name="bobot1"]').val(obj.bobot);
+                                    $('[name="bobot1"]').val(obj.bobot_cpl);
                                 });
                             }
                         });
