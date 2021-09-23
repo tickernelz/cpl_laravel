@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bobotcpl;
+use App\Models\Btp;
 use App\Models\Cpl;
 use App\Models\Cpmk;
 use App\Models\DosenAdmin;
@@ -60,8 +62,12 @@ class Hapus extends Controller
 
     public function cpmk($id)
     {
-        Cpmk::find($id)->delete();
-
-        return redirect()->route('cpmk');
+        $cek_btp = Btp::where('cpmk_id', $id)->count();
+        $cek_bcpl = Bobotcpl::where('cpmk_id', $id)->count();
+        if ($cek_btp === 0 || $cek_bcpl === 0) {
+            Cpmk::find($id)->delete();
+            return redirect()->route('cpmk');
+        }
+        return redirect()->route('cpmk')->with('error', 'Data yang ingin dihapus masih digunakan!');
     }
 }

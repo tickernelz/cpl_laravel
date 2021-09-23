@@ -16,11 +16,24 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <a href="{{ Request::url() }}/tambah">
-                                        <button type="button"
-                                                class="btn btn-primary btn-lg waves-effect waves-light mb-4">Tambah CPMK
-                                        </button>
-                                    </a>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ Request::url() }}/tambah">
+                                            <button type="button"
+                                                    class="btn btn-primary btn-lg waves-effect waves-light mb-4">Tambah
+                                                CPMK
+                                            </button>
+                                        </a>
+                                        @if (Session::has('success'))
+                                            <div class="alert alert-success mb-3" role="alert">
+                                                {{ Session::get('success') }}
+                                            </div>
+                                        @endif
+                                        @if (Session::has('error'))
+                                            <div class="alert alert-danger mb-3" role="alert">
+                                                {{ Session::get('error') }}
+                                            </div>
+                                        @endif
+                                    </div>
                                     <div class="table-rep-plugin">
                                         <div class="table-responsive mb-0" data-bs-pattern="priority-columns">
                                             <table id="datatable" class="table table-striped">

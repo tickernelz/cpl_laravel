@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bobotcpl;
 use App\Models\Btp;
 use App\Models\Cpmk;
 use App\Models\DosenAdmin;
@@ -138,14 +139,17 @@ class BtpController extends Controller
             $save = $btp->save();
             return Response()->json($save);
         }
-        return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
+        return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100!');
     }
 
     public function hapus(Request $request)
     {
         $id = $request->id;
-        $hapus = Btp::find($id)->delete();
-
-        return Response()->json($hapus);
+        $cek = Bobotcpl::where('btp_id', $id)->count();
+        if ($cek === 0) {
+            $hapus = Btp::find($id)->delete();
+            return Response()->json($hapus);
+        }
+        return back()->with('error', 'Data yang ingin dihapus masih digunakan!');
     }
 }
