@@ -380,6 +380,7 @@
                                     location.reload();
                                 },
                                 error: function (data) {
+                                    alert("Data yang ingin dihapus masih digunakan!")
                                     console.log(data);
                                 }
                             });
