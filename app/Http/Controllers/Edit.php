@@ -70,20 +70,18 @@ class Edit extends Controller
     public function admin(Request $request, $id)
     {
         $rules = [
-            'nip' => 'required|integer|unique:dosen_admins',
+            'nip' => 'required|integer',
             'nama' => 'required|string',
-            'username' => 'required|string|unique:users',
+            'username' => 'required|string',
             'password' => 'required|string',
         ];
 
         $messages = [
             'nip.required' => 'NIP wajib diisi',
-            'nip.unique' => 'NIP harus beda dari yang lain',
             'nip.integer' => 'NIP harus berupa angka',
             'nama.required' => 'Nama wajib diisi',
             'nama.string' => 'Nama tidak valid',
             'username.required' => 'Username wajib diisi',
-            'username.unique' => 'Username harus beda dari yang lain',
             'username.string' => 'Username tidak valid',
             'password.required' => 'Password wajib diisi',
             'password.string' => 'Password harus berupa string',
@@ -109,20 +107,18 @@ class Edit extends Controller
     public function dosen(Request $request, $id)
     {
         $rules = [
-            'nip' => 'required|integer|unique:dosen_admins',
+            'nip' => 'required|integer',
             'nama' => 'required|string',
-            'username' => 'required|string|unique:users',
+            'username' => 'required|string',
             'password' => 'required|string',
         ];
 
         $messages = [
             'nip.required' => 'NIP wajib diisi',
-            'nip.unique' => 'NIP harus beda dari yang lain',
             'nip.integer' => 'NIP harus berupa angka',
             'nama.required' => 'Nama wajib diisi',
             'nama.string' => 'Nama tidak valid',
             'username.required' => 'Username wajib diisi',
-            'username.unique' => 'Username harus beda dari yang lain',
             'username.string' => 'Username tidak valid',
             'password.required' => 'Password wajib diisi',
             'password.string' => 'Password harus berupa string',
@@ -192,12 +188,11 @@ class Edit extends Controller
     public function ta(Request $request, $id)
     {
         $rules = [
-            'tahun' => 'required|string|unique:tahun_ajarans',
+            'tahun' => 'required|string',
         ];
 
         $messages = [
             'tahun.required' => 'Tahun Ajaran wajib diisi',
-            'tahun.unique' => 'Tahun Ajaran harus beda dari yang lain',
             'tahun.string' => 'Tahun Ajaran tidak valid',
         ];
 
