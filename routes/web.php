@@ -13,6 +13,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KRSController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
+use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\TahunAjaranController;
 use App\Http\Controllers\Tambah;
 use Illuminate\Support\Facades\Route;
@@ -112,6 +113,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cek-teknik', [BobotcplController::class, 'cekTeknik']);
         Route::post('edit-bcpl', [BobotcplController::class, 'edit']);
         Route::post('hapus-bcpl', [BobotcplController::class, 'hapus']);
+    });
+    Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
+        // Bobot CPL
+        Route::get('nilai', [NilaiController::class, 'index'])->name('nilai');
+        Route::get('nilai/cari', [NilaiController::class, 'cari'])->name('nilaicari');
+        Route::post('tambah-nilai', [NilaiController::class, 'store']);
+        Route::get('get-nilai', [NilaiController::class, 'get']);
+        Route::get('cek-teknik', [NilaiController::class, 'cekTeknik']);
+        Route::post('edit-nilai', [NilaiController::class, 'edit']);
+        Route::post('hapus-nilai', [NilaiController::class, 'hapus']);
     });
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');

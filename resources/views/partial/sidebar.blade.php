@@ -68,18 +68,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{URL::to('btp')}}"
-                           class="waves-effect {{ Request::routeIs('btp') ? 'active' : '' }}">
-                            <i class="ti-ruler"></i>
-                            <span>Bobot Teknik Penilaian</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{URL::to('bcpl')}}"
-                           class="waves-effect {{ Request::routeIs('bcpl') ? 'active' : '' }}">
+                        <a href="javascript: void(0);"
+                           class="has-arrow waves-effect {{ Request::routeIs('btp','bcpl') ? 'active' : '' }}">
                             <i class="ti-ruler-pencil"></i>
-                            <span>Bobot CPL</span>
+                            <span>Bobot</span>
                         </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{URL::to('btp')}}">Bobot Teknik Penilaian</a></li>
+                            <li><a href="{{URL::to('bcpl')}}">Bobot CPL</a></li>
+                        </ul>
                     </li>
                     @endhasanyrole
             </ul>
