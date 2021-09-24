@@ -35,6 +35,21 @@ class MataKuliah extends Model
 
     public function krs()
     {
-        return $this->belongsTo(KRS::class);
+        return $this->hasMany(KRS::class);
+    }
+
+    public function cpmk()
+    {
+        return $this->hasMany(Cpmk::class);
+    }
+
+    public function btp()
+    {
+        return $this->hasMany(Btp::class);
+    }
+
+    public function bobotcpl()
+    {
+        return $this->hasMany(Bobotcpl::class);
     }
 }

@@ -67,4 +67,14 @@ class Btp extends Model
     {
         return $this->belongsTo(DosenAdmin::class);
     }
+
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class);
+    }
+
+    public function bobotcpl()
+    {
+        return $this->hasMany(Bobotcpl::class);
+    }
 }

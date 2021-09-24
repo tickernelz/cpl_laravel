@@ -44,4 +44,9 @@ class DosenAdmin extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function btp()
+    {
+        return $this->hasMany(Btp::class);
+    }
 }

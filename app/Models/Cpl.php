@@ -35,4 +35,9 @@ class Cpl extends Model
     protected $guarded = [
         'id',
     ];
+
+    public function bobotcpl()
+    {
+        return $this->hasMany(Bobotcpl::class);
+    }
 }

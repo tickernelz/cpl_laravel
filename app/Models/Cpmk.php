@@ -39,4 +39,14 @@ class Cpmk extends Model
     {
         return $this->belongsTo(MataKuliah::class);
     }
+
+    public function btp()
+    {
+        return $this->hasMany(Btp::class);
+    }
+
+    public function bobotcpl()
+    {
+        return $this->hasMany(Bobotcpl::class);
+    }
 }

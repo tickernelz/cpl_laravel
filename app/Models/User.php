@@ -67,6 +67,6 @@ class User extends Authenticatable
 
     public function dosenadmin()
     {
-        return $this->belongsTo(DosenAdmin::class);
+        return $this->hasMany(DosenAdmin::class);
     }
 }
