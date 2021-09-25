@@ -26,7 +26,7 @@ class CreateBtpsTable extends Migration
             $table->string('nama');
             $table->enum('semester', ['1', '2']);
             $table->integer('kategori');
-            $table->integer('bobot');
+            $table->float('bobot');
             $table->timestamps();
         });
     }

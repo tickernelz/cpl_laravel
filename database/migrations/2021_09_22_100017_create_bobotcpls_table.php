@@ -26,7 +26,7 @@ class CreateBobotcplsTable extends Migration
             $table->foreignIdFor(Cpmk::class);
             $table->foreignIdFor(Btp::class);
             $table->enum('semester', ['1', '2']);
-            $table->integer('bobot_cpl');
+            $table->float('bobot_cpl');
             $table->timestamps();
         });
     }

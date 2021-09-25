@@ -19,7 +19,7 @@ class CreateNilaisTable extends Migration
             $table->id();
             $table->foreignIdFor(Mahasiswa::class);
             $table->foreignIdFor(Btp::class);
-            $table->integer('nilai');
+            $table->float('nilai');
             $table->timestamps();
         });
     }
