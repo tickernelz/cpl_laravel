@@ -165,25 +165,6 @@
                 <!-- end main content-->
             </div>
             <!-- END layout-wrapper -->
-        @endsection
-        @section('js')
-            <!--script>
-                    $(document).ready(function () {
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-Token': $("input[name=_token]").val()
-                            }
-                        });
-                        $('#edit').Tabledit({
-                            url: '',
-                            dataType: "json",
-                            columns: {
-                                identifier: [0, 'id'],
-                                editable: [
-                                    [3,]
-                                ],
-                            }
-                        });
-                    })
-                </script-->
+@endsection
+@section('js')
 @endsection
