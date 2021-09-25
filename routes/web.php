@@ -115,7 +115,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('hapus-bcpl', [BobotcplController::class, 'hapus']);
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
-        // Bobot CPL
+        // Nilai
         Route::get('nilai', [NilaiController::class, 'index'])->name('nilai');
         Route::get('nilai/cari', [NilaiController::class, 'cari'])->name('nilaicari');
         Route::post('nilai-post', [NilaiController::class, 'store']);
