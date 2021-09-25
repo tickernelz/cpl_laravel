@@ -6,6 +6,7 @@ use App\Models\Btp;
 use App\Models\DosenAdmin;
 use App\Models\KRS;
 use App\Models\MataKuliah;
+use App\Models\Nilai;
 use App\Models\TahunAjaran;
 use Crypt;
 use Illuminate\Http\Request;
@@ -47,5 +48,29 @@ class NilaiController extends Controller
             'mhs' => $getMhs,
             'teknik' => $getTeknik,
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $id_mhs = $request->mahasiswa_id;
+        $id_btp = $request->btp_id;
+        $nilai = $request->nilai;
+        $cek = Nilai::where([
+            ['mahasiswa_id', '=', $id_mhs],
+            ['btp_id', '=', $id_btp],
+        ])->first();
+
+        if (!is_null($cek)) {
+            $cek->update([
+                'nilai' => $nilai
+            ]);
+            return back()->with('success', 'Data Berhasil Diperbarui!.');
+        }
+        Nilai::create([
+            'mahasiswa_id' => $id_mhs,
+            'btp_id' => $id_btp,
+            'nilai' => $nilai
+        ]);
+        return back()->with('success', 'Data Berhasil Ditambahkan!.');
     }
 }

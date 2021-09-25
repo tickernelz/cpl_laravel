@@ -118,11 +118,7 @@ Route::group(['middleware' => 'auth'], function () {
         // Bobot CPL
         Route::get('nilai', [NilaiController::class, 'index'])->name('nilai');
         Route::get('nilai/cari', [NilaiController::class, 'cari'])->name('nilaicari');
-        Route::post('tambah-nilai', [NilaiController::class, 'store']);
-        Route::get('get-nilai', [NilaiController::class, 'get']);
-        Route::get('cek-teknik', [NilaiController::class, 'cekTeknik']);
-        Route::post('edit-nilai', [NilaiController::class, 'edit']);
-        Route::post('hapus-nilai', [NilaiController::class, 'hapus']);
+        Route::post('nilai-post', [NilaiController::class, 'store']);
     });
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');

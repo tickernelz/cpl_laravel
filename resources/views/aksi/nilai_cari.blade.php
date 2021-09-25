@@ -68,6 +68,30 @@
                             </div>
                             <div class="card">
                                 <div class="card-body">
+                                    @csrf
+                                    @if(session('errors'))
+                                        <div class="alert alert-danger alert-dismissible fade show mb-3"
+                                             role="alert">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                            <strong>Aduh!</strong> Ada yang error nih :
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                    @if (Session::has('success'))
+                                        <div class="alert alert-success mb-3" role="alert">
+                                            {{ Session::get('success') }}
+                                        </div>
+                                    @endif
+                                    @if (Session::has('error'))
+                                        <div class="alert alert-danger mb-3" role="alert">
+                                            {{ Session::get('error') }}
+                                        </div>
+                                    @endif
                                     <div class="table-rep-plugin">
                                         <div class="table-responsive mb-0" data-bs-pattern="priority-columns">
                                             <table id="datatable1"
@@ -98,7 +122,9 @@
                                                                 <td></td>
                                                             @else
                                                                 <td>
-                                                                    <form method="post">
+                                                                    <form method="POST"
+                                                                          action="{{URL::to('nilai-post')}}">
+                                                                        @csrf
                                                                         <div class="input-group mb-3">
                                                                             <input name="mahasiswa_id" type="hidden"
                                                                                    value="{{ $li->mahasiswa->id }}">
@@ -114,7 +140,7 @@
                                                                             <div class="input-group-append">
                                                                                 <button
                                                                                     class="btn btn-outline-primary waves-effect waves-light"
-                                                                                    type="button">
+                                                                                    type="submit">
                                                                                     Simpan
                                                                                 </button>
                                                                             </div>
@@ -123,9 +149,6 @@
                                                                 </td>
                                                             @endif
                                                         @endforeach
-                                                        <td class="text-center">
-
-                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
