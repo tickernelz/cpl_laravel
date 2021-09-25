@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|DosenAdmin whereNip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DosenAdmin whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DosenAdmin whereUserId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Btp[] $btp
+ * @property-read int|null $btp_count
  */
 class DosenAdmin extends Model
 {

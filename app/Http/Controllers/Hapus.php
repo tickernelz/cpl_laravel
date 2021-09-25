@@ -68,6 +68,6 @@ class Hapus extends Controller
             Cpmk::find($id)->delete();
             return redirect()->route('cpmk');
         }
-        return response()->json(['error' => 'Data yang ingin dihapus masih digunakan!'], 409);
+        return back()->with('error', 'Data yang ingin dihapus masih digunakan!');
     }
 }

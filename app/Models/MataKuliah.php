@@ -24,6 +24,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|MataKuliah whereKode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|MataKuliah whereNama($value)
  * @method static \Illuminate\Database\Eloquent\Builder|MataKuliah whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bobotcpl[] $bobotcpl
+ * @property-read int|null $bobotcpl_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Btp[] $btp
+ * @property-read int|null $btp_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Cpmk[] $cpmk
+ * @property-read int|null $cpmk_count
+ * @property-read int|null $krs_count
  */
 class MataKuliah extends Model
 {

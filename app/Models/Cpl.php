@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nama_cpl
  * @method static \Illuminate\Database\Eloquent\Builder|Cpl whereKodeCpl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cpl whereNamaCpl($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bobotcpl[] $bobotcpl
+ * @property-read int|null $bobotcpl_count
  */
 class Cpl extends Model
 {

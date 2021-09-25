@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Mahasiswa whereNama($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Mahasiswa whereNim($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Mahasiswa whereUpdatedAt($value)
+ * @property-read int|null $krs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Nilai[] $nilai
+ * @property-read int|null $nilai_count
  */
 class Mahasiswa extends Model
 {

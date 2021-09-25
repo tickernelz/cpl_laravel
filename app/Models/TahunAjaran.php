@@ -22,6 +22,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|TahunAjaran whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TahunAjaran whereTahun($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TahunAjaran whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bobotcpl[] $bobotcpl
+ * @property-read int|null $bobotcpl_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Btp[] $btp
+ * @property-read int|null $btp_count
+ * @property-read int|null $krs_count
  */
 class TahunAjaran extends Model
 {

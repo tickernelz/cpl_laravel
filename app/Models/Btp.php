@@ -39,6 +39,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Btp whereSemester($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Btp whereTahunAjaranId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Btp whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bobotcpl[] $bobotcpl
+ * @property-read int|null $bobotcpl_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Nilai[] $nilai
+ * @property-read int|null $nilai_count
  */
 class Btp extends Model
 {

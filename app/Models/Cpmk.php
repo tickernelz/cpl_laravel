@@ -26,6 +26,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Cpmk whereMataKuliahId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cpmk whereNamaCpmk($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cpmk whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bobotcpl[] $bobotcpl
+ * @property-read int|null $bobotcpl_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Btp[] $btp
+ * @property-read int|null $btp_count
  */
 class Cpmk extends Model
 {

@@ -39,7 +39,8 @@ class NilaiController extends Controller
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
         )->get();
         $getTeknik = Btp::whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND dosen_admin_id = '$id_dosen'"
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'
+            AND dosen_admin_id = '$id_dosen'"
         )->get();
 
         return view('aksi.nilai_cari', [
