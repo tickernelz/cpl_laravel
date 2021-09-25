@@ -95,7 +95,7 @@
                                     <div class="table-rep-plugin">
                                         <div class="table-responsive mb-0" data-bs-pattern="priority-columns">
                                             <table id="datatable1"
-                                                   class="table table-striped table-bordered">
+                                                   class="table table-hover table-bordered">
                                                 <thead>
                                                 <tr>
                                                     <th>Nomor</th>
