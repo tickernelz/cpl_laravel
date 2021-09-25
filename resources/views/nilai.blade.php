@@ -17,7 +17,7 @@
                             <div class="col-lg-6" style="float:none;margin:auto;">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form method="get" action="{{URL::to('bcpl/cari')}}">
+                                        <form method="get" action="{{URL::to('nilai/cari')}}">
                                             <div class="mb-3">
                                                 <label class="form-label">Tahun Ajaran</label>
                                                 <select class="form-select" name="tahunajaran" id="tahunajaran">

@@ -78,6 +78,13 @@
                             <li><a href="{{URL::to('bcpl')}}">Bobot CPL</a></li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="{{URL::to('nilai')}}"
+                           class="waves-effect {{ Request::routeIs('nilai') ? 'active' : '' }}">
+                            <i class="ti-pencil"></i>
+                            <span>Nilai</span>
+                        </a>
+                    </li>
                     @endhasanyrole
             </ul>
         </div>
