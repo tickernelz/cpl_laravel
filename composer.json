@@ -54,9 +54,7 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ],
-        "phpcs": "phpcs --standard=phpcs.xml",
-        "php-cs-fixer": "php artisan fixer:fix --config=./.php_cs.laravel.php"
+        ]
     },
     "extra": {
         "laravel": {
