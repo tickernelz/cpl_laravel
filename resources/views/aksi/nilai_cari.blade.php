@@ -94,8 +94,9 @@
                                     @endif
                                     <div class="table-rep-plugin">
                                         <div class="table-responsive mb-0" data-bs-pattern="priority-columns">
-                                            <table id="datatable1"
-                                                   class="table table-hover table-bordered">
+                                            <table id="datatableNilai"
+                                                   class="table table-sm table-hover table-bordered"
+                                                   style="width: 100%">
                                                 <thead>
                                                 <tr>
                                                     <th>Nomor</th>
