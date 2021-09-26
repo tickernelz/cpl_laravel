@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Bobotcpl
+ * App\Models\Bobotcpl.
  *
  * @property int $id
  * @property int $tahun_ajaran_id
@@ -43,7 +43,7 @@ class Bobotcpl extends Model
     use HasFactory;
 
     protected $guarded = [
-        'id'
+        'id',
     ];
 
     public function tahun_ajaran()

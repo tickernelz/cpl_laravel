@@ -27,6 +27,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
+        "orangehill/iseed": "^3.0",
         "phpunit/phpunit": "^9.3.3",
         "roave/security-advisories": "dev-latest",
         "squizlabs/php_codesniffer": "3.*"
@@ -58,7 +59,7 @@
             "@php artisan key:generate --ansi"
         ],
         "phpcs": "phpcs --standard=phpcs.xml",
-        "php-cs-fixer": "artisan fixer:fix --config=./.php_cs.laravel.php"
+        "php-cs-fixer": "php artisan fixer:fix --config=./.php_cs.laravel.php"
     },
     "extra": {
         "laravel": {

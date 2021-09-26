@@ -28,6 +28,7 @@ class BobotcplController extends Controller
     {
         $id = $request->id;
         $data = Bobotcpl::whereId($id)->get();
+
         return Response()->json($data);
     }
 
@@ -40,6 +41,7 @@ class BobotcplController extends Controller
         $tampil = Btp::whereRaw(
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND cpmk_id = '$cpmk'"
         )->get();
+
         return Response()->json($tampil);
     }
 
@@ -111,8 +113,10 @@ class BobotcplController extends Controller
                     'bobot_cpl' => $bobot,
                 ]
             );
+
             return Response()->json($bcpl);
         }
+
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
     }
 
@@ -146,8 +150,10 @@ class BobotcplController extends Controller
             $btp->semester = (string)$semester;
             $btp->bobot_cpl = $bobot;
             $save = $btp->save();
+
             return Response()->json($save);
         }
+
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
     }
 

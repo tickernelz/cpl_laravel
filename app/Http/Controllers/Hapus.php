@@ -66,8 +66,10 @@ class Hapus extends Controller
         $cek_bcpl = Bobotcpl::where('cpmk_id', $id)->count();
         if ($cek_btp === 0 || $cek_bcpl === 0) {
             Cpmk::find($id)->delete();
+
             return redirect()->route('cpmk');
         }
+
         return back()->with('error', 'Data yang ingin dihapus masih digunakan!');
     }
 }

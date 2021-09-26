@@ -63,15 +63,17 @@ class NilaiController extends Controller
 
         if (!is_null($cek)) {
             $cek->update([
-                'nilai' => $nilai
+                'nilai' => $nilai,
             ]);
+
             return back()->with('success', 'Data Berhasil Diperbarui!.');
         }
         Nilai::create([
             'mahasiswa_id' => $id_mhs,
             'btp_id' => $id_btp,
-            'nilai' => $nilai
+            'nilai' => $nilai,
         ]);
+
         return back()->with('success', 'Data Berhasil Ditambahkan!.');
     }
 }

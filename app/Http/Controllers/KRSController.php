@@ -29,8 +29,8 @@ class KRSController extends Controller
 
     public function carimhs(Request $request)
     {
-        $res = Mahasiswa::select("nim")
-            ->where("nim", "LIKE", "%{$request->term}%")
+        $res = Mahasiswa::select('nim')
+            ->where('nim', 'LIKE', "%{$request->term}%")
             ->get();
 
         return response()->json($res);
@@ -66,10 +66,11 @@ class KRSController extends Controller
                     'id_ta' => $id_ta,
                     'id_sem' => $id_sem,
                     'id_mhs' => $id_mhs,
-                    'nama_mhs' => $nama_mhs
+                    'nama_mhs' => $nama_mhs,
                 ]
             );
         }
+
         return redirect()->route('krs')->with('error', 'Data tidak ditemukan!.');
     }
 
@@ -88,6 +89,7 @@ class KRSController extends Controller
                 'semester' => $request->sem,
             ]
         );
+
         return Response()->json($krs);
     }
 

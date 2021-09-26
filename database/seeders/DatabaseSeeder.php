@@ -18,14 +18,14 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             DosenAdminSeeder::class,
             MahasiswaSeeder::class,
-            TahunAjaranSeeder::class,
-            MataKuliahSeeder::class,
-            KRSSeeder::class,
-            CplSeeder::class,
-            CpmkSeeder::class,
-            BtpSeeder::class,
-            BobotcplSeeder::class,
-            NilaiSeeder::class
+            TahunAjaransTableSeeder::class,
+            MataKuliahsTableSeeder::class,
+            KRSTableSeeder::class,
+            CplsTableSeeder::class,
+            CpmksTableSeeder::class,
+            BtpsTableSeeder::class,
+            BobotcplsTableSeeder::class,
+            NilaisTableSeeder::class,
         ]);
     }
 }

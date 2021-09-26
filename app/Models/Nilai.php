@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Nilai
+ * App\Models\Nilai.
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Nilai newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Nilai newQuery()

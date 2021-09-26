@@ -28,6 +28,7 @@ class BtpController extends Controller
     {
         $id_btp = $request->id;
         $databtp = Btp::whereId($id_btp)->get();
+
         return Response()->json($databtp);
     }
 
@@ -97,8 +98,10 @@ class BtpController extends Controller
                     'bobot' => $bobot,
                 ]
             );
+
             return Response()->json($btp);
         }
+
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
     }
 
@@ -133,8 +136,10 @@ class BtpController extends Controller
             $btp->kategori = (string)$kategori;
             $btp->bobot = $bobot;
             $save = $btp->save();
+
             return Response()->json($save);
         }
+
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100!');
     }
 
@@ -144,8 +149,10 @@ class BtpController extends Controller
         $cek = Bobotcpl::where('btp_id', $id)->count();
         if ($cek === 0) {
             $hapus = Btp::find($id)->delete();
+
             return Response()->json($hapus);
         }
+
         return response()->json(['error' => 'Data yang ingin dihapus masih digunakan!'], 409);
     }
 }
