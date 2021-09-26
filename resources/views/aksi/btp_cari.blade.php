@@ -79,7 +79,7 @@
                                                 <strong>Waduh!</strong> Total Bobot Masih {{$total_bobot}} nih, <strong>Tambah</strong> {{ 100-$total_bobot }}
                                                 Lagi.
                                             </div>
-                                        @elseif($total_bobot === 100)
+                                        @elseif($total_bobot >= 100.00 && $total_bobot <= 101.00)
                                             <div class="alert alert-success" role="alert">
                                                 <strong>Kerja Bagus!</strong> Total Bobot Sudah Mencapai 100.
                                             </div>

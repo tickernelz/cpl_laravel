@@ -15,16 +15,12 @@ class BtpController extends Controller
 {
     public function index()
     {
-        $ta = TahunAjaran::get();
-        $mk = MataKuliah::get();
-        $cpmk = Cpmk::get();
-        $da = DosenAdmin::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
 
         return view('btp', [
             'ta' => $ta,
             'mk' => $mk,
-            'cpmk' => $cpmk,
-            'da' => $da,
         ]);
     }
 
@@ -37,10 +33,10 @@ class BtpController extends Controller
 
     public function cari(Request $request)
     {
-        $ta = TahunAjaran::get();
-        $mk = MataKuliah::get();
-        $cpmk = Cpmk::get();
-        $da = DosenAdmin::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
+        $cpmk = Cpmk::orderBy('nama_cpmk', 'asc')->get();
+        $da = DosenAdmin::orderBy('nama', 'asc')->get();
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);

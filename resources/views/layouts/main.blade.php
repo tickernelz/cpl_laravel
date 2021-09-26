@@ -70,6 +70,7 @@
 <!-- Required datatable js -->
 <script src="{{asset('assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{asset('//cdn.datatables.net/plug-ins/1.11.3/sorting/natural.js')}}"></script>
 
 <!-- Peity chart-->
 <script src="{{asset('assets/libs/peity/jquery.peity.min.js')}}"></script>

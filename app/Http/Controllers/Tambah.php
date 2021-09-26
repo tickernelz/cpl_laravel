@@ -46,7 +46,7 @@ class Tambah extends Controller
 
     public function indexcpmk()
     {
-        $mk = MataKuliah::get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
 
         return view('aksi.cpmk_tambah', [
             'mk' => $mk,

@@ -50,7 +50,8 @@
                                         @endif
                                         <div class="mb-3">
                                             <label class="form-label">Mata Kuliah</label>
-                                            <select class="form-select" name="mata_kuliah" id="mata_kuliah">
+                                            <select class="form-select" name="mata_kuliah" id="mata_kuliah"
+                                                    onclick="checkAvailability3()">
                                                 @foreach($mk as $t)
                                                     <option
                                                         value="{{ $t->id }}" @if ($t->id === $cpmk->mata_kuliah_id)

@@ -13,7 +13,7 @@ class KRSController extends Controller
 {
     public function index()
     {
-        $ta = TahunAjaran::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
         $mk = MataKuliah::get();
 
         return view(
@@ -38,9 +38,9 @@ class KRSController extends Controller
 
     public function cari(Request $request)
     {
-        $ta = TahunAjaran::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
         $mhs = Mahasiswa::get();
-        $mk = MataKuliah::get();
+        $mk = TahunAjaran::orderBy('nama', 'asc')->get();
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $nim = $request->nim;

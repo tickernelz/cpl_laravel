@@ -75,12 +75,12 @@
                                                 data-bs-target="#tambahbobot">Tambah
                                             Bobot
                                         </button>
-                                        @if ($total_bobot < 100)
+                                        @if ($total_bobot < 99.8)
                                             <div class="alert alert-warning" role="alert">
                                                 <strong>Waduh!</strong> Total Bobot Masih {{$total_bobot}} nih, <strong>Tambah</strong> {{ 100-$total_bobot }}
                                                 Lagi.
                                             </div>
-                                        @elseif($total_bobot === 100)
+                                        @elseif($total_bobot >= 99.8 && $total_bobot <= 101.00)
                                             <div class="alert alert-success" role="alert">
                                                 <strong>Kerja Bagus!</strong> Total Bobot Sudah Mencapai 100.
                                             </div>
@@ -133,9 +133,8 @@
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Bobot</label>
-                                                            <input type="number" name="bobot"
-                                                                   id="bobot"
-                                                                   required>
+                                                            <input type="number" name="bobot" id="bobot"
+                                                                   class="form-control" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -201,7 +200,7 @@
                                                         <div class="mb-3">
                                                             <label class="form-label">Bobot</label>
                                                             <input type="number" name="bobot1" id="bobot1"
-                                                                   required>
+                                                                   class="form-control" required>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -271,7 +270,6 @@
             <!-- END layout-wrapper -->
             @endsection
             @section('js')
-                <script src="{{asset('assets/js/custom/form-advanced.js')}}"></script>
                 <script type="text/javascript">
                     function cekTeknik() {
                         $.ajax({

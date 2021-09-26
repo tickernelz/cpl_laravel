@@ -15,16 +15,12 @@ class BobotcplController extends Controller
 {
     public function index()
     {
-        $ta = TahunAjaran::get();
-        $mk = MataKuliah::get();
-        $cpmk = Cpmk::get();
-        $cpl = Cpl::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
 
         return view('bcpl', [
             'ta' => $ta,
             'mk' => $mk,
-            'cpmk' => $cpmk,
-            'cpl' => $cpl,
         ]);
     }
 
@@ -49,11 +45,11 @@ class BobotcplController extends Controller
 
     public function cari(Request $request)
     {
-        $ta = TahunAjaran::get();
-        $mk = MataKuliah::get();
-        $cpmk = Cpmk::get();
-        $cpl = Cpl::get();
-        $btp = Btp::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
+        $cpmk = Cpmk::orderBy('nama_cpmk', 'asc')->get();
+        $cpl = Cpl::orderBy('nama_cpl', 'asc')->get();
+        $btp = Btp::orderBy('nama', 'asc')->get();
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);

@@ -16,8 +16,8 @@ class NilaiController extends Controller
 {
     public function index()
     {
-        $ta = TahunAjaran::get();
-        $mk = MataKuliah::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
 
         return view('nilai', [
             'ta' => $ta,
@@ -27,8 +27,8 @@ class NilaiController extends Controller
 
     public function cari(Request $request)
     {
-        $ta = TahunAjaran::get();
-        $mk = MataKuliah::get();
+        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
         $id_user = Auth::user()->id; // returns an instance of the authenticated user...
         $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();
         $id_dosen = $dosenadmin->id;
