@@ -8,6 +8,7 @@
     <!-- Page JS Plugins CSS -->
     <link rel="stylesheet" href="{{ asset('js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('js/plugins/datatables-buttons-bs5/css/buttons.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('js/plugins/sweetalert2/sweetalert2.min.css') }}">
 @endsection
 
 @section('js_after')
@@ -24,9 +25,11 @@
     <script src="{{ asset('js/plugins/datatables-buttons-pdfmake/vfs_fonts.js') }}"></script>
     <script src="{{ asset('js/plugins/datatables-buttons/buttons.print.min.js') }}"></script>
     <script src="{{ asset('js/plugins/datatables-buttons/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <!-- Page JS Code -->
     <script src="{{ asset('js/pages/tables_datatables.js') }}"></script>
+    <script src="{{ asset('js/pages/delete_dialogs.js') }}"></script>
 @endsection
 
 @section('content')
@@ -63,43 +66,6 @@
         </div>
         <!-- END Info -->
 
-        <!-- Dynamic Table Full -->
-        <div class="block block-rounded">
-            <div class="block-header block-header-default">
-                <h3 class="block-title">Dynamic Table <small>Full</small></h3>
-            </div>
-            <div class="block-content block-content-full">
-                <!-- DataTables init on table by adding .js-dataTable-full class, functionality is initialized in js/pages/tables_datatables.js -->
-                <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
-                    <thead>
-                    <tr>
-                        <th class="text-center" style="width: 80px;">#</th>
-                        <th>Name</th>
-                        <th class="d-none d-sm-table-cell" style="width: 30%;">Email</th>
-                        <th style="width: 15%;">Registered</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for ($i = 1; $i < 21; $i++)
-                        <tr>
-                            <td class="text-center"><?php echo $i; ?></td>
-                            <td class="font-w600">
-                                <a href="javascript:void(0)">John Doe</a>
-                            </td>
-                            <td class="d-none d-sm-table-cell">
-                                client{{ $i }}<em class="text-muted">@example.com</em>
-                            </td>
-                            <td>
-                                <em class="text-muted">{{ rand(2, 10) }} days ago</em>
-                            </td>
-                        </tr>
-                    @endfor
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <!-- END Dynamic Table Full -->
-
         <!-- Dynamic Table with Export Buttons -->
         <div class="block block-rounded">
             <div class="block-header block-header-default">
@@ -111,26 +77,35 @@
                     <thead>
                     <tr>
                         <th class="text-center" style="width: 80px;">#</th>
-                        <th>Name</th>
-                        <th class="d-none d-sm-table-cell" style="width: 30%;">Email</th>
-                        <th style="width: 15%;">Registered</th>
+                        <th>NIP</th>
+                        <th>Username</th>
+                        <th>Nama</th>
+                        <th>Status</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @for ($i = 1; $i < 21; $i++)
+                    @foreach($admin as $adm)
                         <tr>
-                            <td class="text-center">{{ $i }}</td>
-                            <td class="font-w600">
-                                <a href="javascript:void(0)">John Smith</a>
-                            </td>
-                            <td class="d-none d-sm-table-cell">
-                                client{{ $i }}<em class="text-muted">@example.com</em>
-                            </td>
-                            <td>
-                                <em class="text-muted">{{ rand(2, 10) }} days ago</em>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $adm->nip }}</td>
+                            <td>{{ $adm->user->username }}</td>
+                            <td>{{ $adm->nama }}</td>
+                            <td>{{ $adm->user->status }}</td>
+                            <td class="text-center" style="width: 100px">
+                                <a href="{{ Request::url() }}/edit/{{ $adm->id }}"
+                                   class="btn btn-secondary btn-sm edit"
+                                   title="Edit">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <button type="button" class="btn btn-secondary btn-sm edit"
+                                        title="Delete"
+                                        onclick="deleteConfirm('{{ Request::url() }}/hapus/{{ $adm->user->id }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </td>
                         </tr>
-                    @endfor
+                    @endforeach
                     </tbody>
                 </table>
             </div>

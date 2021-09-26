@@ -7,6 +7,7 @@
 
 // Import required modules
 import Template from './modules/template';
+import Swal from 'sweetalert2';
 
 // App extends Template
 export default class App extends Template {
@@ -56,10 +57,25 @@ export default class App extends Template {
    *
    */
 
-  //  _uiInit() {
-  //      // Your own JS code without ever calling the original function's code
-  //  }
+    //  _uiInit() {
+    //      // Your own JS code without ever calling the original function's code
+    //  }
 }
 
 // Create a new instance of App
 window.Dashmix = new App();
+
+window.deleteConfirm = function (href) {
+    Swal.fire({
+        icon: 'warning',
+        text: 'Apakah Anda Yakin Ingin Menghapus Data?',
+        showCancelButton: true,
+        cancelButtonText: 'Tidak',
+        confirmButtonText: 'Hapus',
+        confirmButtonColor: '#e3342f',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = href
+        }
+    });
+}
