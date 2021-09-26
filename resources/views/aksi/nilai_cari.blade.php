@@ -95,8 +95,7 @@
                                     <div class="table-rep-plugin">
                                         <div class="table-responsive mb-0" data-bs-pattern="priority-columns">
                                             <table id="datatableNilai"
-                                                   class="table table-sm table-hover table-bordered"
-                                                   style="width: 100%">
+                                                   class="table table-sm table-hover table-bordered">
                                                 <thead>
                                                 <tr>
                                                     <th>Nomor</th>
@@ -120,9 +119,9 @@
                                                         <td>{{ $li->mahasiswa->nama }}</td>
                                                         @foreach($teknik as $t)
                                                             @if(empty($t->id))
-                                                                <td></td>
+                                                                <td class="teknik"></td>
                                                             @else
-                                                                <td>
+                                                                <td class="teknik">
                                                                     <form method="POST"
                                                                           action="{{URL::to('nilai-post')}}">
                                                                         @csrf

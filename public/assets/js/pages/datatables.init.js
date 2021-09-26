@@ -15,13 +15,13 @@ $(document).ready(function () {
         ]
     });
     $('#datatableNilai').DataTable({
-        scrollY: "300px",
         scrollX: true,
         scrollCollapse: true,
         columnDefs: [
             {type: 'natural', targets: '_all'},
-            {width: 100, targets: ['_all']}
-        ],
-        fixedColumns: true
+            {width: 100, targets: "teknik"},
+            {width: 50, targets: 0},
+            {width: 80, targets: [1, 2]},
+        ]
     });
 });

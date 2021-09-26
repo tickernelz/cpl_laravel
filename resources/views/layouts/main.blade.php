@@ -71,6 +71,7 @@
 <script src="{{asset('assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('//cdn.datatables.net/plug-ins/1.11.3/sorting/natural.js')}}"></script>
+<script src="{{asset('//cdn.datatables.net/fixedcolumns/4.0.0/js/dataTables.fixedColumns.min.js')}}"></script>
 
 <!-- Peity chart-->
 <script src="{{asset('assets/libs/peity/jquery.peity.min.js')}}"></script>
