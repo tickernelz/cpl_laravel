@@ -4,17 +4,6 @@
 Login
 @endsection
 
-@section('js_after')
-<!-- jQuery (required for jQuery Validation plugin) -->
-<script src="{{ asset('js/lib/jquery.min.js') }}"></script>
-
-<!-- Page JS Plugins -->
-<script src="{{ asset('js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-
-<!-- Page JS Code -->
-<script src="{{ asset('js/pages/op_auth_signin.min.js') }}"></script>
-@endsection
-
 @section('content')
 <div class="bg-image" style="background-image: url({{ asset('media/photos/photo22@2x.jpg') }});">
     <div class="row g-0 bg-primary-op">
@@ -31,8 +20,6 @@ Login
                 <!-- END Header -->
 
                 <!-- Sign In Form -->
-                <!-- jQuery Validation (.js-validation-signin class is initialized in js/pages/op_auth_signin.min.js which was auto compiled from _js/pages/op_auth_signin.js) -->
-                <!-- For more info and examples you can check out https://github.com/jzaefferer/jquery-validation -->
                 <div class="row g-0 justify-content-center">
                     <div class="col-sm-8 col-xl-6">
                         <form action="{{ route('login') }}" method="post">
@@ -88,13 +75,14 @@ Login
         <!-- END Main Section -->
 
         <!-- Meta Info Section -->
-        <div class="hero-static col-md-6 d-none d-md-flex align-items-md-center justify-content-md-center text-md-center">
+        <div
+            class="hero-static col-md-6 d-none d-md-flex align-items-md-center justify-content-md-center text-md-center">
             <div class="p-3">
                 <p class="display-4 fw-bold text-white mb-3">
                     Sistem Informasi CPL
                 </p>
                 <p class="fs-lg fw-semibold text-white-75 mb-0">
-                    Copyright &copy; <span data-toggle="year-copy"></span>
+                    Copyright &copy; <span data-toggle="year-copy"></span> TI UPR
                 </p>
             </div>
         </div>

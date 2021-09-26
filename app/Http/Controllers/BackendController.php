@@ -17,9 +17,7 @@ class BackendController extends Controller
         $user = Auth::user(); // returns an instance of the authenticated user...
         $id = $user->id;
         $dosenadmin = DosenAdmin::with('user')->where('id', $id)->first();
-        $nama = $dosenadmin->nama;
-
-        return $nama;
+        return $dosenadmin->nama;
     }
 
 }

@@ -162,7 +162,7 @@
             <div class="content-side content-side-full">
                 <ul class="nav-main">
                     <li class="nav-main-item">
-                        <a class="nav-main-link{{ request()->is('home') ? ' active' : '' }}" href="/home">
+                        <a class="nav-main-link{{ request()->is('home','home/*') ? ' active' : '' }}" href="/home">
                             <i class="nav-main-link-icon fa fa-location-arrow"></i>
                             <span class="nav-main-link-name">Dashboard</span>
                         </a>
@@ -177,13 +177,13 @@
                         </a>
                         <ul class="nav-main-submenu">
                             <li class="nav-main-item">
-                                <a class="nav-main-link{{ request()->is('admin') ? ' active' : '' }}"
+                                <a class="nav-main-link{{ request()->is('admin', 'admin/*') ? ' active' : '' }}"
                                    href="{{URL::to('admin')}}">
                                     <span class="nav-main-link-name">Admin</span>
                                 </a>
                             </li>
                             <li class="nav-main-item">
-                                <a class="nav-main-link{{ request()->is('dosen') ? ' active' : '' }}"
+                                <a class="nav-main-link{{ request()->is('dosen', 'dosen/*') ? ' active' : '' }}"
                                    href="{{URL::to('dosen')}}">
                                     <span class="nav-main-link-name">Dosen</span>
                                 </a>
@@ -192,31 +192,36 @@
                     </li>
                     <li class="nav-main-heading">Kelola</li>
                     <li class="nav-main-item">
-                        <a class="nav-main-link{{ request()->is('mhs') ? ' active' : '' }}" href="{{URL::to('mhs')}}">
+                        <a class="nav-main-link{{ request()->is('mhs','mhs/*') ? ' active' : '' }}"
+                           href="{{URL::to('mhs')}}">
                             <i class="nav-main-link-icon fa fa-user-graduate"></i>
                             <span class="nav-main-link-name">Mahasiswa</span>
                         </a>
                     </li>
                     <li class="nav-main-item">
-                        <a class="nav-main-link{{ request()->is('ta') ? ' active' : '' }}" href="{{URL::to('ta')}}">
+                        <a class="nav-main-link{{ request()->is('ta','ta/*') ? ' active' : '' }}"
+                           href="{{URL::to('ta')}}">
                             <i class="nav-main-link-icon fa fa-calendar"></i>
                             <span class="nav-main-link-name">Tahun Ajaran</span>
                         </a>
                     </li>
                     <li class="nav-main-item">
-                        <a class="nav-main-link{{ request()->is('mk') ? ' active' : '' }}" href="{{URL::to('mk')}}">
+                        <a class="nav-main-link{{ request()->is('mk','mk/*') ? ' active' : '' }}"
+                           href="{{URL::to('mk')}}">
                             <i class="nav-main-link-icon fa fa-book-open"></i>
                             <span class="nav-main-link-name">Mata Kuliah</span>
                         </a>
                     </li>
                     <li class="nav-main-item">
-                        <a class="nav-main-link{{ request()->is('krs') ? ' active' : '' }}" href="{{URL::to('krs')}}">
+                        <a class="nav-main-link{{ request()->is('krs','krs/*') ? ' active' : '' }}"
+                           href="{{URL::to('krs')}}">
                             <i class="nav-main-link-icon fa fa-sticky-note"></i>
                             <span class="nav-main-link-name">KRS</span>
                         </a>
                     </li>
                     <li class="nav-main-item">
-                        <a class="nav-main-link{{ request()->is('cpl') ? ' active' : '' }}" href="{{URL::to('cpl')}}">
+                        <a class="nav-main-link{{ request()->is('cpl','cpl/*') ? ' active' : '' }}"
+                           href="{{URL::to('cpl')}}">
                             <i class="nav-main-link-icon fa fa-book"></i>
                             <span class="nav-main-link-name">CPL</span>
                         </a>
@@ -226,7 +231,7 @@
                         @endrole
                         @hasanyrole('dosen_koordinator|admin')
                         <li class="nav-main-item">
-                            <a class="nav-main-link{{ request()->is('cpmk') ? ' active' : '' }}"
+                            <a class="nav-main-link{{ request()->is('cpmk','cpmk/*') ? ' active' : '' }}"
                                href="{{URL::to('cpmk')}}">
                                 <i class="nav-main-link-icon si si-notebook"></i>
                                 <span class="nav-main-link-name">CPMK</span>
@@ -240,13 +245,13 @@
                             </a>
                             <ul class="nav-main-submenu">
                                 <li class="nav-main-item">
-                                    <a class="nav-main-link{{ request()->is('btp') ? ' active' : '' }}"
+                                    <a class="nav-main-link{{ request()->is('btp','btp/*') ? ' active' : '' }}"
                                        href="{{URL::to('btp')}}">
                                         <span class="nav-main-link-name">Teknik Penilaian</span>
                                     </a>
                                 </li>
                                 <li class="nav-main-item">
-                                    <a class="nav-main-link{{ request()->is('bcpl') ? ' active' : '' }}"
+                                    <a class="nav-main-link{{ request()->is('bcpl','bcpl/*') ? ' active' : '' }}"
                                        href="{{URL::to('bcpl')}}">
                                         <span class="nav-main-link-name">CPL</span>
                                     </a>
@@ -254,7 +259,7 @@
                             </ul>
                         </li>
                         <li class="nav-main-item">
-                            <a class="nav-main-link{{ request()->is('nilai') ? ' active' : '' }}"
+                            <a class="nav-main-link{{ request()->is('nilai','nilai/*') ? ' active' : '' }}"
                                href="{{URL::to('nilai')}}">
                                 <i class="nav-main-link-icon si si-pencil"></i>
                                 <span class="nav-main-link-name">Nilai</span>
