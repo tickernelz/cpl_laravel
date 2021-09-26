@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\MataKuliah;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateCpmksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,11 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('username');
-            $table->string('password');
-            $table->string('status');
-            $table->rememberToken();
+        Schema::create('cpmks', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(MataKuliah::class);
+            $table->string('kode_cpmk');
+            $table->string('nama_cpmk');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('cpmks');
     }
 }
