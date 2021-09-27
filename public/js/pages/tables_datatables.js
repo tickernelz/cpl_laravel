@@ -94,6 +94,9 @@
                             type: 'natural',
                             targets: '_all'
                         }],
+                        language: {
+                            infoEmpty: "Data Kosong Bosss..."
+                        },
                         buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                         dom: "<'row'<'col-sm-12'<'text-center py-2 mb-2'B>>>" + "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
                     });

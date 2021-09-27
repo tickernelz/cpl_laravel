@@ -5,12 +5,29 @@
 @endsection
 
 @section('css_before')
+    <!-- Page JS Plugins CSS -->
+    <link rel="stylesheet" href="{{ asset('js/plugins/datatables-bs5/css/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('js/plugins/datatables-buttons-bs5/css/buttons.bootstrap5.min.css') }}">
     <link rel="stylesheet" href="{{ asset('js/plugins/select2/css/select2.min.css') }}">
 @endsection
 
 @section('js_after')
     <script src="{{ asset('js/lib/jquery.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
+    <!-- Page JS Plugins -->
+    <script src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-buttons/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-buttons-bs5/js/buttons.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-buttons-jszip/jszip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-buttons-pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-buttons-pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-buttons/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datatables-buttons/buttons.html5.min.js') }}"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.11.3/sorting/natural.js"></script>
+
+    <!-- Page JS Code -->
+    <script src="{{ asset('js/pages/tables_datatables.js') }}"></script>
     <script>Dashmix.helpersOnLoad(['jq-select2']);</script>
     <script type="text/javascript">
         function tambahFunc(id) {
@@ -233,14 +250,13 @@
         <div class="block block-rounded">
             <div class="block-header block-header-default">
                 <h3 class="block-title">KRS <small>List</small></h3>
+                <div class="block-options">
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#tambahkrs">Tambah
+                    </button>
+                </div>
             </div>
             <div class="block-content block-content-full">
-                <button type="button"
-                        class="btn btn-primary btn-md mb-4"
-                        data-bs-toggle="modal"
-                        data-bs-target="#tambahkrs">Tambah
-                    KRS
-                </button>
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
