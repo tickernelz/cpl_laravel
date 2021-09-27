@@ -5404,6 +5404,7 @@ reference element's position.
                             var el = jQuery(element); // Add .js-select2-enabled class to tag it as activated and init it
 
                             el.addClass('js-select2-enabled').select2({
+                                language: "id",
                                 placeholder: el.data('placeholder') || false,
                                 dropdownParent: el.data('container') || document.getElementById('page-container')
                             });

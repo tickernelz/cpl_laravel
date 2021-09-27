@@ -50,7 +50,7 @@
     <!-- Page Content -->
     <div class="content">
         <!-- Info -->
-        <div class="col-4 block block-rounded block-fx-shadow">
+        <div class="col-lg-4 block block-rounded block-fx-shadow">
             <div class="block-header block-header-default">
                 <h3 class="block-title">Alat</h3>
             </div>

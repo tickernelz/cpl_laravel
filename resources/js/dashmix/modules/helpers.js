@@ -233,7 +233,7 @@ export default class Helpers {
         }
         else { // ..else add it
           let elChild = document.createElement('span')
-          
+
           elChild.classList.add(cssClass)
           el.insertBefore(elChild, el.firstChild);
         }
@@ -390,14 +390,14 @@ export default class Helpers {
             && !e.target.parentNode.classList.contains('custom-control')) {
             let checkboxHead = table.querySelector('thead input[type=checkbox]');
             let checkbox = e.currentTarget.querySelector('input[type=checkbox]');
-            
-            // Update row's checkbox status
+
+              // Update row's checkbox status
             checkbox.checked = !checkbox.checked;
 
             // Update Row classes
             this.tableToolscheckRow(checkbox, checkbox.checked);
-  
-            // Adjust checkbox in thead
+
+              // Adjust checkbox in thead
             if (!checkbox.checked) {
               checkboxHead.checked = false
             } else {
@@ -761,8 +761,9 @@ export default class Helpers {
 
       // Add .js-select2-enabled class to tag it as activated and init it
       el.addClass('js-select2-enabled').select2({
-        placeholder: el.data('placeholder') || false,
-        dropdownParent: el.data('container') || document.getElementById('page-container'),
+          language: "id",
+          placeholder: el.data('placeholder') || false,
+          dropdownParent: el.data('container') || document.getElementById('page-container'),
       });
     });
   }

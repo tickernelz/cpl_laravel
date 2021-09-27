@@ -76,7 +76,7 @@
                             </div>
                         @endif
                         <div class="row justify-content-center py-sm-3 py-md-5">
-                            <div class="col-sm-10 col-md-8">
+                            <div class="col-lg-10 col-lg-8">
                                 <div class="mb-4">
                                     <label class="form-label" for="nip">NIP</label>
                                     <input type="text" class="form-control" id="nip"
