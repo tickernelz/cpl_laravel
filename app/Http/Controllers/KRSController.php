@@ -34,16 +34,28 @@ class KRSController extends Controller
 
     public function cari(Request $request)
     {
+        // Nilai tetap
+        $judul = 'Kelola KRS';
+        $parent = 'KRS';
+        $subparent = 'Cari';
+        $judulform = 'Cari Data KRS';
+
+        // Ambil Data
         $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
-        $mhs = Mahasiswa::get();
-        $mk = TahunAjaran::orderBy('nama', 'asc')->get();
+        $mhs = Mahasiswa::orderBy('nama', 'asc')->get();
+        $mk = MataKuliah::orderBy('nama', 'asc')->get();
+
+        // Get Request
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
-        $nim = $request->nim;
-        $id_mhs = Mahasiswa::where('nim', $nim)->value('id');
-        $nama_mhs = Mahasiswa::where('nim', $nim)->value('nama');
-        $ada_mhs = Mahasiswa::where('nim', $nim)->get();
-        $tampil = KRS::with('mahasiswa', 'tahun_ajaran', 'mata_kuliah')->whereRaw("tahun_ajaran_id = '$id_ta' AND mahasiswa_id = '$id_mhs' AND semester = '$id_sem'")->get();
+        $id_mhs = Crypt::decrypt($request->nim);
+        $nama_mhs = Mahasiswa::where('id', $id_mhs)->value('nama');
+        $ada_mhs = Mahasiswa::where('id', $id_mhs)->get();
+        $tampil = KRS::with(
+            'mahasiswa', 'tahun_ajaran', 'mata_kuliah'
+        )->whereRaw(
+            "tahun_ajaran_id = '$id_ta' AND mahasiswa_id = '$id_mhs' AND semester = '$id_sem'"
+        )->get();
         $arraymk = $tampil->pluck('mata_kuliah_id')->toArray();
         if (isset($tampil)) {
             $tampilselain = MataKuliah::whereNotIn('id', $arraymk)->get();
@@ -52,7 +64,7 @@ class KRSController extends Controller
         }
         if (count($ada_mhs) > 0) {
             return view(
-                'aksi.krs_cari',
+                'krs.cari',
                 [
                     'data' => $tampil,
                     'dataselain' => $tampilselain,
@@ -63,10 +75,13 @@ class KRSController extends Controller
                     'id_sem' => $id_sem,
                     'id_mhs' => $id_mhs,
                     'nama_mhs' => $nama_mhs,
+                    'judul' => $judul,
+                    'judulform' => $judulform,
+                    'parent' => $parent,
+                    'subparent' => $subparent,
                 ]
             );
         }
-
         return redirect()->route('krs')->with('error', 'Data tidak ditemukan!.');
     }
 
@@ -74,11 +89,10 @@ class KRSController extends Controller
     {
         $mkId = $request->id_mk;
         $nim = $request->id_mhs;
-        $id_mhs = Mahasiswa::where('nim', $nim)->value('id');
         $krs = KRS::Create(
             [
                 'mata_kuliah_id' => $mkId,
-                'mahasiswa_id' => $id_mhs,
+                'mahasiswa_id' => $nim,
                 'tahun_ajaran_id' => $request->id_ta,
                 'semester' => $request->sem,
             ]

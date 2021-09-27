@@ -35,7 +35,7 @@
     <div class="content">
         <div class="row">
             <div class="col-md-6 " style="float:none;margin:auto;">
-                <form method="POST" action="{{URL::to('krs/cari')}}">
+                <form method="GET" action="{{URL::to('krs/cari')}}">
                     <div class="block block-rounded">
                         <div class="block-header block-header-default">
                             <h3 class="block-title">{{ $judulform }}</h3>
@@ -43,7 +43,6 @@
                                 <button type="submit" class="btn btn-sm btn-outline-primary">
                                     <i class="fa fa-fw fa-search"></i> Cari
                                 </button>
-                                <button type="reset" class="btn btn-sm btn-outline-danger">Reset</button>
                             </div>
                         </div>
                         <div class="block-content">
