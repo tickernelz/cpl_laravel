@@ -64,11 +64,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('mhs/edit/{id}/post', [MahasiswaController::class, 'edit']);
         // Tahun Ajaran
         Route::get('ta', [TahunAjaranController::class, 'index'])->name('ta');
-        Route::get('ta/tambah/', [Tambah::class, 'indexta'])->name('tambahta');
-        Route::post('ta/tambah/post', [Tambah::class, 'ta']);
-        Route::get('ta/hapus/{id}', [Hapus::class, 'ta']);
-        Route::get('ta/edit/{id}', [Edit::class, 'indexta']);
-        Route::post('ta/edit/{id}/post', [Edit::class, 'ta']);
+        Route::get('ta/tambah/', [TahunAjaranController::class, 'tambahindex'])->name('tambahta');
+        Route::post('ta/tambah/post', [TahunAjaranController::class, 'tambah'])->name('form-tambah-ta');
+        Route::get('ta/hapus/{id}', [TahunAjaranController::class, 'hapus']);
+        Route::get('ta/edit/{id}', [TahunAjaranController::class, 'editindex']);
+        Route::post('ta/edit/{id}/post', [TahunAjaranController::class, 'edit']);
         // Mata Kuliah
         Route::get('mk', [MataKuliahController::class, 'index'])->name('mk');
         Route::get('mk/tambah/', [Tambah::class, 'indexmk'])->name('tambahmk');
