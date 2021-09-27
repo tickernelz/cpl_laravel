@@ -49,21 +49,14 @@
 
     <!-- Page Content -->
     <div class="content">
-        <!-- Info -->
-        <div class="col-lg-4 block block-rounded block-fx-shadow">
-            <div class="block-header block-header-default">
-                <h3 class="block-title">Alat</h3>
-            </div>
-            <div class="block-content">
-                <a href="{{ route('tambahmhs') }}" class="btn btn-hero btn-primary mb-4">Tambah</a>
-            </div>
-        </div>
-        <!-- END Info -->
 
         <!-- Dynamic Table with Export Buttons -->
         <div class="block block-rounded block-fx-shadow">
             <div class="block-header block-header-default">
                 <h3 class="block-title">Mahasiswa <small>List</small></h3>
+                <div class="block-options">
+                    <a href="{{ route('tambahmhs') }}" class="btn btn-sm btn-primary">Tambah</a>
+                </div>
             </div>
             <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
