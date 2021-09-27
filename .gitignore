@@ -14,3 +14,5 @@ yarn-error.log
 /.idea
 /.vscode
 !/code-generator/
+!/.env
+/cpl_dashmix.zip
