@@ -57,11 +57,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('dosen/edit/{id}/post', [DosenController::class, 'edit']);
         // Mahasiswa
         Route::get('mhs', [MahasiswaController::class, 'index'])->name('mhs');
-        Route::get('mhs/tambah/', [Tambah::class, 'indexmhs'])->name('tambahmhs');
-        Route::post('mhs/tambah/post', [Tambah::class, 'mhs']);
-        Route::get('mhs/hapus/{id}', [Hapus::class, 'mhs']);
-        Route::get('mhs/edit/{id}', [Edit::class, 'indexmhs']);
-        Route::post('mhs/edit/{id}/post', [Edit::class, 'mhs']);
+        Route::get('mhs/tambah/', [MahasiswaController::class, 'tambahindex'])->name('tambahmhs');
+        Route::post('mhs/tambah/post', [MahasiswaController::class, 'tambah'])->name('form-tambah-mahasiswa');
+        Route::get('mhs/hapus/{id}', [MahasiswaController::class, 'hapus']);
+        Route::get('mhs/edit/{id}', [MahasiswaController::class, 'editindex']);
+        Route::post('mhs/edit/{id}/post', [MahasiswaController::class, 'edit']);
         // Tahun Ajaran
         Route::get('ta', [TahunAjaranController::class, 'index'])->name('ta');
         Route::get('ta/tambah/', [Tambah::class, 'indexta'])->name('tambahta');

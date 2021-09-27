@@ -55,7 +55,7 @@
                 <h3 class="block-title">Alat</h3>
             </div>
             <div class="block-content">
-                <a href="{{ route('tambahdosen') }}" class="btn btn-hero btn-primary mb-4">Tambah</a>
+                <a href="{{ route('tambahmhs') }}" class="btn btn-hero btn-primary mb-4">Tambah</a>
             </div>
         </div>
         <!-- END Info -->
@@ -63,7 +63,7 @@
         <!-- Dynamic Table with Export Buttons -->
         <div class="block block-rounded block-fx-shadow">
             <div class="block-header block-header-default">
-                <h3 class="block-title">Dosen <small>List</small></h3>
+                <h3 class="block-title">Mahasiswa <small>List</small></h3>
             </div>
             <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
@@ -72,21 +72,19 @@
                         <thead>
                         <tr>
                             <th class="text-center" style="width: 80px;">#</th>
-                            <th>NIP</th>
-                            <th>Username</th>
+                            <th>NIM</th>
                             <th>Nama</th>
-                            <th>Status</th>
+                            <th>Angkatan</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($dosen as $adm)
+                        @foreach($mahasiswa as $adm)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $adm->nip }}</td>
-                                <td>{{ $adm->user->username }}</td>
+                                <td>{{ $adm->nim }}</td>
                                 <td>{{ $adm->nama }}</td>
-                                <td>{{ $adm->user->status }}</td>
+                                <td>{{ $adm->angkatan }}</td>
                                 <td class="text-center" style="width: 100px">
                                     <div class="btn-group">
                                         <a type="button" href="{{ Request::url() }}/edit/{{ $adm->id }}"
@@ -96,7 +94,7 @@
                                         </a>
                                         <button type="button" class="btn btn-secondary btn-sm edit"
                                                 title="Delete"
-                                                onclick="deleteConfirm('{{ Request::url() }}/hapus/{{ $adm->user->id }}')">
+                                                onclick="deleteConfirm('{{ Request::url() }}/hapus/{{ $adm->id }}')">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
