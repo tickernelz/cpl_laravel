@@ -71,11 +71,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('ta/edit/{id}/post', [TahunAjaranController::class, 'edit']);
         // Mata Kuliah
         Route::get('mk', [MataKuliahController::class, 'index'])->name('mk');
-        Route::get('mk/tambah/', [Tambah::class, 'indexmk'])->name('tambahmk');
-        Route::post('mk/tambah/post', [Tambah::class, 'mk']);
-        Route::get('mk/hapus/{id}', [Hapus::class, 'mk']);
-        Route::get('mk/edit/{id}', [Edit::class, 'indexmk']);
-        Route::post('mk/edit/{id}/post', [Edit::class, 'mk']);
+        Route::get('mk/tambah/', [MataKuliahController::class, 'tambahindex'])->name('tambahmk');
+        Route::post('mk/tambah/post', [MataKuliahController::class, 'tambah'])->name('form-tambah-mk');
+        Route::get('mk/hapus/{id}', [MataKuliahController::class, 'hapus']);
+        Route::get('mk/edit/{id}', [MataKuliahController::class, 'editindex']);
+        Route::post('mk/edit/{id}/post', [MataKuliahController::class, 'edit']);
         // Mata Kuliah
         Route::get('krs', [KRSController::class, 'index'])->name('krs');
         Route::get('carimhs', [KRSController::class, 'carimhs'])->name('carimhs');
