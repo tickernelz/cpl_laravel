@@ -4,6 +4,16 @@
     {{ $judul }}
 @endsection
 
+@section('css_before')
+    <link rel="stylesheet" href="{{ asset('js/plugins/select2/css/select2.min.css') }}">
+@endsection
+
+@section('js_after')
+    <script src="{{ asset('js/lib/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/js/select2.full.min.js') }}"></script>
+    <script>Dashmix.helpersOnLoad(['jq-select2']);</script>
+@endsection
+
 @section('content')
     <!-- Hero -->
     <div class="bg-body-light">
@@ -25,17 +35,17 @@
     <div class="content">
         <!-- Your Block -->
         <div class="col-md-6 " style="float:none;margin:auto;">
-            <form method="POST" action="{{ route('form-tambah-admin') }}">
+            <form method="POST" action="{{url()->current()}}/post">
                 <div class="block block-rounded">
                     <div class="block-header block-header-default">
-                        <h3 class="block-title">{{ $judulform }}</h3>
+                        <h3 class="block-title">Form Edit Dosen</h3>
                         <div class="block-options">
                             <button type="submit" class="btn btn-sm btn-outline-primary">
                                 <i class="fa fa-check"></i> Simpan
                             </button>
                             <button type="reset" class="btn btn-sm btn-outline-danger">Reset</button>
                             <button type="button" class="btn btn-sm btn-secondary"
-                                    onclick="window.location.href='{{ redirect()->getUrlGenerator()->route('admin') }}'">
+                                    onclick="window.location.href='{{ redirect()->getUrlGenerator()->route('dosen') }}'">
                                 Kembali
                             </button>
                         </div>
@@ -69,27 +79,42 @@
                             <div class="col-sm-10 col-md-8">
                                 <div class="mb-4">
                                     <label class="form-label" for="nip">NIP</label>
-                                    <input type="text" class="form-control form-control-alt" id="nip"
-                                           value="{{ old('nip') }}" name="nip"
+                                    <input type="text" class="form-control" id="nip"
+                                           value="{{ $dosen->nip }}" name="nip"
                                            placeholder="Masukkan NIP..." required>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label" for="nama">Nama Lengkap</label>
-                                    <input type="text" class="form-control form-control-alt" id="nama"
-                                           value="{{ old('nama') }}" name="nama"
+                                    <input type="text" class="form-control" id="nama"
+                                           value="{{ $dosen->nama }}" name="nama"
                                            placeholder="Masukkan Nama Lengkap..." required>
                                 </div>
                                 <div class="mb-4">
+                                    <label class="form-label" for="status">Status Dosen</label>
+                                    <select class="js-select2 form-select" name="status" id="status">
+                                        <option
+                                            value="Dosen Koordinator" @if ($dosen->user->status === "Dosen Koordinator")
+                                        selected="selected"
+                                            @endif>Dosen Koordinator
+                                        </option>
+                                        <option
+                                            value="Dosen Pengampu" @if ($dosen->user->status === "Dosen Pengampu")
+                                        selected="selected"
+                                            @endif>Dosen Pengampu
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
                                     <label class="form-label" for="username">Username</label>
-                                    <input type="text" class="form-control form-control-alt" id="username"
-                                           value="{{ old('username') }}"
+                                    <input type="text" class="form-control" id="username"
+                                           value="{{ $dosen->user->username }}"
                                            name="username"
                                            placeholder="Masukkan Username..." required>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label" for="password">Password</label>
-                                    <input type="password" class="form-control form-control-alt" id="password"
-                                           value="{{ old('password') }}"
+                                    <input type="password" class="form-control" id="password"
+                                           value="{{ $dosen->user->password }}"
                                            name="password"
                                            placeholder="Masukkan Password..." required>
                                 </div>

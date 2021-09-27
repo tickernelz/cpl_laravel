@@ -50,11 +50,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('admin/edit/{id}/post', [AdminController::class, 'edit']);
         // Dosen
         Route::get('dosen', [DosenController::class, 'index'])->name('dosen');
-        Route::get('dosen/tambah/', [Tambah::class, 'indexdosen'])->name('tambahdosen');
-        Route::post('dosen/tambah/post', [Tambah::class, 'dosen']);
-        Route::get('dosen/hapus/{id}', [Hapus::class, 'dosen']);
-        Route::get('dosen/edit/{id}', [Edit::class, 'indexdosen']);
-        Route::post('dosen/edit/{id}/post', [Edit::class, 'dosen']);
+        Route::get('dosen/tambah/', [DosenController::class, 'tambahindex'])->name('tambahdosen');
+        Route::post('dosen/tambah/post', [DosenController::class, 'tambah'])->name('form-tambah-dosen');
+        Route::get('dosen/hapus/{id}', [DosenController::class, 'hapus']);
+        Route::get('dosen/edit/{id}', [DosenController::class, 'editindex']);
+        Route::post('dosen/edit/{id}/post', [DosenController::class, 'edit']);
         // Mahasiswa
         Route::get('mhs', [MahasiswaController::class, 'index'])->name('mhs');
         Route::get('mhs/tambah/', [Tambah::class, 'indexmhs'])->name('tambahmhs');

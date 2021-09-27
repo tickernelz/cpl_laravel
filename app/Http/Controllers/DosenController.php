@@ -7,20 +7,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Validator;
 
-class AdminController extends Controller
+class DosenController extends Controller
 {
     public function index()
     {
         // Nilai tetap
-        $judul = 'Kelola Admin';
-        $parent = 'Admin';
+        $judul = 'Kelola Dosen';
+        $parent = 'Dosen';
 
         $tampil = DosenAdmin::whereHas('user', function ($query) {
-            return $query->whereRaw("status IN ('Admin')");
+            return $query->whereRaw("status IN ('Dosen Koordinator','Dosen Pengampu')");
         })->get();
 
-        return view('admin.index', [
-            'admin' => $tampil,
+        return view('dosen.index', [
+            'dosen' => $tampil,
             'judul' => $judul,
             'parent' => $parent,
         ]);
@@ -29,12 +29,12 @@ class AdminController extends Controller
     public function tambahindex()
     {
         // Nilai tetap
-        $judul = 'Tambah Admin';
+        $judul = 'Tambah Dosen';
         $judulform = 'Form Tambah Dosen';
-        $parent = 'Admin';
+        $parent = 'Dosen';
         $subparent = 'Tambah';
 
-        return view('admin.tambah', [
+        return view('dosen.tambah', [
             'judul' => $judul,
             'judulform' => $judulform,
             'parent' => $parent,
@@ -45,17 +45,17 @@ class AdminController extends Controller
     public function editindex(int $id)
     {
         // Nilai tetap
-        $judul = 'Edit Admin';
-        $parent = 'Admin';
+        $judul = 'Edit Dosen';
+        $parent = 'Dosen';
         $subparent = 'Edit';
 
         $user = DosenAdmin::with('user')->find($id);
 
-        return view('admin.edit', [
+        return view('dosen.edit', [
             'judul' => $judul,
             'parent' => $parent,
             'subparent' => $subparent,
-            'admin' => $user
+            'dosen' => $user
         ]);
     }
 
@@ -89,10 +89,15 @@ class AdminController extends Controller
 
         $user = new User;
         $user->username = $request->input('username');
-        $user->status = 'Admin';
+        $user->status = $request->input('status');
         $user->password = bcrypt($request->input('password'));
         $user->save();
-        $user->assignRole('admin');
+        $status = $request->input('status');
+        if ($status === 'Dosen Koordinator') {
+            $user->assignRole('dosen_koordinator');
+        } elseif ($status === 'Dosen Pengampu') {
+            $user->assignRole('dosen_pengampu');
+        }
 
         $dosenadmin = new DosenAdmin;
         $dosenadmin->nip = $request->input('nip');
@@ -133,9 +138,21 @@ class AdminController extends Controller
         $dosenadmin->nip = $request->input('nip');
         $dosenadmin->nama = $request->input('nama');
         $dosenadmin->user->username = $request->input('username');
-        $dosenadmin->user->password = bcrypt($request->input('password'));
+        $cekpassword = $dosenadmin->user->password;
+        if ($cekpassword !== $request->input('password')) {
+            $dosenadmin->user->password = bcrypt($request->input('password'));
+        } else {
+            //do nothing
+        }
+        $dosenadmin->user->status = $request->input('status');
         $dosenadmin->user->save();
         $dosenadmin->save();
+        $status = $request->input('status');
+        if ($status === 'Dosen Koordinator') {
+            User::find($id)->assignRole('dosen_koordinator');
+        } elseif ($status === 'Dosen Pengampu') {
+            User::find($id)->assignRole('dosen_pengampu');
+        }
 
         return back()->with('success', 'Data Berhasil Diubah!.');
     }
@@ -145,6 +162,6 @@ class AdminController extends Controller
         DosenAdmin::where('user_id', $id)->delete();
         User::find($id)->delete();
 
-        return redirect()->route('admin');
+        return redirect()->route('dosen');
     }
 }
