@@ -13,8 +13,7 @@ class AdminController extends Controller
     {
         // Nilai tetap
         $judul = 'Kelola Admin';
-        $active = 'Admin';
-        $parent = 'Admin & Dosen';
+        $parent = 'Admin';
 
         $tampil = DosenAdmin::whereHas('user', function ($query) {
             return $query->whereRaw("status IN ('Admin')");
@@ -23,26 +22,58 @@ class AdminController extends Controller
         return view('admin.index', [
             'admin' => $tampil,
             'judul' => $judul,
-            'active' => $active,
             'parent' => $parent,
+        ]);
+    }
+
+    public function tambahindex()
+    {
+        // Nilai tetap
+        $judul = 'Tambah Admin';
+        $parent = 'Admin';
+        $subparent = 'Tambah';
+
+        return view('admin.tambah', [
+            'judul' => $judul,
+            'parent' => $parent,
+            'subparent' => $subparent,
+        ]);
+    }
+
+    public function editindex(int $id)
+    {
+        // Nilai tetap
+        $judul = 'Edit Admin';
+        $parent = 'Admin';
+        $subparent = 'Edit';
+
+        $user = DosenAdmin::with('user')->find($id);
+
+        return view('admin.edit', [
+            'judul' => $judul,
+            'parent' => $parent,
+            'subparent' => $subparent,
+            'admin' => $user
         ]);
     }
 
     public function tambah(Request $request)
     {
         $rules = [
-            'nip' => 'required|integer',
+            'nip' => 'required|integer|unique:dosen_admins',
             'nama' => 'required|string',
-            'username' => 'required|string',
+            'username' => 'required|string|unique:users',
             'password' => 'required|string',
         ];
 
         $messages = [
             'nip.required' => 'NIP wajib diisi',
+            'nip.unique' => 'NIP harus beda dari yang lain',
             'nip.integer' => 'NIP harus berupa angka',
             'nama.required' => 'Nama wajib diisi',
             'nama.string' => 'Nama tidak valid',
             'username.required' => 'Username wajib diisi',
+            'username.unique' => 'Username harus beda dari yang lain',
             'username.string' => 'Username tidak valid',
             'password.required' => 'Password wajib diisi',
             'password.string' => 'Password harus berupa string',
@@ -68,5 +99,50 @@ class AdminController extends Controller
         $dosenadmin->save();
 
         return back()->with('success', 'Data Berhasil Ditambahkan!.');
+    }
+
+    public function edit(Request $request, int $id)
+    {
+        $rules = [
+            'nip' => 'required|integer',
+            'nama' => 'required|string',
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ];
+
+        $messages = [
+            'nip.required' => 'NIP wajib diisi',
+            'nip.integer' => 'NIP harus berupa angka',
+            'nama.required' => 'Nama wajib diisi',
+            'nama.string' => 'Nama tidak valid',
+            'username.required' => 'Username wajib diisi',
+            'username.string' => 'Username tidak valid',
+            'password.required' => 'Password wajib diisi',
+            'password.string' => 'Password harus berupa string',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput($request->all);
+        }
+
+        $dosenadmin = DosenAdmin::with('user')->where('id', $id)->first();
+        $dosenadmin->nip = $request->input('nip');
+        $dosenadmin->nama = $request->input('nama');
+        $dosenadmin->user->username = $request->input('username');
+        $dosenadmin->user->password = bcrypt($request->input('password'));
+        $dosenadmin->user->save();
+        $dosenadmin->save();
+
+        return back()->with('success', 'Data Berhasil Diubah!.');
+    }
+
+    public function hapus(int $id)
+    {
+        DosenAdmin::where('user_id', $id)->delete();
+        User::find($id)->delete();
+
+        return redirect()->route('admin');
     }
 }

@@ -25,7 +25,7 @@
     <link rel="stylesheet" id="css-main" href="{{ mix('css/dashmix.css') }}">
 
     <!-- You can include a specific file from public/css/themes/ folder to alter the default color theme of the template. eg: -->
-    <link rel="stylesheet" id="css-theme" href="{{ mix('css/themes/xmodern.css') }}">
+<!--link rel="stylesheet" id="css-theme" href="{{ mix('css/themes/xmodern.css') }}"-->
 @yield('css_after')
 
 <!-- Scripts -->
@@ -168,7 +168,7 @@
                     </li>
                     @role('admin')
                     <li class="nav-main-heading">Pengguna</li>
-                    <li class="nav-main-item{{ request()->is('admin','dosen') ? ' open' : '' }}">
+                    <li class="nav-main-item{{ request()->is('admin','dosen','admin/tambah*', 'admin/edit/*') ? ' open' : '' }}">
                         <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
                            aria-expanded="true" href="#">
                             <i class="nav-main-link-icon fa fa-user-friends"></i>
@@ -176,7 +176,7 @@
                         </a>
                         <ul class="nav-main-submenu">
                             <li class="nav-main-item">
-                                <a class="nav-main-link{{ request()->is('admin', 'admin/*') ? ' active' : '' }}"
+                                <a class="nav-main-link{{ request()->is('admin', 'admin/tambah*', 'admin/edit/*') ? ' active' : '' }}"
                                    href="{{URL::to('admin')}}">
                                     <span class="nav-main-link-name">Admin</span>
                                 </a>

@@ -43,11 +43,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => ['role:admin']], function () {
         // Admin
         Route::get('admin', [AdminController::class, 'index'])->name('admin');
-        Route::get('admin/tambah/', [AdminController::class, 'tambah'])->name('tambahadmin');
-        Route::post('admin/tambah/post', [AdminController::class, 'admin']);
-        Route::get('admin/hapus/{id}', [AdminController::class, 'admin']);
-        Route::get('admin/edit/{id}', [AdminController::class, 'indexadmin']);
-        Route::post('admin/edit/{id}/post', [AdminController::class, 'admin']);
+        Route::get('admin/tambah/', [AdminController::class, 'tambahindex'])->name('tambahadmin');
+        Route::post('admin/tambah/post', [AdminController::class, 'tambah'])->name('form-tambah-admin');
+        Route::get('admin/hapus/{id}', [AdminController::class, 'hapus']);
+        Route::get('admin/edit/{id}', [AdminController::class, 'editindex']);
+        Route::post('admin/edit/{id}/post', [AdminController::class, 'edit']);
         // Dosen
         Route::get('dosen', [DosenController::class, 'index'])->name('dosen');
         Route::get('dosen/tambah/', [Tambah::class, 'indexdosen'])->name('tambahdosen');
