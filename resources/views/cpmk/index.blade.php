@@ -54,8 +54,14 @@
         <div class="block block-rounded block-fx-shadow">
             <div class="block-header block-header-default">
                 <h3 class="block-title">{{ $parent }} <small>List</small></h3>
-                <div class="block-options">
                     <div class="block-options-item">
+                        <a href="{{ route('tambahcpmk') }}" class="btn btn-sm btn-primary">Tambah</a>
+                    </div>
+                </div>
+            </div>
+            <div class="block-content block-content-full">
+                <div class="d-flex flex-row-reverse">
+                    <div class="col-lg-4">
                         @if (Session::has('success'))
                             <div class="alert alert-success py-2 mb-0" role="alert">
                                 <i class="fa fa-check-circle me-1"></i>{{ Session::get('success') }}
@@ -67,12 +73,6 @@
                             </div>
                         @endif
                     </div>
-                    <div class="block-options-item">
-                        <a href="{{ route('tambahcpmk') }}" class="btn btn-sm btn-primary">Tambah</a>
-                    </div>
-                </div>
-            </div>
-            <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
