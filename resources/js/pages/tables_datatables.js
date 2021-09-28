@@ -66,6 +66,20 @@ class pageTablesDatatables {
             dom: "<'row'<'col-sm-12'<'text-center py-2 mb-2'B>>>" +
                 "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
         });
+
+        // Init DataTable with Buttons
+        jQuery('.js-dataTable-nilai').DataTable({
+            pageLength: 10,
+            lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
+            scrollX: true,
+            scrollCollapse: true,
+            columnDefs: [
+                {type: 'natural', targets: '_all'}
+            ],
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            dom: "<'row'<'col-sm-12'<'text-center py-2 mb-2'B>>>" +
+                "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+        });
     }
 
     /*
