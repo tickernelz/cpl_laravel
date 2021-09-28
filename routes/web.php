@@ -5,17 +5,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BobotcplController;
 use App\Http\Controllers\BtpController;
 use App\Http\Controllers\CPLController;
-use App\Http\Controllers\CpmkController;
+use App\Http\Controllers\CPMKController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\Edit;
-use App\Http\Controllers\Hapus;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KRSController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\TahunAjaranController;
-use App\Http\Controllers\Tambah;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -91,12 +88,12 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator']], function () {
         // CPMK
-        Route::get('cpmk', [CpmkController::class, 'index'])->name('cpmk');
-        Route::get('cpmk/tambah/', [Tambah::class, 'indexcpmk'])->name('tambahcpmk');
-        Route::post('cpmk/tambah/post', [Tambah::class, 'cpmk']);
-        Route::get('cpmk/hapus/{id}', [Hapus::class, 'cpmk']);
-        Route::get('cpmk/edit/{id}', [Edit::class, 'indexcpmk']);
-        Route::post('cpmk/edit/{id}/post', [Edit::class, 'cpmk']);
+        Route::get('cpmk', [CPMKController::class, 'index'])->name('cpmk');
+        Route::get('cpmk/tambah/', [CPMKController::class, 'tambahindex'])->name('tambahcpmk');
+        Route::post('cpmk/tambah/post', [CPMKController::class, 'tambah'])->name('form-tambah-cpmk');
+        Route::get('cpmk/hapus/{id}', [CPMKController::class, 'hapus']);
+        Route::get('cpmk/edit/{id}', [CPMKController::class, 'editindex']);
+        Route::post('cpmk/edit/{id}/post', [CPMKController::class, 'edit']);
         // Bobot Teknik Penilaian
         Route::get('btp', [BtpController::class, 'index'])->name('btp');
         Route::get('btp/cari', [BtpController::class, 'cari'])->name('btpcari');
