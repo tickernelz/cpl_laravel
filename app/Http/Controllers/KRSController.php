@@ -18,9 +18,9 @@ class KRSController extends Controller
         $parent = 'KRS';
         $judulform = 'Cari Data KRS';
 
-        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
-        $mk = MataKuliah::orderBy('nama', 'asc')->get();
-        $mhs = Mahasiswa::orderBy('nama', 'asc')->get();
+        $ta = TahunAjaran::orderBy('tahun')->get();
+        $mk = MataKuliah::orderBy('nama')->get();
+        $mhs = Mahasiswa::orderBy('nim')->get();
 
         return view('krs.index', [
             'ta' => $ta,
@@ -41,9 +41,9 @@ class KRSController extends Controller
         $judulform = 'Cari Data KRS';
 
         // Ambil Data
-        $ta = TahunAjaran::orderBy('tahun', 'asc')->get();
-        $mhs = Mahasiswa::orderBy('nama', 'asc')->get();
-        $mk = MataKuliah::orderBy('nama', 'asc')->get();
+        $ta = TahunAjaran::orderBy('tahun')->get();
+        $mhs = Mahasiswa::orderBy('nim')->get();
+        $mk = MataKuliah::orderBy('nama')->get();
 
         // Get Request
         $id_ta = Crypt::decrypt($request->tahunajaran);
