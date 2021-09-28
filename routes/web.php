@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BobotcplController;
+use App\Http\Controllers\BcplController;
 use App\Http\Controllers\BtpController;
 use App\Http\Controllers\CPLController;
 use App\Http\Controllers\CPMKController;
@@ -29,12 +29,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [AuthController::class, 'showFormLogin'])->name('login');
 Route::get('login', [AuthController::class, 'showFormLogin'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
-Route::post(
-    '/cek',
-    function () {
-        return view('validation.cek');
-    }
-);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => ['role:admin']], function () {
@@ -102,13 +96,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('edit-btp', [BtpController::class, 'edit']);
         Route::post('hapus-btp', [BtpController::class, 'hapus']);
         // Bobot CPL
-        Route::get('bcpl', [BobotcplController::class, 'index'])->name('bcpl');
-        Route::get('bcpl/cari', [BobotcplController::class, 'cari'])->name('bcplcari');
-        Route::post('tambah-bcpl', [BobotcplController::class, 'store']);
-        Route::get('get-bcpl', [BobotcplController::class, 'get']);
-        Route::get('cek-teknik', [BobotcplController::class, 'cekTeknik']);
-        Route::post('edit-bcpl', [BobotcplController::class, 'edit']);
-        Route::post('hapus-bcpl', [BobotcplController::class, 'hapus']);
+        Route::get('bcpl', [BcplController::class, 'index'])->name('bcpl');
+        Route::get('bcpl/cari', [BcplController::class, 'cari'])->name('bcplcari');
+        Route::post('tambah-bcpl', [BcplController::class, 'store']);
+        Route::get('get-bcpl', [BcplController::class, 'get']);
+        Route::get('cek-teknik', [BcplController::class, 'cekTeknik']);
+        Route::post('edit-bcpl', [BcplController::class, 'edit']);
+        Route::post('hapus-bcpl', [BcplController::class, 'hapus']);
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
         // Nilai
