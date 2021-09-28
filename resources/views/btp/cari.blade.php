@@ -434,7 +434,7 @@
                                 <strong>Tambah</strong> {{ round((100-$total_bobot), 2) }}
                                 Lagi.
                             </div>
-                        @elseif($total_bobot >= 99.8 && $total_bobot <= 100.9)
+                        @elseif($total_bobot >= 99.8 && $total_bobot <= 100.1)
                             <div class="alert alert-success py-2 mb-0" role="alert">
                                 <strong>Kerja Bagus!</strong> Total Bobot Sudah Mencapai {{round($total_bobot, 2)}}.
                             </div>

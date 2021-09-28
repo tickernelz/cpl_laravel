@@ -102,7 +102,7 @@ class BtpController extends Controller
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
         )->get();
         $sum_bobot = $tampil->sum('bobot') + $bobot;
-        if ($sum_bobot <= 100) {
+        if ($sum_bobot <= 100.1) {
             $btp = Btp::Create(
                 [
                     'tahun_ajaran_id' => $id_ta,
@@ -142,7 +142,7 @@ class BtpController extends Controller
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
         )->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot') + $bobot;
-        if ($sum_bobot <= 100) {
+        if ($sum_bobot <= 100.1) {
             $btp = Btp::find($id);
             $btp->tahun_ajaran_id = $id_ta;
             $btp->mata_kuliah_id = $id_mk;
