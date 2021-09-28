@@ -69,6 +69,7 @@
                             <div class="col-lg-10 col-lg-8">
                                 <div class="mb-4">
                                     <label class="form-label" for="kode">Kode Mata Kuliah</label>
+                                    <input name="kode-ori" type="hidden" value="{{ $matakuliah->kode }}">
                                     <input type="text" class="form-control" id="kode"
                                            value="{{ $matakuliah->kode }}" name="kode"
                                            placeholder="Masukkan Kode Mata Kuliah..." required>

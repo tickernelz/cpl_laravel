@@ -79,6 +79,7 @@
                             <div class="col-lg-10 col-lg-8">
                                 <div class="mb-4">
                                     <label class="form-label" for="nim">NIM</label>
+                                    <input name="nim-ori" type="hidden" value="{{ $mahasiswa->nim }}">
                                     <input type="text" class="form-control" id="nim"
                                            value="{{ $mahasiswa->nim }}" name="nim"
                                            placeholder="Masukkan NIM..." required>

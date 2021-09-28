@@ -79,6 +79,7 @@
                             <div class="col-lg-10 col-lg-8">
                                 <div class="mb-4">
                                     <label class="form-label" for="tahun">Tahun Ajaran</label>
+                                    <input name="ta-ori" type="hidden" value="{{ $tahunajaran->tahun }}">
                                     <select class="js-select2 form-select" name="tahun" id="tahun">
                                         @for ($year = (int)date('Y'); 1995 <= $year; $year--)
                                             <option value="{{ $year + 3 }}/{{ $year + 4 }}">{{ $year + 3 }}

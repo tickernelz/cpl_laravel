@@ -69,6 +69,7 @@
                             <div class="col-lg-10 col-lg-8">
                                 <div class="mb-4">
                                     <label class="form-label" for="nip">NIP</label>
+                                    <input name="nip-ori" type="hidden" value="{{ $admin->nip }}">
                                     <input type="text" class="form-control form-control-alt" id="nip"
                                            value="{{ $admin->nip }}" name="nip"
                                            placeholder="Masukkan NIP..." required>
@@ -81,6 +82,7 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label" for="username">Username</label>
+                                    <input name="username-ori" type="hidden" value="{{ $admin->user->username }}">
                                     <input type="text" class="form-control form-control-alt" id="username"
                                            value="{{ $admin->user->username }}"
                                            name="username"
@@ -88,6 +90,7 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label" for="password">Password</label>
+                                    <input name="password-ori" type="hidden" value="{{ $admin->user->password }}">
                                     <input type="password" class="form-control form-control-alt" id="password"
                                            value="{{ $admin->user->password }}"
                                            name="password"

@@ -105,25 +105,71 @@ class AdminController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $rules = [
+        $nipori = $request->input('nip-ori');
+        $nipedit = $request->input('nip');
+        $usernameori = $request->input('username-ori');
+        $usernameedit = $request->input('username');
+        $passori = $request->input('password-ori');
+        $passedit = $request->input('password');
+
+        $rules1 = [
             'nip' => 'required|integer',
             'nama' => 'required|string',
             'username' => 'required|string',
             'password' => 'required|string',
         ];
 
+        $rules2 = [
+            'nip' => 'required|integer|unique:dosen_admins',
+            'nama' => 'required|string',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string',
+        ];
+
+        $rules3 = [
+            'nip' => 'required|integer|unique:dosen_admins',
+            'nama' => 'required|string',
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ];
+
+        $rules4 = [
+            'nip' => 'required|integer',
+            'nama' => 'required|string',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string',
+        ];
+
         $messages = [
             'nip.required' => 'NIP wajib diisi',
+            'nip.unique' => 'NIP harus beda dari yang lain',
             'nip.integer' => 'NIP harus berupa angka',
             'nama.required' => 'Nama wajib diisi',
             'nama.string' => 'Nama tidak valid',
             'username.required' => 'Username wajib diisi',
+            'username.unique' => 'Username harus beda dari yang lain',
             'username.string' => 'Username tidak valid',
             'password.required' => 'Password wajib diisi',
             'password.string' => 'Password harus berupa string',
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($nipori === $nipedit && $usernameori === $usernameedit) {
+            return $this->extracted($request, $rules1, $messages, $id, $passori, $passedit);
+        }
+
+        if ($nipori === $nipedit) {
+            return $this->extracted($request, $rules4, $messages, $id, $passori, $passedit);
+        }
+
+        if ($usernameori === $usernameedit) {
+            return $this->extracted($request, $rules3, $messages, $id, $passori, $passedit);
+        }
+        return $this->extracted($request, $rules2, $messages, $id, $passori, $passedit);
+    }
+
+    public function extracted(Request $request, array $rules1, array $messages, int $id, $passori, $passedit): \Illuminate\Http\RedirectResponse
+    {
+        $validator = Validator::make($request->all(), $rules1, $messages);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
@@ -133,7 +179,9 @@ class AdminController extends Controller
         $dosenadmin->nip = $request->input('nip');
         $dosenadmin->nama = $request->input('nama');
         $dosenadmin->user->username = $request->input('username');
-        $dosenadmin->user->password = bcrypt($request->input('password'));
+        if ($passori !== $passedit) {
+            $dosenadmin->user->password = bcrypt($request->input('password'));
+        }
         $dosenadmin->user->save();
         $dosenadmin->save();
 

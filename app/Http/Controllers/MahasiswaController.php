@@ -91,14 +91,24 @@ class MahasiswaController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $rules = [
+        $nimori = $request->input('nim-ori');
+        $nimedit = $request->input('nim');
+
+        $rules1 = [
             'nim' => 'required|string',
+            'nama' => 'required|string',
+            'angkatan' => 'required|integer',
+        ];
+
+        $rules2 = [
+            'nim' => 'required|string|unique:mahasiswas',
             'nama' => 'required|string',
             'angkatan' => 'required|integer',
         ];
 
         $messages = [
             'nim.required' => 'NIM wajib diisi',
+            'nim.unique' => 'NIM harus beda dari yang lain',
             'nim.string' => 'NIM tidak valid',
             'nama.required' => 'Nama wajib diisi',
             'nama.string' => 'Nama tidak valid',
@@ -106,7 +116,22 @@ class MahasiswaController extends Controller
             'angkatan.integer' => 'Angkatan harus berupa angka',
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($nimori === $nimedit) {
+            $validator = Validator::make($request->all(), $rules1, $messages);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput($request->all);
+            }
+
+            $mhs = Mahasiswa::where('id', $id)->first();
+            $mhs->nim = $request->input('nim');
+            $mhs->nama = $request->input('nama');
+            $mhs->angkatan = $request->input('angkatan');
+            $mhs->save();
+
+            return back()->with('success', 'Data Berhasil Diubah!.');
+        }
+        $validator = Validator::make($request->all(), $rules2, $messages);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
