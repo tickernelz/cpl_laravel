@@ -54,9 +54,8 @@
         <div class="block block-rounded block-fx-shadow">
             <div class="block-header block-header-default">
                 <h3 class="block-title">{{ $parent }} <small>List</small></h3>
-                    <div class="block-options-item">
-                        <a href="{{ route('tambahcpmk') }}" class="btn btn-sm btn-primary">Tambah</a>
-                    </div>
+                <div class="block-options-item">
+                    <a href="{{ route('tambahcpmk') }}" class="btn btn-sm btn-primary">Tambah</a>
                 </div>
             </div>
             <div class="block-content block-content-full">
