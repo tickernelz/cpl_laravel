@@ -4,7 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BobotcplController;
 use App\Http\Controllers\BtpController;
-use App\Http\Controllers\CplController;
+use App\Http\Controllers\CPLController;
 use App\Http\Controllers\CpmkController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\Edit;
@@ -82,12 +82,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('tambah-krs', [KRSController::class, 'store']);
         Route::post('hapus-krs', [KRSController::class, 'hapus']);
         // CPL
-        Route::get('cpl', [CplController::class, 'index'])->name('cpl');
-        Route::get('cpl/tambah/', [Tambah::class, 'indexcpl'])->name('tambahcpl');
-        Route::post('cpl/tambah/post', [Tambah::class, 'cpl']);
-        Route::get('cpl/hapus/{id}', [Hapus::class, 'cpl']);
-        Route::get('cpl/edit/{id}', [Edit::class, 'indexcpl']);
-        Route::post('cpl/edit/{id}/post', [Edit::class, 'cpl']);
+        Route::get('cpl', [CPLController::class, 'index'])->name('cpl');
+        Route::get('cpl/tambah/', [CPLController::class, 'tambahindex'])->name('tambahcpl');
+        Route::post('cpl/tambah/post', [CPLController::class, 'tambah'])->name('form-tambah-cpl');
+        Route::get('cpl/hapus/{id}', [CPLController::class, 'hapus']);
+        Route::get('cpl/edit/{id}', [CPLController::class, 'editindex']);
+        Route::post('cpl/edit/{id}/post', [CPLController::class, 'edit']);
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator']], function () {
         // CPMK
