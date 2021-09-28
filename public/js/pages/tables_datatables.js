@@ -58,7 +58,8 @@
                             lengthMenu: "_MENU_",
                             search: "_INPUT_",
                             searchPlaceholder: "Cari..",
-                            info: "Halaman <strong>_PAGE_</strong> of <strong>_PAGES_</strong>",
+                            emptyTable: "'Kosong' seperti perasaan dia",
+                            info: "Halaman <strong>_PAGE_</strong> dari <strong>_PAGES_</strong>",
                             paginate: {
                                 first: '<i class="fa fa-angle-double-left"></i>',
                                 previous: '<i class="fa fa-angle-left"></i>',
@@ -87,16 +88,13 @@
                     }); // Init DataTable with Buttons
 
                     jQuery('.js-dataTable-buttons').DataTable({
-                        pageLength: 5,
-                        lengthMenu: [[5, 10, 20], [5, 10, 20]],
+                        pageLength: 10,
+                        lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
                         autoWidth: true,
                         columnDefs: [{
                             type: 'natural',
                             targets: '_all'
                         }],
-                        language: {
-                            infoEmpty: "Data Kosong Bosss..."
-                        },
                         buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                         dom: "<'row'<'col-sm-12'<'text-center py-2 mb-2'B>>>" + "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
                     });
