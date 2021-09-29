@@ -92,7 +92,8 @@
     'sidebar-dark page-header-dark dark-mode'   Enable dark mode (light sidebar/header is not supported with dark mode)
 -->
 <div id="page-container"
-     class="sidebar-o enable-page-overlay sidebar-dark side-scroll page-header-fixed main-content-narrow">
+     class="sidebar-mini sidebar-o enable-page-overlay sidebar-dark side-scroll page-header-fixed main-content-narrow remember-theme">
+    <div id="page-loader" class="show"></div>
 
     <!-- Sidebar -->
     <!--
@@ -113,7 +114,7 @@
                 <!-- Logo -->
                 <a class="fw-semibold text-white tracking-wide" href="/">
             <span class="smini-visible">
-              SI<span class="opacity-75">CPL</span>
+              <span class="opacity-75">CPL</span>
             </span>
                     <span class="smini-hidden">
               SI<span class="opacity-75">CPL</span>
@@ -328,6 +329,8 @@
                     </div>
                 </div>
                 <!-- END Header Loader -->
+            </div>
+        </div>
     </header>
     <!-- END Header -->
 
