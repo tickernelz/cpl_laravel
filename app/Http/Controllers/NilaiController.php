@@ -70,27 +70,43 @@ class NilaiController extends Controller
 
     public function store(Request $request)
     {
-        $id_mhs = $request->mahasiswa_id;
-        $id_btp = $request->btp_id;
-        $nilai = $request->nilai;
-        $cek = Nilai::where([
-            ['mahasiswa_id', '=', $id_mhs],
-            ['btp_id', '=', $id_btp],
-        ])->first();
+        $id_mhs = $request->get('mahasiswa_id');
+        $id_btp = $request->get('btp_id');
+        $nilaiori = $request->get('nilai-ori');
+        $nilai = $request->get('nilai');
 
-        if (!is_null($cek)) {
-            $cek->update([
-                'nilai' => $nilai,
-            ]);
+        $maxidmhs = count($id_mhs);
 
-            return back()->with('success', 'Data Berhasil Diperbarui!.');
+        for ($x = 0; $x < $maxidmhs; $x ++)
+        {
+            $btpbymhs = $id_btp[$x];
+            $maxidbtp = count($btpbymhs);
+            for ($y = 0; $y < $maxidbtp; $y ++)
+            {
+                $id_mhs_array = $id_mhs[$x];
+                $id_btp_array = $id_btp[$x][$y];
+                $nilai_array = $nilai[$x][$y];
+                $nilaiori_array = $nilaiori[$x][$y];
+                $cek = Nilai::where([
+                    ['mahasiswa_id', '=', $id_mhs_array],
+                    ['btp_id', '=', $id_btp_array],
+                    ['nilai', '=', $nilaiori_array],
+                ])->first();
+
+                if (!is_null($cek)) {
+                    $cek->update([
+                        'nilai' => $nilai_array,
+                    ]);
+
+                } else {
+                    Nilai::create([
+                        'mahasiswa_id' => $id_mhs_array,
+                        'btp_id' => $id_btp_array,
+                        'nilai' => $nilai_array,
+                    ]);
+                }
+            }
         }
-        Nilai::create([
-            'mahasiswa_id' => $id_mhs,
-            'btp_id' => $id_btp,
-            'nilai' => $nilai,
-        ]);
-
         return back()->with('success', 'Data Berhasil Ditambahkan!.');
     }
 }
