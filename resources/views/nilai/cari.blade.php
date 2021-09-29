@@ -159,7 +159,7 @@
                 <div class="block-content block-content-full">
                     <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                     <div class="table-responsive">
-                        <table class="table table-sm table-bordered table-striped table-vcenter js-dataTable-nilai">
+                        <table class="table table-sm table-bordered table-striped table-vcenter js-dataTable-full">
                             <thead>
                             <tr>
                                 <th class="text-center" style="width: 50px;">#</th>
