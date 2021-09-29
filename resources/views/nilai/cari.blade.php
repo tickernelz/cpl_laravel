@@ -154,17 +154,17 @@
             <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-vcenter js-dataTable-nilai">
+                    <table class="table table-sm table-bordered table-striped table-vcenter js-dataTable-nilai">
                         <thead>
                         <tr>
-                            <th class="text-center" style="width: 80px;">#</th>
+                            <th class="text-center" style="width: 50px;">#</th>
                             <th style="width: 80px;">NIM</th>
                             <th style="width: 80px;">Nama Mahasiswa</th>
                             @foreach($teknik as $li)
                                 @if(empty($li->id))
                                     <th></th>
                                 @else
-                                    <th class="text-center">{{ $li->nama }}</th>
+                                    <th class="text-center" style="width: 130px;">{{ $li->nama }}</th>
                                 @endif
                             @endforeach
                         </tr>

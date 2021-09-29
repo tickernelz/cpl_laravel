@@ -120,10 +120,10 @@
                     $.map(data, function (obj) {
                         $('#editbobot').modal('show');
                         $('[name="id1"]').val(obj.id);
-                        $('[name="cpmk1"]').val(obj.cpmk_id);
+                        $('[name="cpmk1"]').val(obj.cpmk_id).trigger('change');
                         $('[name="teknik1"]').val(obj.nama);
-                        $('[name="kategori1"]').val(obj.kategori);
-                        $('[name="dosen1"]').val(obj.dosen_admin_id);
+                        $('[name="kategori1"]').val(obj.kategori).trigger('change');
+                        $('[name="dosen1"]').val(obj.dosen_admin_id).trigger('change');
                         $('[name="bobot1"]').val(obj.bobot);
                     });
                 }
