@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Btp[] $btp
  * @property-read int|null $btp_count
  * @property-read int|null $krs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpmk[] $kcpmk
+ * @property-read int|null $kcpmk_count
  */
 class TahunAjaran extends Model
 {
@@ -49,5 +51,10 @@ class TahunAjaran extends Model
     public function bobotcpl()
     {
         return $this->hasMany(Bobotcpl::class);
+    }
+
+    public function kcpmk()
+    {
+        return $this->hasMany(Kcpmk::class);
     }
 }

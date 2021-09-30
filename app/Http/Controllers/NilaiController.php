@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Btp;
 use App\Models\DosenAdmin;
+use App\Models\kcpmk;
 use App\Models\KRS;
 use App\Models\MataKuliah;
 use App\Models\Nilai;
@@ -51,7 +52,7 @@ class NilaiController extends Controller
         $getMhs = KRS::with('mahasiswa')->whereRaw(
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
         )->get();
-        $getTeknik = Btp::whereRaw(
+        $getTeknik = Btp::with('cpmk')->whereRaw(
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'
             AND dosen_admin_id = '$id_dosen'"
         )->get();
@@ -70,6 +71,12 @@ class NilaiController extends Controller
 
     public function store(Request $request)
     {
+        $id_ta = Crypt::decrypt($request->tahun_ajaran);
+        $id_sem = Crypt::decrypt($request->semester);
+        $id_mk = Crypt::decrypt($request->mata_kuliah);
+
+        $id_cpmk = $request->get('cpmk_id');
+        $kode_cpmk = $request->get('kode_cpmk');
         $id_mhs = $request->get('mahasiswa_id');
         $id_btp = $request->get('btp_id');
         $nilaiori = $request->get('nilai-ori');
@@ -84,17 +91,32 @@ class NilaiController extends Controller
             for ($y = 0; $y < $maxidbtp; $y ++)
             {
                 $id_mhs_array = $id_mhs[$x];
+                $id_cpmk_array = $id_cpmk[$x][$y];
+                $kode_cpmk_array = $kode_cpmk[$x][$y];
                 $id_btp_array = $id_btp[$x][$y];
                 $nilai_array = $nilai[$x][$y];
                 $nilaiori_array = $nilaiori[$x][$y];
-                $cek = Nilai::where([
+                // Nilai
+                $cek_nilai = Nilai::where([
                     ['mahasiswa_id', '=', $id_mhs_array],
                     ['btp_id', '=', $id_btp_array],
                     ['nilai', '=', $nilaiori_array],
                 ])->first();
 
-                if (!is_null($cek)) {
-                    $cek->update([
+                // Ketercapaian CPMK
+                $cek_kcpmk = kcpmk::where([
+                    ['tahun_ajaran_id', '=', $id_ta],
+                    ['btp_id', '=', $id_btp_array],
+                    ['mahasiswa_id', '=', $id_mhs_array],
+                    ['mata_kuliah_id', '=', $id_mk],
+                    ['cpmk_id', '=', $id_cpmk_array],
+                    ['kode_cpmk', '=', $kode_cpmk_array],
+                    ['semester', '=', $id_sem],
+                    ['nilai_kcpmk', '=', $nilaiori_array],
+                ])->first();
+
+                if (!is_null($cek_nilai)) {
+                    $cek_nilai->update([
                         'nilai' => $nilai_array,
                     ]);
 
@@ -103,6 +125,23 @@ class NilaiController extends Controller
                         'mahasiswa_id' => $id_mhs_array,
                         'btp_id' => $id_btp_array,
                         'nilai' => $nilai_array,
+                    ]);
+                }
+
+                if(!is_null($cek_kcpmk)) {
+                    $cek_kcpmk->update([
+                        'nilai_kcpmk' => $nilai_array,
+                    ]);
+                } else {
+                    kcpmk::create([
+                        'tahun_ajaran_id' => $id_ta,
+                        'btp_id' => $id_btp_array,
+                        'mahasiswa_id' => $id_mhs_array,
+                        'mata_kuliah_id' => $id_mk,
+                        'cpmk_id' => $id_cpmk_array,
+                        'kode_cpmk' => $kode_cpmk_array,
+                        'semester' => $id_sem,
+                        'nilai_kcpmk' => $nilai_array,
                     ]);
                 }
             }

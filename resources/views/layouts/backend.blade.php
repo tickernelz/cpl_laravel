@@ -258,6 +258,29 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-main-item{{ request()->is('kcpmk','kcpl','kcpmk/*','kcpl/*') ? ' open' : '' }}">
+                            <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
+                               aria-expanded="true" href="#">
+                                <i class="nav-main-link-icon far fa-chart-bar"></i>
+                                <span class="nav-main-link-name">Ketercapaian</span>
+                            </a>
+                            <ul class="nav-main-submenu">
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link{{ request()->is('kcpmk','kcpmk/*') ? ' active' : '' }}"
+                                       href="{{URL::to('kcpmk')}}">
+                                        <span class="nav-main-link-name">CPMK</span>
+                                    </a>
+                                </li>
+                                <li class="nav-main-item">
+                                    <a class="nav-main-link{{ request()->is('kcpl','kcpl/*') ? ' active' : '' }}"
+                                       href="{{URL::to('kcpl')}}">
+                                        <span class="nav-main-link-name">CPL</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endhasanyrole
+                        @hasanyrole('dosen_koordinator|dosen_pengampu|admin')
                         <li class="nav-main-item">
                             <a class="nav-main-link{{ request()->is('nilai','nilai/*') ? ' active' : '' }}"
                                href="{{URL::to('nilai')}}">

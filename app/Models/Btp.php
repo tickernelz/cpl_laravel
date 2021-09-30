@@ -81,4 +81,9 @@ class Btp extends Model
     {
         return $this->hasMany(Bobotcpl::class);
     }
+
+    public function kcpmk()
+    {
+        return $this->hasMany(Kcpmk::class);
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\CPLController;
 use App\Http\Controllers\CPMKController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KcpmkController;
 use App\Http\Controllers\KRSController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
@@ -103,6 +104,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cek-teknik', [BcplController::class, 'cekTeknik']);
         Route::post('edit-bcpl', [BcplController::class, 'edit']);
         Route::post('hapus-bcpl', [BcplController::class, 'hapus']);
+        // Ketercapaian CPMK
+        Route::get('kcpmk', [KcpmkController::class, 'index'])->name('kcpmk');
+        Route::get('kcpmk/cari', [KcpmkController::class, 'cari'])->name('kcpmkcari');
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
         // Nilai

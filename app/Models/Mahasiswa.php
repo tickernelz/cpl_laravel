@@ -48,4 +48,9 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(Nilai::class);
     }
+
+    public function kcpmk()
+    {
+        return $this->hasMany(Kcpmk::class);
+    }
 }

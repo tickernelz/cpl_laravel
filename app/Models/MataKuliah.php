@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Cpmk[] $cpmk
  * @property-read int|null $cpmk_count
  * @property-read int|null $krs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpmk[] $kcpmk
+ * @property-read int|null $kcpmk_count
  */
 class MataKuliah extends Model
 {
@@ -58,5 +60,10 @@ class MataKuliah extends Model
     public function bobotcpl()
     {
         return $this->hasMany(Bobotcpl::class);
+    }
+
+    public function kcpmk()
+    {
+        return $this->hasMany(Kcpmk::class);
     }
 }

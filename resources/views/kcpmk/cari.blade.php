@@ -147,89 +147,60 @@
         <!-- END Cari Data -->
 
         <!-- Dynamic Table with Export Buttons -->
-        <form method="POST" action="{{URL::to('nilai-post')}}">
-            @csrf
-            <input name="tahun_ajaran" type="hidden"
-                   value="{{ Request::get('tahunajaran') }}">
-            <input name="semester" type="hidden"
-                   value="{{ Request::get('semester') }}">
-            <input name="mata_kuliah" type="hidden"
-                   value="{{ Request::get('mk') }}">
-            <div class="block block-rounded">
-                <div class="block-header block-header-default">
-                    <h3 class="block-title">{{$parent}} <small>List</small></h3>
-                    <div class="block-options">
-                        <input type="submit" class="btn btn-sm btn-primary" value="Simpan">
-                    </div>
+        <div class="block block-rounded">
+            <div class="block-header block-header-default">
+                <h3 class="block-title">{{$parent}} <small>List</small></h3>
+                <div class="block-options">
+                    <input type="submit" class="btn btn-sm btn-primary" value="Simpan">
                 </div>
-                <div class="block-content block-content-full">
-                    <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered table-striped table-vcenter js-dataTable-full">
-                            <thead>
+            </div>
+            <div class="block-content block-content-full">
+                <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-striped table-vcenter js-dataTable-full">
+                        <thead>
+                        <tr>
+                            <th class="text-center" style="width: 50px;">#</th>
+                            <th style="width: 80px;">NIM</th>
+                            <th style="width: 80px;">Nama Mahasiswa</th>
+                            @foreach($cpmk as $li)
+                                @if(empty($li->id))
+                                    <th></th>
+                                @else
+                                    <th class="text-center" style="width: 130px;">{{ $li->cpmk->kode_cpmk }}</th>
+                                @endif
+                            @endforeach
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($mhs as $li)
                             <tr>
-                                <th class="text-center" style="width: 50px;">#</th>
-                                <th style="width: 80px;">NIM</th>
-                                <th style="width: 80px;">Nama Mahasiswa</th>
-                                @foreach($teknik as $li)
-                                    @if(empty($li->id))
-                                        <th></th>
+                                <td>{{ $loop->iteration }}</td>
+                                <input name="mahasiswa_id[]" type="hidden"
+                                       value="{{ $li->mahasiswa->id }}">
+                                <td>{{ $li->mahasiswa->nim }}</td>
+                                <td>{{ $li->mahasiswa->nama }}</td>
+                                @foreach($cpmk as $t)
+                                    <input name="cpmk_id[]" type="hidden"
+                                           value="{{ $t->cpmk->id }}">
+                                    @if(empty($t->id))
+                                        <td class="text-center"></td>
                                     @else
-                                        <th class="text-center" style="width: 130px;">{{ $li->nama }}</th>
+                                        <td class="text-center">
+                                            {{ \App\Models\Nilai::where([
+                                                        ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                        ['btp_id', '=', $t->id],
+                                                    ])->value('nilai')}}
+                                        </td>
                                     @endif
                                 @endforeach
                             </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($mhs as $li)
-                                <tr>
-                                    @php
-                                        $number1 = $loop->iteration - 1
-                                    @endphp
-                                    <td>{{ $loop->iteration }}</td>
-                                    <input name="mahasiswa_id[]" type="hidden"
-                                           value="{{ $li->mahasiswa->id }}">
-                                    <td>{{ $li->mahasiswa->nim }}</td>
-                                    <td>{{ $li->mahasiswa->nama }}</td>
-                                    @foreach($teknik as $t)
-                                        @php
-                                            $number2 = $loop->iteration - 1
-                                        @endphp
-                                        @if(empty($t->id))
-                                            <td class="text-center"></td>
-                                        @else
-                                            <input name="cpmk_id[{{$number1}}][{{$number2}}]" type="hidden"
-                                                   value="{{ $t->cpmk->id }}">
-                                            <input name="kode_cpmk[{{$number1}}][{{$number2}}]" type="hidden"
-                                                   value="{{ $t->cpmk->kode_cpmk }}">
-                                            <td class="text-center">
-                                                <div class="input-group mb-3">
-                                                    <input name="btp_id[{{$number1}}][{{$number2}}]" type="hidden"
-                                                           value="{{ $t->id }}">
-                                                    <input type="hidden" name="nilai-ori[{{$number1}}][{{$number2}}]"
-                                                           value="{{ \App\Models\Nilai::where([
-                                                            ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                                            ['btp_id', '=', $t->id],
-                                                        ])->value('nilai')}}"
-                                                           class="form-control">
-                                                    <input type="text" name="nilai[{{$number1}}][{{$number2}}]"
-                                                           value="{{ \App\Models\Nilai::where([
-                                                            ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                                            ['btp_id', '=', $t->id],
-                                                        ])->value('nilai')}}"
-                                                           class="form-control"
-                                                           placeholder="Isi Nilai">
-                                                </div>
-                                            </td>
-                                        @endif
-                                    @endforeach
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
         </form>
         <!-- END Dynamic Table with Export Buttons -->
     </div>
