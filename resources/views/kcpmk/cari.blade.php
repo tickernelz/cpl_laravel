@@ -59,7 +59,7 @@
         <!-- Cari Data -->
         <div class="row">
             <div class="col-md-6 " style="float:none;margin:auto;">
-                <form method="GET" action="{{URL::to('nilai/cari')}}">
+                <form method="GET" action="{{URL::to('kcpmk/cari')}}">
                     <div class="block block-rounded block-fx-shadow">
                         <div class="block-header block-header-default">
                             <h3 class="block-title">{{ $judulform }}</h3>
@@ -137,6 +137,19 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="mb-4">
+                                        <label class="form-label" for="mhs">Mahasiswa</label>
+                                        <select class="js-select2 form-select" name="mhs" id="mhs">
+                                            @foreach($mhs as $item)
+                                                <option
+                                                    value="{{ Crypt::encrypt($item->id) }}"
+                                                    @if (Crypt::decrypt(Request::get('mhs')) === $item->id)
+                                                    selected="selected"
+                                                    @endif>{{$item->nim}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -157,43 +170,26 @@
             <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                 <div class="table-responsive">
-                    <table class="table table-sm table-bordered table-striped table-vcenter js-dataTable-full">
+                    <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
                         <thead>
                         <tr>
                             <th class="text-center" style="width: 50px;">#</th>
                             <th style="width: 80px;">NIM</th>
                             <th style="width: 80px;">Nama Mahasiswa</th>
-                            @foreach($cpmk as $li)
-                                @if(empty($li->id))
-                                    <th></th>
-                                @else
-                                    <th class="text-center" style="width: 130px;">{{ $li->cpmk->kode_cpmk }}</th>
-                                @endif
+                            @foreach($getkolom->sortBy('kode_cpmk', SORT_NATURAL) as $li)
+                                <th>{{ $li->kode_cpmk }}</th>
                             @endforeach
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($mhs as $li)
+                        @foreach($getmhs as $li)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <input name="mahasiswa_id[]" type="hidden"
-                                       value="{{ $li->mahasiswa->id }}">
                                 <td>{{ $li->mahasiswa->nim }}</td>
                                 <td>{{ $li->mahasiswa->nama }}</td>
-                                @foreach($cpmk as $t)
-                                    <input name="cpmk_id[]" type="hidden"
-                                           value="{{ $t->cpmk->id }}">
-                                    @if(empty($t->id))
-                                        <td class="text-center"></td>
-                                    @else
-                                        <td class="text-center">
-                                            {{ \App\Models\Nilai::where([
-                                                        ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                                        ['btp_id', '=', $t->id],
-                                                    ])->value('nilai')}}
-                                        </td>
-                                    @endif
-                                @endforeach
+                                    @foreach($getnilai->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
+                                        <td class="text-center">{{ $lii->average }}</td>
+                                    @endforeach
                             </tr>
                         @endforeach
                         </tbody>
@@ -201,7 +197,6 @@
                 </div>
             </div>
         </div>
-        </form>
         <!-- END Dynamic Table with Export Buttons -->
     </div>
     <!-- END Page Content -->
