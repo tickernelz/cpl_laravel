@@ -33,6 +33,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|kcpmk whereTahunAjaranId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|kcpmk whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $btp_id
+ * @property string $kode_cpmk
+ * @property-read \App\Models\Btp $btp
+ * @property-read \App\Models\Mahasiswa $mahasiswa
+ * @method static \Illuminate\Database\Eloquent\Builder|kcpmk whereBtpId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|kcpmk whereKodeCpmk($value)
  */
 class kcpmk extends Model
 {

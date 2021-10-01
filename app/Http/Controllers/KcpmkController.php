@@ -9,6 +9,7 @@ use App\Models\TahunAjaran;
 use Crypt;
 use DB;
 use Illuminate\Http\Request;
+use PDF;
 
 class KcpmkController extends Controller
 {
@@ -81,5 +82,11 @@ class KcpmkController extends Controller
             'parent' => $parent,
             'subparent' => $subparent,
         ]);
+    }
+
+    public function downloadPDF(Request $request)
+    {
+        $pdf = PDF::loadview('kcpmk.pdf')->setPaper('A4','potrait');
+        return $pdf->stream();
     }
 }

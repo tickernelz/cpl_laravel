@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $krs_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Nilai[] $nilai
  * @property-read int|null $nilai_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpmk[] $kcpmk
+ * @property-read int|null $kcpmk_count
  */
 class Mahasiswa extends Model
 {

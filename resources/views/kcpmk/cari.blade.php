@@ -165,7 +165,7 @@
             <div class="block-header block-header-default">
                 <h3 class="block-title">{{$parent}} <small>List</small></h3>
                 <div class="block-options">
-                    <input type="submit" class="btn btn-sm btn-primary" value="Simpan">
+                    <a type="button" href="{{ route('kcpmk-pdf') }}" class="btn btn-sm btn-primary">Cetak</a>
                 </div>
             </div>
             <div class="block-content block-content-full">
