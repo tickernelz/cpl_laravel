@@ -60,8 +60,8 @@ var pageTablesDatatables = /*#__PURE__*/function () {
       }); // Init full DataTable
 
       jQuery('.js-dataTable-full').DataTable({
-        pageLength: 5,
-        lengthMenu: [[5, 10, 20], [5, 10, 20]],
+        pageLength: 20,
+        lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
         autoWidth: true,
         columnDefs: [{
           type: 'natural',
@@ -70,7 +70,7 @@ var pageTablesDatatables = /*#__PURE__*/function () {
       }); // Init DataTable with Buttons
 
       jQuery('.js-dataTable-buttons').DataTable({
-        pageLength: 10,
+        pageLength: 20,
         lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
         autoWidth: true,
         columnDefs: [{
@@ -82,7 +82,7 @@ var pageTablesDatatables = /*#__PURE__*/function () {
       }); // Init DataTable with Buttons
 
       jQuery('.js-dataTable-nilai').DataTable({
-        pageLength: 10,
+        pageLength: 20,
         lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
         scrollX: true,
         scrollCollapse: true,

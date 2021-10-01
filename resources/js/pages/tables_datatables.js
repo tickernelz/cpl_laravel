@@ -46,8 +46,8 @@ class pageTablesDatatables {
 
         // Init full DataTable
         jQuery('.js-dataTable-full').DataTable({
-            pageLength: 5,
-            lengthMenu: [[5, 10, 20], [5, 10, 20]],
+            pageLength: 20,
+            lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
             autoWidth: true,
             columnDefs: [
                 {type: 'natural', targets: '_all'}
@@ -56,7 +56,7 @@ class pageTablesDatatables {
 
         // Init DataTable with Buttons
         jQuery('.js-dataTable-buttons').DataTable({
-            pageLength: 10,
+            pageLength: 20,
             lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
             autoWidth: true,
             columnDefs: [
@@ -69,7 +69,7 @@ class pageTablesDatatables {
 
         // Init DataTable with Buttons
         jQuery('.js-dataTable-nilai').DataTable({
-            pageLength: 10,
+            pageLength: 20,
             lengthMenu: [[5, 10, 20, 40, 80], [5, 10, 20, 40, 80]],
             scrollX: true,
             scrollCollapse: true,

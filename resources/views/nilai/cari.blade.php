@@ -171,7 +171,7 @@
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th style="width: 80px;">NIM</th>
                                 <th style="width: 80px;">Nama Mahasiswa</th>
-                                @foreach($teknik as $li)
+                                @foreach($teknik->sortBy('nama', SORT_NATURAL) as $li)
                                     @if(empty($li->id))
                                         <th></th>
                                     @else
@@ -191,7 +191,7 @@
                                            value="{{ $li->mahasiswa->id }}">
                                     <td>{{ $li->mahasiswa->nim }}</td>
                                     <td>{{ $li->mahasiswa->nama }}</td>
-                                    @foreach($teknik as $t)
+                                    @foreach($teknik->sortBy('nama', SORT_NATURAL) as $t)
                                         @php
                                             $number2 = $loop->iteration - 1
                                         @endphp
