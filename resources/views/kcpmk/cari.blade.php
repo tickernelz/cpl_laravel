@@ -140,6 +140,7 @@
                                     <div class="mb-4">
                                         <label class="form-label" for="mhs">Mahasiswa</label>
                                         <select class="js-select2 form-select" name="mhs" id="mhs">
+                                            <option value="{{ Crypt::encrypt('semua') }}">Semua</option>
                                             @foreach($mhs as $item)
                                                 <option
                                                     value="{{ Crypt::encrypt($item->id) }}"
@@ -168,33 +169,69 @@
                 </div>
             </div>
             <div class="block-content block-content-full">
-                <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
-                        <thead>
-                        <tr>
-                            <th class="text-center" style="width: 50px;">#</th>
-                            <th style="width: 80px;">NIM</th>
-                            <th style="width: 80px;">Nama Mahasiswa</th>
-                            @foreach($getkolom->sortBy('kode_cpmk', SORT_NATURAL) as $li)
-                                <th>{{ $li->kode_cpmk }}</th>
-                            @endforeach
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($getmhs as $li)
+                @if (Crypt::decrypt(Request::get('mhs')) === 'semua')
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
+                            <thead>
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $li->mahasiswa->nim }}</td>
-                                <td>{{ $li->mahasiswa->nama }}</td>
+                                <th class="text-center" style="width: 50px;">#</th>
+                                <th style="width: 80px;">NIM</th>
+                                <th style="width: 80px;">Nama Mahasiswa</th>
+                                @foreach($getkolom->sortBy('kode_cpmk', SORT_NATURAL) as $li)
+                                    <th class="text-center">{{ $li->kode_cpmk }}</th>
+                                @endforeach
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($getmhs as $li)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $li->mahasiswa->nim }}</td>
+                                    <td>{{ $li->mahasiswa->nama }}</td>
+                                    @foreach($kcpmk::where([
+                                        ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                        ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                        ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
+                                        ['semester', '=', Crypt::decrypt(Request::get('semester'))],])
+                                        ->select('*',DB::raw('AVG(nilai_kcpmk) average'))
+                                        ->groupBy('kode_cpmk')->get()->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
+                                        <td class="text-center">{{ $lii->average }}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
+                            <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50px;">#</th>
+                                <th style="width: 80px;">NIM</th>
+                                <th style="width: 80px;">Nama Mahasiswa</th>
+                                @foreach($getkolom->sortBy('kode_cpmk', SORT_NATURAL) as $li)
+                                    <th class="text-center">{{ $li->kode_cpmk }}</th>
+                                @endforeach
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($getmhs as $li)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $li->mahasiswa->nim }}</td>
+                                    <td>{{ $li->mahasiswa->nama }}</td>
                                     @foreach($getnilai->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
                                         <td class="text-center">{{ $lii->average }}</td>
                                     @endforeach
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+            @endif
+            <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
+
             </div>
         </div>
         <!-- END Dynamic Table with Export Buttons -->

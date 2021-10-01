@@ -103,6 +103,7 @@
                                     <div class="mb-4">
                                         <label class="form-label" for="mhs">Mahasiswa</label>
                                         <select class="js-select2 form-select" name="mhs" id="mhs">
+                                            <option value="{{ Crypt::encrypt('semua') }}">Semua</option>
                                             @foreach($mhs as $item)
                                                 <option
                                                     value="{{ Crypt::encrypt($item->id) }}">{{$item->nim}}

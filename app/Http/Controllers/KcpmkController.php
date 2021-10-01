@@ -43,10 +43,28 @@ class KcpmkController extends Controller
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
         $mhs = Mahasiswa::orderBy('nim')->get();
+
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_mhs = Crypt::decrypt($request->mhs);
+        if($id_mhs === 'semua'){
+            $getMhs = kcpmk::with('mahasiswa')->groupBy('mahasiswa_id')->get();
+            $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+            $kcpmk = kcpmk::class;
+            return view('kcpmk.cari', [
+                'getmhs' => $getMhs,
+                'getkolom' => $getKolom,
+                'kcpmk' => $kcpmk,
+                'ta' => $ta,
+                'mk' => $mk,
+                'mhs' => $mhs,
+                'judul' => $judul,
+                'judulform' => $judulform,
+                'parent' => $parent,
+                'subparent' => $subparent,
+            ]);
+        }
         $getMhs = kcpmk::with('mahasiswa')->where('mahasiswa_id', $id_mhs)->groupBy('mahasiswa_id')->get();
         $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
         $getNilai = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('*',DB::raw('AVG(nilai_kcpmk) average'))->groupBy('kode_cpmk')->get();
