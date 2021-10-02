@@ -82,6 +82,11 @@
                                     <input type="number" class="form-control" id="sks" name="sks"
                                            placeholder="Masukkan SKS..." required>
                                 </div>
+                                <div class="mb-4">
+                                    <label class="form-label" for="semester">Semester</label>
+                                    <input type="number" class="form-control" id="semester" name="semester"
+                                           placeholder="Masukkan Semester..." required>
+                                </div>
                             </div>
                         </div>
                     </div>

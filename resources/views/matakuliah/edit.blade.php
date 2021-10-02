@@ -86,6 +86,12 @@
                                            value="{{ $matakuliah->sks }}"
                                            placeholder="Masukkan SKS..." required>
                                 </div>
+                                <div class="mb-4">
+                                    <label class="form-label" for="semester">Semester</label>
+                                    <input type="number" class="form-control" id="semester" name="semester"
+                                           value="{{ $matakuliah->semester }}"
+                                           placeholder="Masukkan Semester..." required>
+                                </div>
                             </div>
                         </div>
                     </div>

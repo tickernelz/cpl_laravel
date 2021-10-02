@@ -67,7 +67,8 @@
                             <th class="text-center" style="width: 80px;">#</th>
                             <th>Kode Mata Kuliah</th>
                             <th>Nama Mata Kuliah</th>
-                            <th>SKS</th>
+                            <th class="text-center">SKS</th>
+                            <th class="text-center">Semester</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                         </thead>
@@ -77,7 +78,8 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $adm->kode }}</td>
                                 <td>{{ $adm->nama }}</td>
-                                <td>{{ $adm->sks }}</td>
+                                <td class="text-center">{{ $adm->sks }}</td>
+                                <td class="text-center">{{ $adm->semester }}</td>
                                 <td class="text-center" style="width: 100px">
                                     <div class="btn-group">
                                         <a type="button" href="{{ Request::url() }}/edit/{{ $adm->id }}"

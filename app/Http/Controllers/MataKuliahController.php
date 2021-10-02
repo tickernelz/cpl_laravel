@@ -62,6 +62,7 @@ class MataKuliahController extends Controller
             'kode' => 'required|string|unique:mata_kuliahs',
             'nama' => 'required|string',
             'sks' => 'required|integer',
+            'semester' => 'required|integer',
         ];
 
         $messages = [
@@ -72,6 +73,8 @@ class MataKuliahController extends Controller
             'nama.string' => 'Nama Mata Kuliah tidak valid',
             'sks.required' => 'SKS wajib diisi',
             'sks.integer' => 'SKS Harus Berupa Angka',
+            'semester.required' => 'Semester wajib diisi',
+            'semester.integer' => 'Semester Harus Berupa Angka',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -84,6 +87,7 @@ class MataKuliahController extends Controller
         $mk->kode = $request->input('kode');
         $mk->nama = $request->input('nama');
         $mk->sks = $request->input('sks');
+        $mk->semester = $request->input('semester');
         $mk->save();
 
         return back()->with('success', 'Data Berhasil Ditambahkan!.');
@@ -98,12 +102,14 @@ class MataKuliahController extends Controller
             'kode' => 'required|string',
             'nama' => 'required|string',
             'sks' => 'required|integer',
+            'semester' => 'required|integer',
         ];
 
         $rules2 = [
             'kode' => 'required|string|unique:mata_kuliahs',
             'nama' => 'required|string',
             'sks' => 'required|integer',
+            'semester' => 'required|integer',
         ];
 
         $messages = [
@@ -114,6 +120,8 @@ class MataKuliahController extends Controller
             'nama.string' => 'Nama Mata Kuliah tidak valid',
             'sks.required' => 'SKS wajib diisi',
             'sks.integer' => 'SKS Harus Berupa Angka',
+            'semester.required' => 'Semester wajib diisi',
+            'semester.integer' => 'Semester Harus Berupa Angka',
         ];
 
         if ($mkori === $mkedit) {
@@ -127,6 +135,7 @@ class MataKuliahController extends Controller
             $mk->kode = $request->input('kode');
             $mk->nama = $request->input('nama');
             $mk->sks = $request->input('sks');
+            $mk->semester = $request->input('semester');
             $mk->save();
 
             return back()->with('success', 'Data Berhasil Diubah!.');
@@ -141,6 +150,7 @@ class MataKuliahController extends Controller
         $mk->kode = $request->input('kode');
         $mk->nama = $request->input('nama');
         $mk->sks = $request->input('sks');
+        $mk->semester = $request->input('semester');
         $mk->save();
 
         return back()->with('success', 'Data Berhasil Diubah!.');

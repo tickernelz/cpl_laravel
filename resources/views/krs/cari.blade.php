@@ -263,11 +263,15 @@
                     <div class="col-lg-3">
                         @if ($sum_sks > 24)
                             <div class="alert alert-warning py-2 mb-0" role="alert">
-                                <strong>Waduh!</strong> Total SKS Melebihi {{$sum_sks}} nih
+                                <strong>Waduh!</strong> Total SKS Melebihi <strong>{{$sum_sks}}</strong> nih
                             </div>
-                        @elseif($sum_sks >= 3)
+                        @elseif($sum_sks >= 1)
                             <div class="alert alert-success py-2 mb-0" role="alert">
-                               Total <strong>SKS </strong>Adalah {{$sum_sks}}
+                               Total <strong>SKS </strong>Adalah <strong>{{$sum_sks}}</strong>
+                            </div>
+                        @else
+                            <div class="alert alert-danger py-2 mb-0" role="alert">
+                                <strong>Loh!</strong> Total SKS Masih <strong>{{$sum_sks}}</strong> Nih!
                             </div>
                         @endif
                         @if (Session::has('error'))

@@ -33,6 +33,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $krs_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpmk[] $kcpmk
  * @property-read int|null $kcpmk_count
+ * @property int $sks
+ * @method static \Illuminate\Database\Eloquent\Builder|MataKuliah whereSks($value)
+ * @property int $semester
+ * @method static \Illuminate\Database\Eloquent\Builder|MataKuliah whereSemester($value)
  */
 class MataKuliah extends Model
 {
