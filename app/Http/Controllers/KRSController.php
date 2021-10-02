@@ -51,11 +51,12 @@ class KRSController extends Controller
         $id_mhs = Crypt::decrypt($request->nim);
         $nama_mhs = Mahasiswa::where('id', $id_mhs)->value('nama');
         $ada_mhs = Mahasiswa::where('id', $id_mhs)->get();
-        $tampil = KRS::with(
-            'mahasiswa', 'tahun_ajaran', 'mata_kuliah'
-        )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mahasiswa_id = '$id_mhs' AND semester = '$id_sem'"
-        )->get();
+        $tampil = KRS::with('mahasiswa', 'tahun_ajaran', 'mata_kuliah')
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mahasiswa_id = '$id_mhs' AND semester = '$id_sem'")
+            ->get();
+        $sum_sks = MataKuliah::whereHas('krs', function ($query) use ($id_sem, $id_mhs, $id_ta) {
+            return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mahasiswa_id = '$id_mhs' AND semester = '$id_sem'");
+        })->get()->sum('sks');
         $arraymk = $tampil->pluck('mata_kuliah_id')->toArray();
         if (isset($tampil)) {
             $tampilselain = MataKuliah::whereNotIn('id', $arraymk)->get();
@@ -68,6 +69,7 @@ class KRSController extends Controller
                 [
                     'data' => $tampil,
                     'dataselain' => $tampilselain,
+                    'sum_sks' => $sum_sks,
                     'ta' => $ta,
                     'mhs' => $mhs,
                     'mk' => $mk,

@@ -208,6 +208,7 @@
                                         <tr>
                                             <th>Kode Mata Kuliah</th>
                                             <th>Nama Mata Kuliah</th>
+                                            <th>SKS</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                         </thead>
@@ -218,6 +219,7 @@
                                                 <tr>
                                                     <td>{{ $ds->kode }}</td>
                                                     <td>{{ $ds->nama }}</td>
+                                                    <td>{{ $ds->sks }}</td>
                                                     <td class="text-center"
                                                         style="width: 100px">
                                                         <a href="javascript:void(0)"
@@ -257,6 +259,24 @@
                 </div>
             </div>
             <div class="block-content block-content-full">
+                <div class="d-flex flex-row-reverse">
+                    <div class="col-lg-3">
+                        @if ($sum_sks > 24)
+                            <div class="alert alert-warning py-2 mb-0" role="alert">
+                                <strong>Waduh!</strong> Total SKS Melebihi {{$sum_sks}} nih
+                            </div>
+                        @elseif($sum_sks >= 3)
+                            <div class="alert alert-success py-2 mb-0" role="alert">
+                               Total <strong>SKS </strong>Adalah {{$sum_sks}}
+                            </div>
+                        @endif
+                        @if (Session::has('error'))
+                            <div class="alert alert-danger py-2 mb-0" role="alert">
+                                {{ Session::get('error') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
@@ -265,6 +285,7 @@
                             <th class="text-center" style="width: 80px;">#</th>
                             <th>Kode Mata Kuliah</th>
                             <th>Nama Mata Kuliah</th>
+                            <th>SKS</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                         </thead>
@@ -274,6 +295,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $li->mata_kuliah->kode }}</td>
                                 <td>{{ $li->mata_kuliah->nama }}</td>
+                                <td>{{ $li->mata_kuliah->sks }}</td>
                                 <td class="text-center" style="width: 100px">
                                     <div class="btn-group">
                                         <a href="javascript:void(0)"
