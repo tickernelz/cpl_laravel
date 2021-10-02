@@ -80,6 +80,12 @@
                                            value="{{ $matakuliah->nama }}" name="nama"
                                            placeholder="Masukkan Nama Mata Kuliah..." required>
                                 </div>
+                                <div class="mb-4">
+                                    <label class="form-label" for="sks">SKS</label>
+                                    <input type="number" class="form-control" id="sks" name="sks"
+                                           value="{{ $matakuliah->sks }}"
+                                           placeholder="Masukkan SKS..." required>
+                                </div>
                             </div>
                         </div>
                     </div>

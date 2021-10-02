@@ -61,6 +61,7 @@ class MataKuliahController extends Controller
         $rules = [
             'kode' => 'required|string|unique:mata_kuliahs',
             'nama' => 'required|string',
+            'sks' => 'required|integer',
         ];
 
         $messages = [
@@ -69,6 +70,8 @@ class MataKuliahController extends Controller
             'kode.string' => 'Kode Mata Kuliah tidak valid',
             'nama.required' => 'Nama Mata Kuliah wajib diisi',
             'nama.string' => 'Nama Mata Kuliah tidak valid',
+            'sks.required' => 'SKS wajib diisi',
+            'sks.integer' => 'SKS Harus Berupa Angka',
         ];
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -80,6 +83,7 @@ class MataKuliahController extends Controller
         $mk = new MataKuliah();
         $mk->kode = $request->input('kode');
         $mk->nama = $request->input('nama');
+        $mk->sks = $request->input('sks');
         $mk->save();
 
         return back()->with('success', 'Data Berhasil Ditambahkan!.');
@@ -93,11 +97,13 @@ class MataKuliahController extends Controller
         $rules1 = [
             'kode' => 'required|string',
             'nama' => 'required|string',
+            'sks' => 'required|integer',
         ];
 
         $rules2 = [
             'kode' => 'required|string|unique:mata_kuliahs',
             'nama' => 'required|string',
+            'sks' => 'required|integer',
         ];
 
         $messages = [
@@ -106,6 +112,8 @@ class MataKuliahController extends Controller
             'kode.string' => 'Kode Mata Kuliah tidak valid',
             'nama.required' => 'Nama Mata Kuliah wajib diisi',
             'nama.string' => 'Nama Mata Kuliah tidak valid',
+            'sks.required' => 'SKS wajib diisi',
+            'sks.integer' => 'SKS Harus Berupa Angka',
         ];
 
         if ($mkori === $mkedit) {
@@ -118,6 +126,7 @@ class MataKuliahController extends Controller
             $mk = MataKuliah::where('id', $id)->first();
             $mk->kode = $request->input('kode');
             $mk->nama = $request->input('nama');
+            $mk->sks = $request->input('sks');
             $mk->save();
 
             return back()->with('success', 'Data Berhasil Diubah!.');
@@ -131,6 +140,7 @@ class MataKuliahController extends Controller
         $mk = MataKuliah::where('id', $id)->first();
         $mk->kode = $request->input('kode');
         $mk->nama = $request->input('nama');
+        $mk->sks = $request->input('sks');
         $mk->save();
 
         return back()->with('success', 'Data Berhasil Diubah!.');
