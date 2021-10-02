@@ -44,9 +44,10 @@ class BcplController extends Controller
         $id_ta = Crypt::decrypt($request->id_ta);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->id_mk);
+        $id_kelas = Crypt::decrypt($request->id_kelas);
         $cpmk = $request->cpmk;
         $tampil = Btp::whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND cpmk_id = '$cpmk'"
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND cpmk_id = '$cpmk' AND kelas = '$id_kelas'"
         )->get();
 
         return Response()->json($tampil);
@@ -68,6 +69,7 @@ class BcplController extends Controller
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
+        $id_kelas = Crypt::decrypt($request->kelas);
         $cpmk_mk = Cpmk::with('mata_kuliah')->where('mata_kuliah_id', $id_mk)->get();
         $tampil = Bobotcpl::with(
             'tahun_ajaran',
@@ -76,7 +78,7 @@ class BcplController extends Controller
             'cpl',
             'btp'
         )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'"
         )->get();
         $sum_bobot = $tampil->sum('bobot_cpl');
 
@@ -103,6 +105,7 @@ class BcplController extends Controller
     {
         $id_ta = $request->id_ta;
         $id_mk = $request->id_mk;
+        $id_kelas =$request->id_kelas;
         $id_cpmk = $request->id_cpmk;
         $id_cpl = $request->id_cpl;
         $id_btp = $request->id_btp;
@@ -115,7 +118,7 @@ class BcplController extends Controller
             'cpl',
             'btp'
         )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
         )->get();
         $sum_bobot = $tampil->sum('bobot_cpl') + $bobot;
         if ($sum_bobot <= 100.1) {
@@ -127,6 +130,7 @@ class BcplController extends Controller
                     'cpl_id' => $id_cpl,
                     'btp_id' => $id_btp,
                     'semester' => $semester,
+                    'kelas' => $id_kelas,
                     'bobot_cpl' => $bobot,
                 ]
             );
@@ -142,6 +146,7 @@ class BcplController extends Controller
         $id = $request->id;
         $id_ta = $request->id_ta;
         $id_mk = $request->id_mk;
+        $id_kelas =$request->id_kelas;
         $id_cpmk = $request->id_cpmk;
         $id_cpl = $request->id_cpl;
         $id_btp = $request->id_btp;
@@ -154,7 +159,7 @@ class BcplController extends Controller
             'cpl',
             'btp'
         )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
         )->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot_cpl') + $bobot;
         if ($sum_bobot <= 100.1) {
@@ -165,6 +170,7 @@ class BcplController extends Controller
             $btp->cpl_id = $id_cpl;
             $btp->btp_id = $id_btp;
             $btp->semester = (string)$semester;
+            $btp->kelas = (string)$id_kelas;
             $btp->bobot_cpl = $bobot;
             $save = $btp->save();
 

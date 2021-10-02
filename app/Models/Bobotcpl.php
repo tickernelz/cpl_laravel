@@ -37,6 +37,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Cpmk $cpmk
  * @property-read \App\Models\MataKuliah $mata_kuliah
  * @property-read \App\Models\TahunAjaran $tahun_ajaran
+ * @property string $kelas
+ * @method static \Illuminate\Database\Eloquent\Builder|Bobotcpl whereKelas($value)
  */
 class Bobotcpl extends Model
 {

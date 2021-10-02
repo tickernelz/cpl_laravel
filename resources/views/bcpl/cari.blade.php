@@ -41,6 +41,7 @@
                 data: {
                     id_ta: '{{ Request::get('tahunajaran') }}',
                     id_mk: '{{ Request::get('mk') }}',
+                    id_kelas: '{{ Request::get('kelas') }}',
                     semester: '{{ Request::get('semester') }}',
                     cpmk: $("#cpmk").val()
                 },
@@ -65,6 +66,7 @@
                 data: {
                     id_ta: '{{ Request::get('tahunajaran') }}',
                     id_mk: '{{ Request::get('mk') }}',
+                    id_kelas: '{{ Request::get('kelas') }}',
                     semester: '{{ Request::get('semester') }}',
                     cpmk: $("#cpmk1").val()
                 },
@@ -91,6 +93,7 @@
                     _token: "{{ csrf_token() }}",
                     id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
                     id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
+                    id_kelas: '{{ Crypt::decrypt(Request::get('kelas')) }}',
                     id_cpmk: $('#cpmk').val(),
                     id_cpl: $('#cpl').val(),
                     id_btp: $('#btp').val(),
@@ -122,6 +125,7 @@
                     id: $('#id1').val(),
                     id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
                     id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
+                    id_kelas: '{{ Crypt::decrypt(Request::get('kelas')) }}',
                     id_cpmk: $('#cpmk1').val(),
                     id_cpl: $('#cpl1').val(),
                     id_btp: $('#btp1').val(),
@@ -281,6 +285,32 @@
                                                 </option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Ruang/Kelas</label>
+                                        <div class="space-x-2">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas1" name="kelas"
+                                                       value="{{ Crypt::encrypt('A') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'A')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas1">Kelas A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas2" name="kelas"
+                                                       value="{{ Crypt::encrypt('B') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'B')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas2">Kelas B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas3" name="kelas"
+                                                       value="{{ Crypt::encrypt('C') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'C')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas3">Kelas C</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
