@@ -54,15 +54,15 @@ class BtpController extends Controller
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
+        $id_kelas = Crypt::decrypt($request->kelas);
         $cpmk_mk = Cpmk::with('mata_kuliah')->where('mata_kuliah_id', $id_mk)->get();
         $tampil = Btp::with(
             'tahun_ajaran',
             'mata_kuliah',
             'cpmk',
-            'dosen_admin'
-        )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
-        )->get();
+            'dosen_admin')
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")
+            ->get();
         $sum_bobot = $tampil->sum('bobot');
 
         return view('btp.cari', [
@@ -89,6 +89,7 @@ class BtpController extends Controller
         $id_mk = $request->id_mk;
         $id_cpmk = $request->id_cpmk;
         $id_dosen = $request->id_dosen;
+        $id_kelas = $request->kelas;
         $teknik = $request->teknik;
         $semester = $request->semester;
         $kategori = $request->kategori;
@@ -99,7 +100,7 @@ class BtpController extends Controller
             'cpmk',
             'dosen_admin'
         )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
         )->get();
         $sum_bobot = $tampil->sum('bobot') + $bobot;
         if ($sum_bobot <= 100.1) {
@@ -129,6 +130,7 @@ class BtpController extends Controller
         $id_mk = $request->id_mk;
         $id_cpmk = $request->id_cpmk;
         $id_dosen = $request->id_dosen;
+        $id_kelas = $request->kelas;
         $teknik = $request->teknik;
         $semester = $request->semester;
         $kategori = $request->kategori;
@@ -139,7 +141,7 @@ class BtpController extends Controller
             'cpmk',
             'dosen_admin'
         )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester'"
+            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
         )->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot') + $bobot;
         if ($sum_bobot <= 100.1) {

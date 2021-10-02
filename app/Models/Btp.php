@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $nilai_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpmk[] $kcpmk
  * @property-read int|null $kcpmk_count
+ * @property string $kelas
+ * @method static \Illuminate\Database\Eloquent\Builder|Btp whereKelas($value)
  */
 class Btp extends Model
 {
