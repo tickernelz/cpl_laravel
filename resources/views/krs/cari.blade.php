@@ -187,7 +187,7 @@
         <!-- Modal Tambah KRS -->
         <div class="modal fade" id="tambahkrs" tabindex="-1" role="dialog" aria-labelledby="tambahkrs"
              aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="block block-rounded block-themed block-transparent mb-0">
                         <div class="block-header bg-primary-dark">
@@ -208,7 +208,8 @@
                                         <tr>
                                             <th>Kode Mata Kuliah</th>
                                             <th>Nama Mata Kuliah</th>
-                                            <th>SKS</th>
+                                            <th class="text-center">SKS</th>
+                                            <th class="text-center">Semester</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                         </thead>
@@ -219,7 +220,8 @@
                                                 <tr>
                                                     <td>{{ $ds->kode }}</td>
                                                     <td>{{ $ds->nama }}</td>
-                                                    <td>{{ $ds->sks }}</td>
+                                                    <td class="text-center">{{ $ds->sks }}</td>
+                                                    <td class="text-center">{{ $ds->semester }}</td>
                                                     <td class="text-center"
                                                         style="width: 100px">
                                                         <a href="javascript:void(0)"
@@ -289,7 +291,8 @@
                             <th class="text-center" style="width: 80px;">#</th>
                             <th>Kode Mata Kuliah</th>
                             <th>Nama Mata Kuliah</th>
-                            <th>SKS</th>
+                            <th class="text-center">SKS</th>
+                            <th class="text-center">Semester Mata Kuliah</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                         </thead>
@@ -299,7 +302,8 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $li->mata_kuliah->kode }}</td>
                                 <td>{{ $li->mata_kuliah->nama }}</td>
-                                <td>{{ $li->mata_kuliah->sks }}</td>
+                                <td class="text-center">{{ $li->mata_kuliah->sks }}</td>
+                                <td class="text-center">{{ $li->mata_kuliah->semester }}</td>
                                 <td class="text-center" style="width: 100px">
                                     <div class="btn-group">
                                         <a href="javascript:void(0)"
