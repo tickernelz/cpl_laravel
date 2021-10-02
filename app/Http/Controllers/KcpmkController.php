@@ -9,10 +9,16 @@ use App\Models\TahunAjaran;
 use Crypt;
 use DB;
 use Illuminate\Http\Request;
-use PDF;
 
 class KcpmkController extends Controller
 {
+    protected $pdf;
+
+    public function __construct(\App\Models\PDFModel $pdf)
+    {
+        $this->pdf = $pdf;
+    }
+
     public function index()
     {
         $judul = 'Kelola Ketercapaian CPMK';
@@ -86,7 +92,55 @@ class KcpmkController extends Controller
 
     public function downloadPDF(Request $request)
     {
-        $pdf = PDF::loadview('kcpmk.pdf')->setPaper('A4','potrait');
-        return $pdf->stream();
+        // Variabel
+        $mata_kuliah = 'Metode Penelitian';
+        $jumlah_mhs = '40';
+        $jumlah_sks = '3';
+        $ruang = 'A';
+
+        // Generate
+        $this->pdf->Addpage('L', 'A4');
+        $this->pdf->SetY(40);
+        $this->pdf->SetFont('Times','B',11.5);
+        $this->pdf->MultiCell(260, 8, "KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)", 0, 'C');
+
+        $this->pdf->SetFont('Times','',9);
+        $this->pdf->SetY(50);
+        $this->pdf->Cell(28, 5, 'Mata Kuliah ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, $mata_kuliah, 0, 1, 'L');
+
+        $this->pdf->Cell(28, 5, 'Jumlah SKS ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, $jumlah_sks, 0, 1, 'L');
+
+        $this->pdf->Cell(28, 5, 'Ruang/Kelas ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, $ruang, 0, 1, 'L');
+
+        $this->pdf->Cell(28, 5, 'Jumlah Mahasiswa ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, $jumlah_mhs, 0, 1, 'L');
+
+        $this->pdf->Cell(28, 5, 'Dosen ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, '', 0, 1, 'L');
+
+        $this->pdf->SetY(50);
+        $this->pdf->SetX(180);
+        $this->pdf->Cell(25, 5, 'Jurusan ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, 'TEKNIK INFORMATIKA', 0, 1, 'L');
+
+        $this->pdf->SetX(180);
+        $this->pdf->Cell(25, 5, 'Jenjang ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, 'S1 TEKNIK INFORMATIKA', 0, 1, 'L');
+
+        $this->pdf->SetX(180);
+        $this->pdf->Cell(25, 5, 'Semester ', 0, 0, 'L');
+        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        $this->pdf->Cell(172, 5, '', 0, 1, 'L');
+        $this->pdf->Output();
     }
 }

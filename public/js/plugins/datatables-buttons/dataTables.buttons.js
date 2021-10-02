@@ -65,7 +65,7 @@ function _fadeOut(el, duration, fn) {
 	}
 	else {
 		el.css('display', 'none');
-		
+
 		if (fn) {
 			fn.call(el);
 		}
@@ -90,9 +90,9 @@ var Buttons = function( dt, config )
 
 	// If there is no config set it to an empty object
 	if ( typeof( config ) === 'undefined' ) {
-		config = {};	
+		config = {};
 	}
-	
+
 	// Allow a boolean true for defaults
 	if ( config === true ) {
 		config = {};
@@ -267,7 +267,7 @@ $.extend( Buttons.prototype, {
 		// needed). Take a copy as the array is modified by `remove`
 		var buttons = this.s.buttons.slice();
 		var i, ien;
-		
+
 		for ( i=0, ien=buttons.length ; i<ien ; i++ ) {
 			this.remove( buttons[i].node );
 		}
@@ -540,7 +540,7 @@ $.extend( Buttons.prototype, {
 		var buttons = ! Array.isArray( button ) ?
 			[ button ] :
 			button;
-		
+
 		if(button === undefined ) {
 			buttons = !Array.isArray(split) ?
 				[ split ] :
@@ -550,7 +550,7 @@ $.extend( Buttons.prototype, {
 		if (button !== undefined && button.split !== undefined) {
 			isSplit = true;
 		}
-			
+
 		for ( var i=0, ien=buttons.length ; i<ien ; i++ ) {
 			var conf = this._resolveExtends( buttons[i] );
 
@@ -564,7 +564,7 @@ $.extend( Buttons.prototype, {
 			else {
 				isSplit = false;
 			}
-			
+
 			// If the configuration is an array, then expand the buttons at this
 			// point
 			if ( Array.isArray( conf ) ) {
@@ -585,7 +585,7 @@ $.extend( Buttons.prototype, {
 				attachTo.push( built );
 			}
 
-			
+
 			if ( built.conf.buttons || built.conf.split ) {
 				built.collection = $('<'+(isSplit ? this.c.dom.splitCollection.tag : this.c.dom.collection.tag)+'/>');
 
@@ -652,7 +652,7 @@ $.extend( Buttons.prototype, {
 		}
 		else if ( !isSplit && inCollection && collectionDom.button ) {
 			buttonDom = collectionDom.button;
-		} 
+		}
 
 		if ( !isSplit && inSplit && splitCollectionDom.buttonLiner ) {
 			linerDom = splitCollectionDom.buttonLiner
@@ -662,7 +662,7 @@ $.extend( Buttons.prototype, {
 		}
 
 		// Make sure that the button is available based on whatever requirements
-		// it has. For example, PDF button require pdfmake
+		// it has. For example, PDFController button require pdfmake
 		if ( config.available && ! config.available( dt, config ) && !config.hasOwnProperty('html') ) {
 			return false;
 		}
@@ -671,9 +671,9 @@ $.extend( Buttons.prototype, {
 		if(!config.hasOwnProperty('html')) {
 			var action = function ( e, dt, button, config ) {
 				config.action.call( dt.button( button ), e, dt, button, config );
-	
+
 				$(dt.table().node()).triggerHandler( 'buttons-action.dt', [
-					dt.button( button ), dt, button, config 
+					dt.button( button ), dt, button, config
 				] );
 			};
 
@@ -686,7 +686,7 @@ $.extend( Buttons.prototype, {
 				.attr( 'aria-controls', this.s.dt.table().node().id )
 				.on( 'click.dtb', function (e) {
 					e.preventDefault();
-	
+
 					if ( ! button.hasClass( buttonDom.disabled ) && config.action ) {
 						action( e, dt, button, config );
 					}
@@ -701,48 +701,48 @@ $.extend( Buttons.prototype, {
 						}
 					}
 				} );
-	
+
 			// Make `a` tags act like a link
 			if ( tag.toLowerCase() === 'a' ) {
 				button.attr( 'href', '#' );
 			}
-	
+
 			// Button tags should have `type=button` so they don't have any default behaviour
 			if ( tag.toLowerCase() === 'button' ) {
 				button.attr( 'type', 'button' );
 			}
-	
+
 			if ( linerDom.tag ) {
 				var liner = $('<'+linerDom.tag+'/>')
 					.html( text( config.text ) )
 					.addClass( linerDom.className );
-	
+
 				if ( linerDom.tag.toLowerCase() === 'a' ) {
 					liner.attr( 'href', '#' );
 				}
-	
+
 				button.append( liner );
 			}
 			else {
 				button.html( text( config.text ) );
 			}
-	
+
 			if ( config.enabled === false ) {
 				button.addClass( buttonDom.disabled );
 			}
-	
+
 			if ( config.className ) {
 				button.addClass( config.className );
 			}
-	
+
 			if ( config.titleAttr ) {
 				button.attr( 'title', text( config.titleAttr ) );
 			}
-	
+
 			if ( config.attr ) {
 				button.attr( config.attr );
 			}
-	
+
 			if ( ! config.namespace ) {
 				config.namespace = '.dt-button-'+(_buttonCounter++);
 			}
@@ -754,7 +754,7 @@ $.extend( Buttons.prototype, {
 		else {
 			button = $(config.html)
 		}
-	
+
 		var buttonContainer = this.c.dom.buttonContainer;
 		var inserter;
 		if ( buttonContainer && buttonContainer.tag ) {
@@ -788,20 +788,20 @@ $.extend( Buttons.prototype, {
 				},
 				align: this.c.dom.splitDropdown.align,
 				splitAlignClass: this.c.dom.splitDropdown.splitAlignClass
-				
+
 			})
 
 			this._addKey(dropButtonConfig);
 
 			var splitAction = function ( e, dt, button, config ) {
 				_dtButtons.split.action.call( dt.button($('div.dt-btn-split-wrapper')[0] ), e, dt, button, config );
-	
+
 				$(dt.table().node()).triggerHandler( 'buttons-action.dt', [
-					dt.button( button ), dt, button, config 
+					dt.button( button ), dt, button, config
 				] );
 				button.attr('aria-expanded', true)
 			};
-			
+
 			var dropButton = $('<button class="' + this.c.dom.splitDropdown.className + ' dt-button"><span class="dt-btn-split-drop-arrow">'+this.c.dom.splitDropdown.text+'</span></button>')
 				.on( 'click.dtb', function (e) {
 					e.preventDefault();
@@ -1240,7 +1240,7 @@ $.extend( Buttons.prototype, {
 					popoverWidth = $(display.children()[0]).outerWidth();
 				}
 			}
-			
+
 			var popoverRight = popoverLeft + popoverWidth;
 
 			// Get the size of the host buttons (left and width - and ...)
@@ -1277,9 +1277,9 @@ $.extend( Buttons.prototype, {
 					if(tableLeft > (popoverLeft + popoverShuffle)){
 						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
 						var rightGap = tableRight - (popoverRight + popoverShuffle);
-		
+
 						if(leftGap > rightGap){
-							popoverShuffle += rightGap; 
+							popoverShuffle += rightGap;
 						}
 						else {
 							popoverShuffle += leftGap;
@@ -1291,9 +1291,9 @@ $.extend( Buttons.prototype, {
 					if(tableLeft > (popoverLeft + popoverShuffle)){
 						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
 						var rightGap = tableRight - (popoverRight + popoverShuffle);
-		
+
 						if(leftGap > rightGap){
-							popoverShuffle += rightGap; 
+							popoverShuffle += rightGap;
 						}
 						else {
 							popoverShuffle += leftGap;
@@ -1306,35 +1306,35 @@ $.extend( Buttons.prototype, {
 					if(tableRight < (popoverRight + popoverShuffle) || tableLeft > (popoverLeft + popoverShuffle)){
 						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
 						var rightGap = tableRight - (popoverRight + popoverShuffle);
-	
+
 						if(leftGap > rightGap ){
 							popoverShuffle += rightGap;
 						}
 						else {
 							popoverShuffle += leftGap;
 						}
-	
+
 					}
 				}
 				// else attempt to left align the popover to the button. Similar to above, if the popover's right goes past the table container's right,
 				//  then move it back, but not so much that it goes past the left of the table container
 				else {
 					popoverShuffle = tableLeft - popoverLeft;
-	
+
 					if(tableRight < (popoverRight + popoverShuffle)){
 						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
 						var rightGap = tableRight - (popoverRight + popoverShuffle);
-	
+
 						if(leftGap > rightGap ){
 							popoverShuffle += rightGap;
 						}
 						else {
 							popoverShuffle += leftGap;
 						}
-	
+
 					}
 				}
-	
+
 				display.css('left', display.position().left + popoverShuffle);
 			}
 			else {
@@ -1347,8 +1347,8 @@ $.extend( Buttons.prototype, {
 
 				display.css('left', display.position().left + popoverShuffle);
 			}
-			
-			
+
+
 		}
 		else {
 			// Fix position - centre on screen
@@ -1410,7 +1410,7 @@ $.extend( Buttons.prototype, {
 /**
  * Show / hide a background layer behind a collection
  * @param  {boolean} Flag to indicate if the background should be shown or
- *   hidden 
+ *   hidden
  * @param  {string} Class to assign to the background
  * @static
  */
@@ -1496,7 +1496,7 @@ Buttons.instanceSelector = function ( group, buttons )
 			ret.push( buttons[ input ].inst );
 		}
 	};
-	
+
 	process( group );
 
 	return ret;
@@ -2279,7 +2279,7 @@ var _exportData = function ( dt, inOpts )
 			return config.format.footer( el ? el.innerHTML : '', idx, el );
 		} ).toArray() :
 		null;
-	
+
 	// If Select is available on this table, and any rows are selected, limit the export
 	// to the selected rows. If no rows are selected, all rows will be exported. Specify
 	// a `selected` modifier to control directly.

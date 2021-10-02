@@ -1398,18 +1398,18 @@ DataTable.ext.buttons.excelFlash = $.extend( {}, flashButton, {
 	},
 
 	extension: '.xlsx',
-	
+
 	createEmptyCells: false
 } );
 
 
 
-// PDF export
+// PDFController export
 DataTable.ext.buttons.pdfFlash = $.extend( {}, flashButton, {
 	className: 'buttons-pdf buttons-flash',
 
 	text: function ( dt ) {
-		return dt.i18n( 'buttons.pdf', 'PDF' );
+		return dt.i18n( 'buttons.pdf', 'PDFController' );
 	},
 
 	action: function ( e, dt, button, config ) {
@@ -1421,7 +1421,7 @@ DataTable.ext.buttons.pdfFlash = $.extend( {}, flashButton, {
 		var info = dt.buttons.exportInfo( config );
 		var totalWidth = dt.table().node().offsetWidth;
 
-		// Calculate the column width ratios for layout of the table in the PDF
+		// Calculate the column width ratios for layout of the table in the PDFController
 		var ratios = dt.columns( config.columns ).indexes().map( function ( idx ) {
 			return dt.column( idx ).header().offsetWidth / totalWidth;
 		} );
