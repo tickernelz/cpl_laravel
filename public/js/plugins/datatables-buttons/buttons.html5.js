@@ -1301,7 +1301,7 @@ DataTable.ext.buttons.excelHtml5 = {
 };
 
 //
-// PDFController export - using pdfMake - http://pdfmake.org
+// PDF export - using pdfMake - http://pdfmake.org
 //
 DataTable.ext.buttons.pdfHtml5 = {
 	className: 'buttons-pdf buttons-html5',
@@ -1311,7 +1311,7 @@ DataTable.ext.buttons.pdfHtml5 = {
 	},
 
 	text: function ( dt ) {
-		return dt.i18n( 'buttons.pdf', 'PDFController' );
+		return dt.i18n( 'buttons.pdf', 'PDF' );
 	},
 
 	action: function ( e, dt, button, config ) {

@@ -662,7 +662,7 @@ $.extend( Buttons.prototype, {
 		}
 
 		// Make sure that the button is available based on whatever requirements
-		// it has. For example, PDFController button require pdfmake
+		// it has. For example, PDF button require pdfmake
 		if ( config.available && ! config.available( dt, config ) && !config.hasOwnProperty('html') ) {
 			return false;
 		}

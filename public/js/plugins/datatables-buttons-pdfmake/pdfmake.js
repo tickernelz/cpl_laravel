@@ -14781,7 +14781,7 @@ function _createForOfIteratorHelper(o, allowArrayLike) {
   };
 }
 /*
-PDFAbstractReference - abstract class for PDFController reference
+PDFAbstractReference - abstract class for PDF reference
 */
 
 
@@ -14922,10 +14922,10 @@ var PDFObject = /*#__PURE__*/function () {
   _createClass(PDFObject, null, [{
     key: "convert",
     value: function convert(object) {
-      var encryptFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null; // String literals are converted to the PDFController name type
+      var encryptFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null; // String literals are converted to the PDF name type
 
       if (typeof object === 'string') {
-        return "/".concat(object); // String objects are converted to PDFController strings (UTF-16)
+        return "/".concat(object); // String objects are converted to PDF strings (UTF-16)
       } else if (object instanceof String) {
         var string = object; // Detect if this is a unicode string
 
@@ -14958,7 +14958,7 @@ var PDFObject = /*#__PURE__*/function () {
         string = string.replace(escapableRe, function (c) {
           return escapable[c];
         });
-        return "(".concat(string, ")"); // Buffers are converted to PDFController hex strings
+        return "(".concat(string, ")"); // Buffers are converted to PDF hex strings
       } else if (Buffer.isBuffer(object)) {
         return "<".concat(object.toString('hex'), ">");
       } else if (object instanceof PDFAbstractReference || object instanceof PDFTree) {
@@ -15111,7 +15111,7 @@ var PDFReference = /*#__PURE__*/function (_PDFAbstractReference) {
   return PDFReference;
 }(PDFAbstractReference);
 /*
-PDFPage - represents a single page in the PDFController document
+PDFPage - represents a single page in the PDF document
 By Devon Govett
 */
 
@@ -15203,7 +15203,7 @@ var PDFPage = /*#__PURE__*/function () {
     this.content = this.document.ref(); // Initialize the Font, XObject, and ExtGState dictionaries
 
     this.resources = this.document.ref({
-      ProcSet: ['PDFController', 'Text', 'ImageB', 'ImageC', 'ImageI']
+      ProcSet: ['PDF', 'Text', 'ImageB', 'ImageC', 'ImageI']
     }); // The page dictionary
 
     this.dictionary = this.document.ref({
@@ -16349,7 +16349,7 @@ var PDFGradient = /*#__PURE__*/function () {
             CS: 'DeviceGray'
           },
           Resources: {
-            ProcSet: ['PDFController', 'Text', 'ImageB', 'ImageC', 'ImageI'],
+            ProcSet: ['PDF', 'Text', 'ImageB', 'ImageC', 'ImageI'],
             Pattern: {
               Sh1: grad
             }
@@ -16375,7 +16375,7 @@ var PDFGradient = /*#__PURE__*/function () {
           XStep: pageBBox[2],
           YStep: pageBBox[3],
           Resources: {
-            ProcSet: ['PDFController', 'Text', 'ImageB', 'ImageC', 'ImageI'],
+            ProcSet: ['PDF', 'Text', 'ImageB', 'ImageC', 'ImageI'],
             Pattern: {
               Sh1: pattern
             },
@@ -18180,7 +18180,7 @@ var EmbeddedFont = /*#__PURE__*/function (_PDFFont) {
         ToUnicode: this.toUnicodeCmap()
       };
       return this.dictionary.end();
-    } // Maps the glyph ids encoded in the PDFController back to unicode strings
+    } // Maps the glyph ids encoded in the PDF back to unicode strings
     // Because of ligature substitutions and the like, there may be one or more
     // unicode characters represented by each glyph.
 
@@ -18262,7 +18262,7 @@ var PDFFontFactory = /*#__PURE__*/function () {
       }
 
       if (font == null) {
-        throw new Error('Not a supported font format or standard PDFController font.');
+        throw new Error('Not a supported font format or standard PDF font.');
       }
 
       return new EmbeddedFont(document, font, id);
@@ -18311,7 +18311,7 @@ var FontsMixin = {
 
     if (size != null) {
       this.fontSize(size);
-    } // fast path: check if the font is already in the PDFController
+    } // fast path: check if the font is already in the PDF
 
 
     if (font = this._fontFamilies[cacheKey]) {
@@ -18321,7 +18321,7 @@ var FontsMixin = {
 
 
     var id = "F".concat(++this._fontCount);
-    this._font = PDFFontFactory.open(this, src, family, id); // check for existing font familes with the same name already in the PDFController
+    this._font = PDFFontFactory.open(this, src, family, id); // check for existing font familes with the same name already in the PDF
     // useful if the font was passed as a buffer
 
     if (font = this._fontFamilies[this._font.name]) {
@@ -19424,7 +19424,7 @@ var PNGImage = /*#__PURE__*/function () {
       if (this.image.palette.length === 0) {
         this.obj.data['ColorSpace'] = this.image.colorSpace;
       } else {
-        // embed the color palette in the PDFController as an object stream
+        // embed the color palette in the PDF as an object stream
         var palette = this.document.ref();
         palette.end(Buffer.from(this.image.palette)); // build the color space array for the image
 
@@ -19467,7 +19467,7 @@ var PNGImage = /*#__PURE__*/function () {
       } else if (hasAlphaChannel) {
         // For PNG color types 4 and 6, the transparency data is stored as a alpha
         // channel mixed in with the main image data. Separate this data out into an
-        // SMask object and store it separately in the PDFController.
+        // SMask object and store it separately in the PDF.
         dataDecoded = true;
         return this.splitAlphaChannel();
       }
@@ -20590,7 +20590,7 @@ var AcroFormMixin = {
 
     if (this._root.data.AcroForm) {
       if (!Object.keys(this._acroform.fonts).length && !this._acroform.defaultFont) {
-        throw new Error('No fonts specified for PDFController form');
+        throw new Error('No fonts specified for PDF form');
       }
 
       var fontDict = this._root.data.AcroForm.data.DR.Font;
@@ -20622,7 +20622,7 @@ var AcroFormMixin = {
 
   /**
    * Creates and adds a form field to the document. Form fields are intermediate
-   * nodes in a PDFController form that are used to specify form name heirarchy and form
+   * nodes in a PDF form that are used to specify form name heirarchy and form
    * value defaults.
    * @param {string} name - field name (T attribute in field dictionary)
    * @param {object} options  - other attributes to include in field dictionary
@@ -20641,7 +20641,7 @@ var AcroFormMixin = {
 
   /**
    * Creates and adds a Form Annotation to the document. Form annotations are
-   * called Widget annotations internally within a PDFController file.
+   * called Widget annotations internally within a PDF file.
    * @param {string} name - form field name (T attribute of widget annotation
    * dictionary)
    * @param {number} x
@@ -20931,12 +20931,12 @@ var AcroFormMixin = {
 };
 var AttachmentsMixin = {
   /**
-   * Embed contents of `src` in PDFController
+   * Embed contents of `src` in PDF
    * @param {Buffer | ArrayBuffer | string} src input Buffer, ArrayBuffer, base64 encoded string or path to file
    * @param {object} options
-   *  * options.name: filename to be shown in PDFController, will use `src` if none set
-   *  * options.type: filetype to be shown in PDFController
-   *  * options.description: description to be shown in PDFController
+   *  * options.name: filename to be shown in PDF, will use `src` if none set
+   *  * options.type: filetype to be shown in PDF
+   *  * options.description: description to be shown in PDF
    *  * options.hidden: if true, do not add attachment to EmbeddedFiles dictionary. Useful for file attachment annotations
    *  * options.creationDate: override creation date
    *  * options.modifiedDate: override modified date
@@ -21063,7 +21063,7 @@ var PDFDocument = /*#__PURE__*/function (_stream$Readable) {
     _classCallCheck(this, PDFDocument);
 
     _this = _super.call(this, options);
-    _this.options = options; // PDFController version
+    _this.options = options; // PDF version
 
     switch (options.pdfVersion) {
       case '1.4':
@@ -21091,7 +21091,7 @@ var PDFDocument = /*#__PURE__*/function (_stream$Readable) {
 
     _this.compress = _this.options.compress != null ? _this.options.compress : true;
     _this._pageBuffer = [];
-    _this._pageBufferStart = 0; // The PDFController object store
+    _this._pageBufferStart = 0; // The PDF object store
 
     _this._offsets = [];
     _this._waiting = 0;
@@ -21159,9 +21159,9 @@ var PDFDocument = /*#__PURE__*/function (_stream$Readable) {
     _this._id = PDFSecurity.generateFileID(_this.info); // Initialize security settings
 
     _this._security = PDFSecurity.create(_assertThisInitialized(_this), options); // Write the header
-    // PDFController version
+    // PDF version
 
-    _this._write("%PDFController-".concat(_this.version)); // 4 binary chars, as recommended by the spec
+    _this._write("%PDF-".concat(_this.version)); // 4 binary chars, as recommended by the spec
 
 
     _this._write('%\xFF\xFF\xFF\xFF'); // Add the first page
@@ -21197,7 +21197,7 @@ var PDFDocument = /*#__PURE__*/function (_stream$Readable) {
       pages.Count++; // reset x and y coordinates
 
       this.x = this.page.margins.left;
-      this.y = this.page.margins.top; // flip PDFController coordinate system so that the origin is in
+      this.y = this.page.margins.top; // flip PDF coordinate system so that the origin is in
       // the top left rather than the bottom left
 
       this._ctm = [1, 0, 0, 1, 0, 0];
@@ -22351,7 +22351,7 @@ var SVGtoPDF = function SVGtoPDF(doc, svg, x, y, options) {
       YStep: pattern.dy,
       Matrix: multiplyMatrix(doc._ctm, pattern.matrix),
       Resources: {
-        ProcSet: ['PDFController', 'Text', 'ImageB', 'ImageC', 'ImageI'],
+        ProcSet: ['PDF', 'Text', 'ImageB', 'ImageC', 'ImageI'],
         XObject: function () {
           var temp = {};
           temp[pattern.group.name] = pattern.group.xobj;
@@ -68130,7 +68130,7 @@ var TTFSubset = /*#__PURE__*/function (_Subset) {
   };
 
   _proto41.encode = function encode(stream) {
-    // tables required by PDFController spec:
+    // tables required by PDF spec:
     //   head, hhea, loca, maxp, cvt , prep, glyf, hmtx, fpgm
     //
     // additional tables required for standalone fonts:
@@ -71686,7 +71686,7 @@ Document.prototype._openWindow = function () {
 	// otherwise popup blockers will stop us
 	var win = window.open('', '_blank');
 	if (win === null) {
-		throw 'Open PDFController in new window blocked by browser';
+		throw 'Open PDF in new window blocked by browser';
 	}
 
 	return win;
@@ -71947,7 +71947,7 @@ function buildColumnWidths(columns, availableWidth) {
 	var maxW = autoMax + starMaxMax * starColumns.length;
 	if (minW >= availableWidth) {
 		// case 1 - there's no way to fit all columns within available width
-		// that's actually pretty bad situation with PDFController as we have no horizontal scroll
+		// that's actually pretty bad situation with PDF as we have no horizontal scroll
 		// no easy workaround (unless we decide, in the future, to split single words)
 		// currently we simply use minWidths for all columns
 		autoColumns.forEach(function (col) {
@@ -74062,7 +74062,7 @@ function addAll(target, otherArray) {
 
 /**
  * Creates an instance of LayoutBuilder - layout engine which turns document-definition-object
- * into a set of pages, lines, inlines and vectors ready to be rendered into a PDFController
+ * into a set of pages, lines, inlines and vectors ready to be rendered into a PDF
  *
  * @param {Object} pageSize - an object defining page width and height
  * @param {Object} pageMargins - an object defining top, left, right and bottom margins
@@ -75330,7 +75330,7 @@ PdfPrinter.prototype.createPdfKitDocument = function (docDefinition, options) {
 };
 
 function setMetadata(docDefinition, pdfKitDoc) {
-	// PDFController standard has these properties reserved: Title, Author, Subject, Keywords,
+	// PDF standard has these properties reserved: Title, Author, Subject, Keywords,
 	// Creator, Producer, CreationDate, ModDate, Trapped.
 	// To keep the pdfmake api consistent, the info field are defined lowercase.
 	// Custom properties don't contain a space.

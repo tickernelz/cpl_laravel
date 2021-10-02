@@ -25,7 +25,7 @@ return array(
          * Additional .afm font metrics can be added by executing load_font.php from command line.
          *
          * Only the original "Base 14 fonts" are present on all pdf viewers. Additional fonts must
-         * be embedded in the pdf file or the PDFController may not display correctly. This can significantly
+         * be embedded in the pdf file or the PDF may not display correctly. This can significantly
          * increase file size unless font subsetting is enabled. Before embedding a font please
          * review your rights under the font license.
          *
@@ -79,9 +79,9 @@ return array(
         "enable_font_subsetting" => false,
 
         /**
-         * The PDFController rendering backend to use
+         * The PDF rendering backend to use
          *
-         * Valid settings are 'PDFLib', 'CPDF' (the bundled R&OS PDFController class), 'GD' and
+         * Valid settings are 'PDFLib', 'CPDF' (the bundled R&OS PDF class), 'GD' and
          * 'auto'. 'auto' will look for PDFLib and use it if found, or if not it will
          * fall back on CPDF. 'GD' renders PDFs to graphic files. {@link
          * Canvas_Factory} ultimately determines which rendering class to instantiate
@@ -98,7 +98,7 @@ return array(
          * The GD rendering backend is a little different than PDFLib and
          * CPDF. Several features of CPDF and PDFLib are not supported or do
          * not make any sense when creating image files.  For example,
-         * multiple pages are not supported, nor are PDFController 'objects'.  Have a
+         * multiple pages are not supported, nor are PDF 'objects'.  Have a
          * look at {@link GD_Adapter} for more information.  GD support is
          * experimental, so use it at your own risk.
          *
@@ -158,7 +158,7 @@ return array(
          * DPI may be overridden for inline images by explictly setting the
          * image's width & height style attributes (i.e. if the image's native
          * width is 600 pixels and you specify the image's width as 72 points,
-         * the image will have a DPI of 600 in the rendered PDFController.  The DPI of
+         * the image will have a DPI of 600 in the rendered PDF.  The DPI of
          * background images can not be overridden and is controlled entirely
          * via this parameter.
          *
