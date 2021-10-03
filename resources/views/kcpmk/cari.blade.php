@@ -191,7 +191,20 @@
             <div class="block-header block-header-default">
                 <h3 class="block-title">{{$parent}} <small>List</small></h3>
                 <div class="block-options">
-                    <a type="button" href="{{ route('kcpmk-pdf') }}" class="btn btn-sm btn-primary">Cetak</a>
+                    <form method="GET" action="{{URL::to('kcpmk-pdf')}}">
+                        @csrf
+                        <input name="tahun_ajaran" type="hidden"
+                               value="{{ Request::get('tahunajaran') }}">
+                        <input name="semester" type="hidden"
+                               value="{{ Request::get('semester') }}">
+                        <input name="mk" type="hidden"
+                               value="{{ Request::get('mk') }}">
+                        <input name="kelas" type="hidden"
+                               value="{{ Request::get('kelas') }}">
+                        <input name="mhs" type="hidden"
+                               value="{{ Request::get('mhs') }}">
+                        <input type="submit" class="btn btn-sm btn-primary" value="Cetak">
+                    </form>
                 </div>
             </div>
             <div class="block-content block-content-full">
@@ -215,14 +228,24 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $li->mahasiswa->nim }}</td>
                                         <td>{{ $li->mahasiswa->nama }}</td>
-                                        @foreach($kcpmk::where([
-                                            ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                            ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
-                                            ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
-                                            ['semester', '=', Crypt::decrypt(Request::get('semester'))],])
-                                            ->select('*',DB::raw('AVG(nilai_kcpmk) average'))
-                                            ->groupBy('kode_cpmk')->get()->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
-                                            <td class="text-center">{{ $lii->average }}</td>
+                                        @foreach($getkolom->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
+                                            @php
+                                                $get_kcpmk = $kcpmk::where([
+                                                    ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                    ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                    ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
+                                                    ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                    ['kode_cpmk', '=', $lii->kode_cpmk],])
+                                                    ->select('*',DB::raw('AVG(nilai_kcpmk) average'))
+                                                    ->groupBy('kode_cpmk')->get()
+                                            @endphp
+                                            @foreach($get_kcpmk->sortBy('kode_cpmk', SORT_NATURAL) as $liii)
+                                                @if($get_kcpmk->isEmpty())
+                                                    <td class="text-center">Kosong!</td>
+                                                @else
+                                                    <td class="text-center">{{ $liii->average }}</td>
+                                                @endif
+                                            @endforeach
                                         @endforeach
                                     </tr>
                                 @endforeach
