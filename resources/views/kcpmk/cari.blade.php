@@ -151,6 +151,32 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Ruang/Kelas</label>
+                                        <div class="space-x-2">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas1" name="kelas"
+                                                       value="{{ Crypt::encrypt('A') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'A')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas1">Kelas A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas2" name="kelas"
+                                                       value="{{ Crypt::encrypt('B') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'B')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas2">Kelas B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas3" name="kelas"
+                                                       value="{{ Crypt::encrypt('C') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'C')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas3">Kelas C</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -183,22 +209,24 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($getmhs as $li)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $li->mahasiswa->nim }}</td>
-                                    <td>{{ $li->mahasiswa->nama }}</td>
-                                    @foreach($kcpmk::where([
-                                        ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                        ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
-                                        ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
-                                        ['semester', '=', Crypt::decrypt(Request::get('semester'))],])
-                                        ->select('*',DB::raw('AVG(nilai_kcpmk) average'))
-                                        ->groupBy('kode_cpmk')->get()->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
-                                        <td class="text-center">{{ $lii->average }}</td>
-                                    @endforeach
-                                </tr>
-                            @endforeach
+                            @if(!$getkolom->isEmpty())
+                                @foreach($getmhs as $li)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $li->mahasiswa->nim }}</td>
+                                        <td>{{ $li->mahasiswa->nama }}</td>
+                                        @foreach($kcpmk::where([
+                                            ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                            ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                            ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
+                                            ['semester', '=', Crypt::decrypt(Request::get('semester'))],])
+                                            ->select('*',DB::raw('AVG(nilai_kcpmk) average'))
+                                            ->groupBy('kode_cpmk')->get()->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
+                                            <td class="text-center">{{ $lii->average }}</td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>

@@ -55,9 +55,10 @@ class KcpmkController extends Controller
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_mhs = Crypt::decrypt($request->mhs);
+        $id_kelas = Crypt::decrypt($request->kelas);
         if($id_mhs === 'semua'){
             $getMhs = kcpmk::with('mahasiswa')->groupBy('mahasiswa_id')->get();
-            $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+            $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
             $kcpmk = kcpmk::class;
             return view('kcpmk.cari', [
                 'getmhs' => $getMhs,
@@ -73,8 +74,8 @@ class KcpmkController extends Controller
             ]);
         }
         $getMhs = kcpmk::with('mahasiswa')->where('mahasiswa_id', $id_mhs)->groupBy('mahasiswa_id')->get();
-        $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
-        $getNilai = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('*',DB::raw('AVG(nilai_kcpmk) average'))->groupBy('kode_cpmk')->get();
+        $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+        $getNilai = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->select('*',DB::raw('AVG(nilai_kcpmk) average'))->groupBy('kode_cpmk')->get();
 
         return view('kcpmk.cari', [
             'getmhs' => $getMhs,
