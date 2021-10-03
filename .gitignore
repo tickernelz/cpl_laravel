@@ -16,3 +16,4 @@ yarn-error.log
 !/code-generator/
 !/.env
 /cpl_dashmix.zip
+/vendor.zip
