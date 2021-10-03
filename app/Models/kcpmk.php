@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\Mahasiswa $mahasiswa
  * @method static \Illuminate\Database\Eloquent\Builder|kcpmk whereBtpId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|kcpmk whereKodeCpmk($value)
+ * @property string $kelas
+ * @method static \Illuminate\Database\Eloquent\Builder|kcpmk whereKelas($value)
  */
 class kcpmk extends Model
 {

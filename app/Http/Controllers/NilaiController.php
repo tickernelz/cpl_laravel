@@ -49,12 +49,13 @@ class NilaiController extends Controller
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
+        $id_kelas = Crypt::decrypt($request->kelas);
         $getMhs = KRS::with('mahasiswa')->whereRaw(
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
         )->get();
         $getTeknik = Btp::with('cpmk')->whereRaw(
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'
-            AND dosen_admin_id = '$id_dosen'"
+            AND dosen_admin_id = '$id_dosen' AND kelas = '$id_kelas'"
         )->get();
 
         return view('nilai.cari', [
@@ -74,6 +75,7 @@ class NilaiController extends Controller
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mata_kuliah);
+        $id_kelas = Crypt::decrypt($request->kelas);
 
         $id_cpmk = $request->get('cpmk_id');
         $kode_cpmk = $request->get('kode_cpmk');
@@ -126,6 +128,7 @@ class NilaiController extends Controller
                     ['cpmk_id', '=', $id_cpmk_array],
                     ['kode_cpmk', '=', $kode_cpmk_array],
                     ['semester', '=', $id_sem],
+                    ['kelas', '=', $id_kelas],
                     ['nilai_kcpmk', '=', $nilaiori_array],
                 ])->first();
 
@@ -142,6 +145,7 @@ class NilaiController extends Controller
                         'cpmk_id' => $id_cpmk_array,
                         'kode_cpmk' => $kode_cpmk_array,
                         'semester' => $id_sem,
+                        'kelas' => $id_kelas,
                         'nilai_kcpmk' => $nilai_array,
                     ]);
                 }

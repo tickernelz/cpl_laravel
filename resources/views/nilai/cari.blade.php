@@ -137,6 +137,32 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Ruang/Kelas</label>
+                                        <div class="space-x-2">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas1" name="kelas"
+                                                       value="{{ Crypt::encrypt('A') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'A')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas1">Kelas A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas2" name="kelas"
+                                                       value="{{ Crypt::encrypt('B') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'B')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas2">Kelas B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" id="kelas3" name="kelas"
+                                                       value="{{ Crypt::encrypt('C') }}"
+                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'C')
+                                                       checked="" @endif>
+                                                <label class="form-check-label" for="kelas3">Kelas C</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -155,6 +181,8 @@
                    value="{{ Request::get('semester') }}">
             <input name="mata_kuliah" type="hidden"
                    value="{{ Request::get('mk') }}">
+            <input name="kelas" type="hidden"
+                   value="{{ Request::get('kelas') }}">
             <div class="block block-rounded">
                 <div class="block-header block-header-default">
                     <h3 class="block-title">{{$parent}} <small>List</small></h3>
@@ -181,50 +209,53 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($mhs as $li)
-                                <tr>
-                                    @php
-                                        $number1 = $loop->iteration - 1
-                                    @endphp
-                                    <td>{{ $loop->iteration }}</td>
-                                    <input name="mahasiswa_id[]" type="hidden"
-                                           value="{{ $li->mahasiswa->id }}">
-                                    <td>{{ $li->mahasiswa->nim }}</td>
-                                    <td>{{ $li->mahasiswa->nama }}</td>
-                                    @foreach($teknik->sortBy('nama', SORT_NATURAL) as $t)
+                            @if(!$teknik->isEmpty())
+                                @foreach($mhs as $li)
+                                    <tr>
                                         @php
-                                            $number2 = $loop->iteration - 1
+                                            $number1 = $loop->iteration - 1
                                         @endphp
-                                        @if(empty($t->id))
-                                            <td class="text-center"></td>
-                                        @else
-                                            <input name="cpmk_id[{{$number1}}][{{$number2}}]" type="hidden"
-                                                   value="{{ $t->cpmk->id }}">
-                                            <input name="kode_cpmk[{{$number1}}][{{$number2}}]" type="hidden"
-                                                   value="{{ $t->cpmk->kode_cpmk }}">
-                                            <td class="text-center">
-                                                <div class="input-group mb-3">
-                                                    <input name="btp_id[{{$number1}}][{{$number2}}]" type="hidden"
-                                                           value="{{ $t->id }}">
-                                                    <input type="hidden" name="nilai-ori[{{$number1}}][{{$number2}}]"
-                                                           value="{{ \App\Models\Nilai::where([
+                                        <td>{{ $loop->iteration }}</td>
+                                        <input name="mahasiswa_id[]" type="hidden"
+                                               value="{{ $li->mahasiswa->id }}">
+                                        <td>{{ $li->mahasiswa->nim }}</td>
+                                        <td>{{ $li->mahasiswa->nama }}</td>
+                                        @foreach($teknik->sortBy('nama', SORT_NATURAL) as $t)
+                                            @php
+                                                $number2 = $loop->iteration - 1
+                                            @endphp
+                                            @if(empty($t->id))
+                                                <td class="text-center"></td>
+                                            @else
+                                                <input name="cpmk_id[{{$number1}}][{{$number2}}]" type="hidden"
+                                                       value="{{ $t->cpmk->id }}">
+                                                <input name="kode_cpmk[{{$number1}}][{{$number2}}]" type="hidden"
+                                                       value="{{ $t->cpmk->kode_cpmk }}">
+                                                <td class="text-center">
+                                                    <div class="input-group mb-3">
+                                                        <input name="btp_id[{{$number1}}][{{$number2}}]" type="hidden"
+                                                               value="{{ $t->id }}">
+                                                        <input type="hidden"
+                                                               name="nilai-ori[{{$number1}}][{{$number2}}]"
+                                                               value="{{ \App\Models\Nilai::where([
                                                             ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                             ['btp_id', '=', $t->id],
                                                         ])->value('nilai')}}"
-                                                           class="form-control">
-                                                    <input type="text" name="nilai[{{$number1}}][{{$number2}}]"
-                                                           value="{{ \App\Models\Nilai::where([
+                                                               class="form-control">
+                                                        <input type="text" name="nilai[{{$number1}}][{{$number2}}]"
+                                                               value="{{ \App\Models\Nilai::where([
                                                             ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                             ['btp_id', '=', $t->id],
                                                         ])->value('nilai')}}"
-                                                           class="form-control"
-                                                           placeholder="Isi Nilai">
-                                                </div>
-                                            </td>
-                                        @endif
-                                    @endforeach
-                                </tr>
-                            @endforeach
+                                                               class="form-control"
+                                                               placeholder="Isi Nilai">
+                                                    </div>
+                                                </td>
+                                            @endif
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>
