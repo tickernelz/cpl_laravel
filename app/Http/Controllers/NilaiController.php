@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bobotcpl;
 use App\Models\Btp;
 use App\Models\DosenAdmin;
+use App\Models\kcpl;
 use App\Models\kcpmk;
 use App\Models\KRS;
 use App\Models\MataKuliah;
@@ -92,12 +94,18 @@ class NilaiController extends Controller
             $maxidbtp = count($btpbymhs);
             for ($y = 0; $y < $maxidbtp; $y ++)
             {
+
                 $id_mhs_array = $id_mhs[$x];
                 $id_cpmk_array = $id_cpmk[$x][$y];
                 $kode_cpmk_array = $kode_cpmk[$x][$y];
                 $id_btp_array = $id_btp[$x][$y];
                 $nilai_array = $nilai[$x][$y];
                 $nilaiori_array = $nilaiori[$x][$y];
+
+                $getBobotCPL = Bobotcpl::with('cpl')
+                    ->whereRaw(
+                    "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND cpmk_id = '$id_cpmk_array' AND btp_id = '$id_btp_array'")
+                    ->get();
 
                 // Nilai
                 $cek_nilai = Nilai::where([
@@ -110,7 +118,6 @@ class NilaiController extends Controller
                     $cek_nilai->update([
                         'nilai' => $nilai_array,
                     ]);
-
                 } else {
                     Nilai::create([
                         'mahasiswa_id' => $id_mhs_array,
@@ -148,6 +155,38 @@ class NilaiController extends Controller
                         'kelas' => $id_kelas,
                         'nilai_kcpmk' => $nilai_array,
                     ]);
+                }
+
+                foreach ($getBobotCPL as $value)
+                {
+                    $cek_kcpl = kcpl::where([
+                        ['tahun_ajaran_id', '=', $id_ta],
+                        ['mahasiswa_id', '=', $id_mhs_array],
+                        ['mata_kuliah_id', '=', $id_mk],
+                        ['bobotcpl_id', '=', $value->id],
+                        ['cpl_id', '=', $value->cpl_id],
+                        ['kode_cpl', '=', $value->cpl->kode_cpl],
+                        ['semester', '=', $id_sem],
+                        ['kelas', '=', $id_kelas],
+                    ])->first();
+
+                    if(!is_null($cek_kcpl)) {
+                        $cek_kcpl->update([
+                            'nilai_cpl' => ($nilai_array * $value->bobot_cpl),
+                        ]);
+                    } else {
+                        kcpl::create([
+                            'tahun_ajaran_id' => $id_ta,
+                            'mahasiswa_id' => $id_mhs_array,
+                            'mata_kuliah_id' => $id_mk,
+                            'bobotcpl_id' => $value->id,
+                            'cpl_id' => $value->cpl_id,
+                            'kode_cpl' => $value->cpl->kode_cpl,
+                            'semester' => $id_sem,
+                            'kelas' => $id_kelas,
+                            'nilai_cpl' => ($nilai_array * $value->bobot_cpl),
+                        ]);
+                    }
                 }
             }
         }

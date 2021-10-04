@@ -8,6 +8,7 @@ use App\Http\Controllers\CPLController;
 use App\Http\Controllers\CPMKController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KcplController;
 use App\Http\Controllers\KcpmkController;
 use App\Http\Controllers\KRSController;
 use App\Http\Controllers\MahasiswaController;
@@ -108,6 +109,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('kcpmk', [KcpmkController::class, 'index'])->name('kcpmk');
         Route::get('kcpmk/cari', [KcpmkController::class, 'cari'])->name('kcpmkcari');
         Route::get('kcpmk-cetak', [KcpmkController::class, 'downloadPDF'])->name('kcpmk-cetak');
+        // Ketercapaian CPL
+        Route::get('kcpl', [KcplController::class, 'index'])->name('kcpl');
+        Route::get('kcpl/cari', [KcplController::class, 'cari'])->name('kcplcari');
+        Route::get('kcpl-cetak', [KcplController::class, 'downloadPDF'])->name('kcpl-cetak');
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
         // Nilai

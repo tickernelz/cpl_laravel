@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Models\TahunAjaran $tahun_ajaran
  * @property string $kelas
  * @method static \Illuminate\Database\Eloquent\Builder|Bobotcpl whereKelas($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpl[] $kcpl
+ * @property-read int|null $kcpl_count
  */
 class Bobotcpl extends Model
 {
@@ -71,5 +73,10 @@ class Bobotcpl extends Model
     public function btp()
     {
         return $this->belongsTo(Btp::class);
+    }
+
+    public function kcpl()
+    {
+        return $this->hasMany(Kcpl::class);
     }
 }

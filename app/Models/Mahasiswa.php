@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $nilai_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpmk[] $kcpmk
  * @property-read int|null $kcpmk_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpl[] $kcpl
+ * @property-read int|null $kcpl_count
  */
 class Mahasiswa extends Model
 {
@@ -54,5 +56,10 @@ class Mahasiswa extends Model
     public function kcpmk()
     {
         return $this->hasMany(Kcpmk::class);
+    }
+
+    public function kcpl()
+    {
+        return $this->hasMany(Kcpl::class);
     }
 }

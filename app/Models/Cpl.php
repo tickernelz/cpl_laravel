@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Cpl whereNamaCpl($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bobotcpl[] $bobotcpl
  * @property-read int|null $bobotcpl_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpl[] $kcpl
+ * @property-read int|null $kcpl_count
  */
 class Cpl extends Model
 {
@@ -41,5 +43,10 @@ class Cpl extends Model
     public function bobotcpl()
     {
         return $this->hasMany(Bobotcpl::class);
+    }
+
+    public function kcpl()
+    {
+        return $this->hasMany(Kcpl::class);
     }
 }
