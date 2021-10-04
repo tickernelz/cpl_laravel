@@ -107,7 +107,7 @@ Route::group(['middleware' => 'auth'], function () {
         // Ketercapaian CPMK
         Route::get('kcpmk', [KcpmkController::class, 'index'])->name('kcpmk');
         Route::get('kcpmk/cari', [KcpmkController::class, 'cari'])->name('kcpmkcari');
-        Route::get('kcpmk-pdf', [KcpmkController::class, 'downloadPDF'])->name('kcpmk-pdf');
+        Route::get('kcpmk-cetak', [KcpmkController::class, 'downloadPDF'])->name('kcpmk-cetak');
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
         // Nilai
