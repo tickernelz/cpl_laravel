@@ -28,7 +28,7 @@ class CreateKcpmksTable extends Migration
             $table->string('kode_cpmk');
             $table->enum('semester', ['1', '2']);
             $table->enum('kelas', ['A', 'B', 'C']);
-            $table->float('nilai_kcpmk')->default('0');
+            $table->float('nilai_kcpmk')->nullable()->default('0');
             $table->timestamps();
         });
     }

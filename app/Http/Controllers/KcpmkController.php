@@ -212,6 +212,6 @@ class KcpmkController extends Controller
             $this->pdf->Ln();
         }
         $this->pdf->SetTitle("KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).")");
-        $this->pdf->Output('',"KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).").pdf");
+        return $this->pdf->Output('D',"KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).").pdf");
     }
 }
