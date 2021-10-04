@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|kcpl whereTahunAjaranId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|kcpl whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property float|null $bobot_cpl
+ * @method static \Illuminate\Database\Eloquent\Builder|kcpl whereBobotCpl($value)
  */
 class kcpl extends Model
 {

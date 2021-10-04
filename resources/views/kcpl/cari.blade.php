@@ -191,7 +191,7 @@
             <div class="block-header block-header-default">
                 <h3 class="block-title">{{$parent}} <small>List</small></h3>
                 <div class="block-options">
-                    <form method="GET" action="{{route('kcpmk-cetak')}}">
+                    <form method="GET" action="{{route('kcpl-cetak')}}">
                         @csrf
                         <input name="tahun_ajaran" type="hidden"
                                value="{{ Request::get('tahunajaran') }}">
