@@ -35,7 +35,7 @@
     <div class="content">
         <div class="row">
             <div class="col-md-6 " style="float:none;margin:auto;">
-                <form method="GET" action="{{URL::to('kcpmk/cari')}}">
+                <form method="GET" action="{{URL::to('kcpl/cari')}}">
                     <div class="block block-rounded">
                         <div class="block-header block-header-default">
                             <h3 class="block-title">{{ $judulform }}</h3>

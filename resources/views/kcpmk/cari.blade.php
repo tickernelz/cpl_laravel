@@ -219,6 +219,7 @@
                                 @foreach($getkolom->sortBy('kode_cpmk', SORT_NATURAL) as $li)
                                     <th class="text-center">{{ $li->kode_cpmk }}</th>
                                 @endforeach
+                                <th class="text-center">Terakhir Diperbarui</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -247,6 +248,7 @@
                                                 @endif
                                             @endforeach
                                         @endforeach
+                                        <td class="text-center">{{ $getUpdated->updated_at->diffForHumans() }}</td>
                                     </tr>
                                 @endforeach
                             @endif

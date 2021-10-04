@@ -157,6 +157,7 @@ class NilaiController extends Controller
                     ]);
                 }
 
+                // Ketercapaian CPL
                 foreach ($getBobotCPL as $value)
                 {
                     $cek_kcpl = kcpl::where([
@@ -173,6 +174,7 @@ class NilaiController extends Controller
                     if(!is_null($cek_kcpl)) {
                         $cek_kcpl->update([
                             'nilai_cpl' => ($nilai_array * $value->bobot_cpl),
+                            'bobot_cpl' => ($value->bobot_cpl),
                         ]);
                     } else {
                         kcpl::create([
@@ -185,6 +187,7 @@ class NilaiController extends Controller
                             'semester' => $id_sem,
                             'kelas' => $id_kelas,
                             'nilai_cpl' => ($nilai_array * $value->bobot_cpl),
+                            'bobot_cpl' => ($value->bobot_cpl),
                         ]);
                     }
                 }

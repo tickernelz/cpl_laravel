@@ -29,6 +29,7 @@ class CreateKcplsTable extends Migration
             $table->enum('semester', ['1', '2']);
             $table->enum('kelas', ['A', 'B', 'C']);
             $table->float('nilai_cpl')->nullable()->default('0');
+            $table->float('bobot_cpl')->nullable()->default('0');
             $table->timestamps();
         });
     }

@@ -59,7 +59,7 @@
         <!-- Cari Data -->
         <div class="row">
             <div class="col-md-6 " style="float:none;margin:auto;">
-                <form method="GET" action="{{URL::to('kcpmk/cari')}}">
+                <form method="GET" action="{{URL::to('kcpl/cari')}}">
                     <div class="block block-rounded block-fx-shadow">
                         <div class="block-header block-header-default">
                             <h3 class="block-title">{{ $judulform }}</h3>
@@ -219,6 +219,7 @@
                                 @foreach($getkolom->sortBy('kode_cpl', SORT_NATURAL) as $li)
                                     <th class="text-center">{{ $li->kode_cpl }}</th>
                                 @endforeach
+                                <th class="text-center">Terakhir Diperbarui</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -236,17 +237,18 @@
                                                     ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
                                                     ['semester', '=', Crypt::decrypt(Request::get('semester'))],
                                                     ['kode_cpl', '=', $lii->kode_cpl],])
-                                                    ->select('*',DB::raw('AVG(nilai_kcpl) average'))
+                                                    ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                                     ->groupBy('kode_cpl')->get()
                                             @endphp
                                             @foreach($get_kcpl->sortBy('kode_cpl', SORT_NATURAL) as $liii)
                                                 @if($get_kcpl->isEmpty())
                                                     <td class="text-center">Kosong!</td>
                                                 @else
-                                                    <td class="text-center">{{ $liii->average }}</td>
+                                                    <td class="text-center">{{ round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) }}</td>
                                                 @endif
                                             @endforeach
                                         @endforeach
+                                        <td class="text-center">{{ $getUpdated->updated_at->diffForHumans() }}</td>
                                     </tr>
                                 @endforeach
                             @endif
