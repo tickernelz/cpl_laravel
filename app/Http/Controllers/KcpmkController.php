@@ -224,7 +224,8 @@ class KcpmkController extends Controller
             PDF::Ln();
         }
         PDF::SetTitle("KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).")");
-        $nama_file = "KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).").pdf";
-        return PDF::Output($nama_file);
+        $nama_file = 'KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($id_kelas).').pdf';
+        PDF::Output(storage_path('app').'/public/'.$nama_file, 'F');
+        return response()->file(storage_path('app').'/public/'.$nama_file);
     }
 }
