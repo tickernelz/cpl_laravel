@@ -10,15 +10,10 @@ use App\Models\TahunAjaran;
 use Crypt;
 use DB;
 use Illuminate\Http\Request;
+use PDF;
 
 class KcpmkController extends Controller
 {
-    protected $pdf;
-
-    public function __construct(\App\Models\PDFModel $pdf)
-    {
-        $this->pdf = $pdf;
-    }
 
     public function index()
     {
@@ -113,85 +108,102 @@ class KcpmkController extends Controller
             return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'");
         })->get();
 
-        // Generate
-        $this->pdf->Addpage('L', 'A4');
-        $this->pdf->SetY(40);
-        $this->pdf->SetFont('Times', 'B', 11.5);
-        $this->pdf->MultiCell(260, 8, "KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)", 0, 'C');
+        // TCPDF
 
-        $this->pdf->SetFont('Times', '', 9);
-        $this->pdf->SetY(50);
-        $this->pdf->Cell(28, 5, 'Mata Kuliah ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
-        $this->pdf->SetFont('Times', 'B', 9);
-        $this->pdf->Cell(172, 5, "".(strtoupper($mata_kuliah->nama))." (".(strtoupper($mata_kuliah->kode)).")", 0, 1, 'L');
+        //Header
+        PDF::setHeaderCallback(function($pdf){
+            $pdf->Image(asset('media/photos/UPR.jpg'),10, 10, 25, 25);
+            $pdf->SetFont('Times','B',11.5);
+            $pdf->Ln(10);
+            $pdf->MultiCell(290, 4, "KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI ", 0, 'C');
+            $pdf->MultiCell(290, 4, "UNIVERSITAS PALANGKA RAYA", 0, 'C');
+            $pdf->MultiCell(290, 4, "FAKULTAS TEKNIK", 0, 'C');
+            $pdf->Ln(1);
+            $pdf->SetFont('Times','',8);
+            $pdf->MultiCell(290, 3, "Alamat : Kampus UPR Tunjung Nyaho Jalan Yos Sudarso Kotak Pos 2/PLKUP Palangka Raya 73112 Kalimantan Tengah - INDONESIA", 0, 'C');
+            $pdf->MultiCell(290, 3, "Telepon/Fax: +62 536-3226487 ; laman: www.upr.ac.id E-Mail: fakultas_teknik@eng.upr.ac.id", 0, 'C');
+            $pdf->Line(10, 38, 285, 38);
+        });
 
-        $this->pdf->SetFont('Times', '', 9);
-        $this->pdf->Cell(28, 5, 'Jumlah SKS ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
-        $this->pdf->Cell(172, 5, $jumlah_sks, 0, 1, 'L');
+        // Isi
+        PDF::Addpage('L', 'A4');
+        PDF::SetY(40);
+        PDF::SetFont('Times', 'B', 11.5);
+        PDF::MultiCell(260, 8, "KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)", 0, 'C');
 
-        $this->pdf->Cell(28, 5, 'Ruang/Kelas ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
-        $this->pdf->Cell(172, 5, $ruang, 0, 1, 'L');
+        PDF::SetFont('Times', '', 9);
+        PDF::SetY(50);
+        PDF::Cell(28, 5, 'Mata Kuliah ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::SetFont('Times', 'B', 9);
+        PDF::Cell(172, 5, "".(strtoupper($mata_kuliah->nama))." (".(strtoupper($mata_kuliah->kode)).")", 0, 1, 'L');
 
-        $this->pdf->Cell(28, 5, 'Jumlah Mahasiswa ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
-        $this->pdf->Cell(172, 5, $jumlah_mhs, 0, 1, 'L');
+        PDF::SetFont('Times', '', 9);
+        PDF::Cell(28, 5, 'Jumlah SKS ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::Cell(172, 5, $jumlah_sks, 0, 1, 'L');
 
-        $this->pdf->Cell(28, 5, 'Dosen ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
+        PDF::Cell(28, 5, 'Ruang/Kelas ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::Cell(172, 5, $ruang, 0, 1, 'L');
+
+        PDF::Cell(28, 5, 'Jumlah Mahasiswa ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::Cell(172, 5, $jumlah_mhs, 0, 1, 'L');
+
+        PDF::Cell(28, 5, 'Dosen ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
         foreach ($dosen as $li => $value)
         {
             if (($li + 1) > 4)
             {
-                $this->pdf->SetY(70);
-                $this->pdf->SetX(160);
-                $this->pdf->Cell(3, 5, "" . ($li + 1).".", 0, 0, 'L');
-                $this->pdf->Cell(172, 5, "".($value->nama)." (".($value->nip).")", 0, 1, 'L');
+                PDF::SetY(70);
+                PDF::SetX(160);
+                PDF::Cell(3, 5, "" . ($li + 1).".", 0, 0, 'L');
+                PDF::Cell(172, 5, "".($value->nama)." (".($value->nip).")", 0, 1, 'L');
             } else {
-                $this->pdf->SetX(41);
-                $this->pdf->Cell(3, 5, "" . ($li + 1).".", 0, 0, 'L');
-                $this->pdf->Cell(172, 5, "".($value->nama)." (".($value->nip).")", 0, 1, 'L');
+                PDF::SetX(41);
+                PDF::Cell(3, 5, "" . ($li + 1).".", 0, 0, 'L');
+                PDF::Cell(172, 5, "".($value->nama)." (".($value->nip).")", 0, 1, 'L');
             }
         }
-        $this->pdf->SetY(50);
-        $this->pdf->SetX(180);
-        $this->pdf->Cell(25, 5, 'Jurusan ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
-        $this->pdf->Cell(172, 5, 'TEKNIK INFORMATIKA', 0, 1, 'L');
+        PDF::SetY(50);
+        PDF::SetX(180);
+        PDF::Cell(25, 5, 'Jurusan ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::Cell(172, 5, 'TEKNIK INFORMATIKA', 0, 1, 'L');
 
-        $this->pdf->SetX(180);
-        $this->pdf->Cell(25, 5, 'Jenjang ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
-        $this->pdf->Cell(172, 5, 'S1 TEKNIK INFORMATIKA', 0, 1, 'L');
+        PDF::SetX(180);
+        PDF::Cell(25, 5, 'Jenjang ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::Cell(172, 5, 'S1 TEKNIK INFORMATIKA', 0, 1, 'L');
 
-        $this->pdf->SetX(180);
-        $this->pdf->Cell(25, 5, 'Semester ', 0, 0, 'L');
-        $this->pdf->Cell(3, 5, ':', 0, 0, 'L');
-        $this->pdf->Cell(172, 5, $semester, 0, 1, 'L');
+        PDF::SetX(180);
+        PDF::Cell(25, 5, 'Semester ', 0, 0, 'L');
+        PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::Cell(172, 5, $semester, 0, 1, 'L');
 
-        $this->pdf->SetY(95);
-        $this->pdf->SetX(10);
-        $this->pdf->SetFont('Times', 'B', 11);
-        $this->pdf->Cell(10, 16, 'No', 1, 0, 'C');
-        $this->pdf->Cell(35, 16, 'NIM', 1, 0, 'C');
-        $this->pdf->Cell(50, 16, 'NAMA MAHASISWA', 1, 0, 'C');
-        $this->pdf->Cell(180, 8, 'KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)', 1, 0, 'C');
-        $this->pdf->SetY(103);
-        $this->pdf->SetX(105);
+        PDF::SetY(95);
+        PDF::SetX(10);
+        PDF::SetFont('Times', 'B', 11);
+        PDF::Cell(10, 16, 'No', 1, 0, 'C');
+        PDF::Cell(35, 16, 'NIM', 1, 0, 'C');
+        PDF::Cell(50, 16, 'NAMA MAHASISWA', 1, 0, 'C');
+        PDF::Cell(180, 8, 'KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)', 1, 0, 'C');
+        PDF::SetY(103);
+        PDF::SetX(105);
         foreach($getKolom->sortBy('kode_cpmk', SORT_NATURAL) as $li)
         {
-            $this->pdf->Cell(18, 8, $li->kode_cpmk, 1, 0, 'C');
+            PDF::Cell(18, 8, $li->kode_cpmk, 1, 0, 'C');
         }
 
-        $this->pdf->SetFont('Times', '', 11);
-        $this->pdf->SetY(111);
+        PDF::SetFont('Times', '', 11);
+        PDF::SetY(111);
         foreach($getmhs as $li => $value) {
-            $this->pdf->SetX(10);
-            $this->pdf->Cell(10, 7, $li+1, 1, 0, 'C');
-            $this->pdf->Cell(35, 7, $value->mahasiswa->nim, 1, 0, 'C');
-            $this->pdf->Cell(50, 7, $value->mahasiswa->nama, 1, 0, 'C');
+            PDF::SetX(10);
+            PDF::Cell(10, 7, $li+1, 1, 0, 'C');
+            PDF::Cell(35, 7, $value->mahasiswa->nim, 1, 0, 'C');
+            PDF::Cell(50, 7, $value->mahasiswa->nama, 1, 0, 'C');
             foreach(kcpmk::where([
                 ['mahasiswa_id', '=', $value->mahasiswa->id],
                 ['tahun_ajaran_id', '=', $id_ta],
@@ -201,17 +213,18 @@ class KcpmkController extends Controller
                          ->groupBy('kode_cpmk')->get()->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
             {
                 if($lii->average < 60){
-                    $this->pdf->SetTextColor(198, 40, 40);
-                    $this->pdf->Cell(18, 7,  $lii->average, 1, 0, 'C');
-                    $this->pdf->SetTextColor(0, 0, 0);
+                    PDF::SetTextColor(198, 40, 40);
+                    PDF::Cell(18, 7,  $lii->average, 1, 0, 'C');
+                    PDF::SetTextColor(0, 0, 0);
                 } else {
-                    $this->pdf->Cell(18, 7,  $lii->average, 1, 0, 'C');
+                    PDF::Cell(18, 7,  $lii->average, 1, 0, 'C');
                 }
 
             }
-            $this->pdf->Ln();
+            PDF::Ln();
         }
-        $this->pdf->SetTitle("KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).")");
-        return $this->pdf->Output('D',"KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).").pdf");
+        PDF::SetTitle("KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).")");
+        $nama_file = "KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).").pdf";
+        return PDF::Output($nama_file);
     }
 }
