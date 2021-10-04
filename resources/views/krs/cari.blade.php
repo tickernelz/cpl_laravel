@@ -164,14 +164,14 @@
                                         </select>
                                     </div>
                                     <div class="mb-4">
-                                        <label class="form-label" for="nim">NIM</label>
+                                        <label class="form-label" for="nim">Mahasiswa</label>
                                         <select class="js-select2 form-select" name="nim" id="nim">
                                             @foreach($mhs as $item)
                                                 <option
                                                     value="{{ Crypt::encrypt($item->id) }}"
                                                     @if (Crypt::decrypt(Request::get('nim')) === $item->id)
                                                     selected="selected"
-                                                    @endif>{{$item->nim}}
+                                                    @endif>{{$item->nim}} ({{$item->nama}})
                                                 </option>
                                             @endforeach
                                         </select>
