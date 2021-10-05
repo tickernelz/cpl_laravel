@@ -121,7 +121,7 @@ class BcplController extends Controller
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
         )->get();
         $sum_bobot = $tampil->sum('bobot_cpl') + $bobot;
-        if ($sum_bobot <= 100.1) {
+        if ($id_btp !== '0' && isset($id_btp) && $sum_bobot <= 100.1) {
             $bcpl = Bobotcpl::Create(
                 [
                     'tahun_ajaran_id' => $id_ta,
@@ -134,7 +134,6 @@ class BcplController extends Controller
                     'bobot_cpl' => $bobot,
                 ]
             );
-
             return Response()->json($bcpl);
         }
 
@@ -162,20 +161,20 @@ class BcplController extends Controller
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
         )->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot_cpl') + $bobot;
-        if ($sum_bobot <= 100.1) {
-            $btp = Bobotcpl::find($id);
-            $btp->tahun_ajaran_id = $id_ta;
-            $btp->mata_kuliah_id = $id_mk;
-            $btp->cpmk_id = $id_cpmk;
-            $btp->cpl_id = $id_cpl;
-            $btp->btp_id = $id_btp;
-            $btp->semester = (string)$semester;
-            $btp->kelas = (string)$id_kelas;
-            $btp->bobot_cpl = $bobot;
-            $save = $btp->save();
+        if ($id_btp !== '0' && isset($id_btp) && $sum_bobot <= 100.1) {
+           $btp = Bobotcpl::find($id);
+           $btp->tahun_ajaran_id = $id_ta;
+           $btp->mata_kuliah_id = $id_mk;
+           $btp->cpmk_id = $id_cpmk;
+           $btp->cpl_id = $id_cpl;
+           $btp->btp_id = $id_btp;
+           $btp->semester = (string)$semester;
+           $btp->kelas = (string)$id_kelas;
+           $btp->bobot_cpl = $bobot;
+           $save = $btp->save();
 
-            return Response()->json($save);
-        }
+           return Response()->json($save);
+       }
 
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
     }
