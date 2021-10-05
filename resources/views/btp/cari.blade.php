@@ -147,7 +147,7 @@
                         location.reload();
                     },
                     error: function (data) {
-                        alert("Data yang ingin dihapus masih digunakan!")
+                        alert("Data yang ingin dihapus masih digunakan di Bobot CPL!")
                         console.log(data);
                     }
                 });

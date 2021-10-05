@@ -7,6 +7,7 @@ use App\Models\Btp;
 use App\Models\Cpmk;
 use App\Models\DosenAdmin;
 use App\Models\MataKuliah;
+use App\Models\Nilai;
 use App\Models\TahunAjaran;
 use Crypt;
 use Illuminate\Http\Request;
@@ -167,11 +168,14 @@ class BtpController extends Controller
         $id = $request->id;
         $cek = Bobotcpl::where('btp_id', $id)->count();
         if ($cek === 0) {
-            $hapus = Btp::find($id)->delete();
-
-            return Response()->json($hapus);
+            $hapus_btp = Btp::find($id)->delete();
+            $hapus_nilai = Nilai::where('btp_id')->get();
+            foreach ($hapus_nilai as $li)
+            {
+                $li->delete();
+            }
+            return Response()->json([$hapus_btp, $hapus_nilai]);
         }
-
         return response()->json(['error' => 'Data yang ingin dihapus masih digunakan!'], 409);
     }
 }
