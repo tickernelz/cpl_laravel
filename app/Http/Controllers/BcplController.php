@@ -6,6 +6,7 @@ use App\Models\Bobotcpl;
 use App\Models\Btp;
 use App\Models\Cpl;
 use App\Models\Cpmk;
+use App\Models\kcpl;
 use App\Models\MataKuliah;
 use App\Models\TahunAjaran;
 use Crypt;
@@ -181,9 +182,14 @@ class BcplController extends Controller
 
     public function hapus(Request $request)
     {
-        $id = $request->id;
-        $hapus = Bobotcpl::find($id)->delete();
+        $id_bcpl= $request->id;
+        $hapus_bcpl = Bobotcpl::find($id_bcpl)->delete();
+        $hapus_kcpl = kcpl::where('bobotcpl_id', $id_bcpl)->get();
+        foreach ($hapus_kcpl as $li)
+        {
+            $li->delete();
+        }
 
-        return Response()->json($hapus);
+        return Response()->json([$hapus_bcpl, $hapus_kcpl]);
     }
 }
