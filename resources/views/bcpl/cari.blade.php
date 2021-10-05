@@ -47,7 +47,7 @@
                 },
                 type: "GET",
                 success: function (data) {
-                    $('#btp option:gt(0)').remove();
+                    $('#btp').empty();
                     $.each(data, function (i, item) {
                         $('#btp').append($('<option>', {
                             value: item.id,
@@ -72,7 +72,7 @@
                 },
                 type: "GET",
                 success: function (data) {
-                    $('#btp1 option:gt(0)').remove();
+                    $('#btp1').empty();
                     $.each(data, function (i, item) {
                         $('#btp1').append($('<option>', {
                             value: item.id,
@@ -157,6 +157,12 @@
                         $('[name="cpmk1"]').val(obj.cpmk_id);
                         $('[name="cpl1"]').val(obj.cpl_id);
                         $('[name="bobot1"]').val(obj.bobot_cpl);
+                    });
+                },
+                complete: function (data) {
+                    cekTeknik2();
+                    $.map(data, function (obj) {
+                        $('[name="btp1"]').val(obj.btp_id);
                     });
                 }
             });
@@ -363,8 +369,6 @@
                                 <label class="form-label" for="btp">Teknik Penilaian</label>
                                 <select class="form-select" name="btp"
                                         id="btp">
-                                    <option value="">-- Pilih Kode CPMK Terlebih Dahulu --
-                                    </option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -377,7 +381,7 @@
                             <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-dismiss="modal">Tutup
                             </button>
                             <button type="button" id="btn-submit" onclick="tambahFunc()"
-                                    class="btn btn-primary">
+                                    class="btn btn-sm btn-primary">
                                 Simpan
                             </button>
                         </div>
@@ -434,8 +438,6 @@
                                 <label class="form-label" for="btp1">Teknik Penilaian</label>
                                 <select class="form-select" name="btp1"
                                         id="btp1">
-                                    <option value="">-- Pilih Kode CPMK Terlebih Dahulu --
-                                    </option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -448,7 +450,7 @@
                             <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-dismiss="modal">Tutup
                             </button>
                             <button type="button" id="btn-submit" onclick="simpaneditFunc()"
-                                    class="btn btn-primary">
+                                    class="btn btn-sm btn-primary">
                                 Simpan
                             </button>
                         </div>
@@ -465,7 +467,7 @@
                 <div class="block-options">
                     <div class="block-options-item">
                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#tambahbobot">Tambah
+                                data-bs-target="#tambahbobot" onclick="cekTeknik()">Tambah
                         </button>
                     </div>
                 </div>
