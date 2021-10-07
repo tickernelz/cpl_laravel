@@ -7,6 +7,7 @@ use App\Http\Controllers\BtpController;
 use App\Http\Controllers\CPLController;
 use App\Http\Controllers\CPMKController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\DpnaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KcplController;
 use App\Http\Controllers\KcpmkController;
@@ -113,6 +114,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('kcpl', [KcplController::class, 'index'])->name('kcpl');
         Route::get('kcpl/cari', [KcplController::class, 'cari'])->name('kcplcari');
         Route::get('kcpl-cetak', [KcplController::class, 'downloadPDF'])->name('kcpl-cetak');
+        // DPNA
+        Route::get('dpna', [DpnaController::class, 'index'])->name('dpna');
+        Route::get('dpna/cari', [DpnaController::class, 'cari'])->name('dpnacari');
+        Route::get('dpna-cetak', [DpnaController::class, 'downloadPDF'])->name('dpna-cetak');
     });
     Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
         // Nilai

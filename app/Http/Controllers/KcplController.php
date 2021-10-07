@@ -198,9 +198,18 @@ class KcplController extends Controller
         PDF::Cell(184, 8, 'KETERCAPAIAN CAPAIAN PEMBELAJARAN LULUSAN (CPL)', 1, 0, 'C');
         PDF::SetY(103);
         PDF::SetX(105);
-        foreach($getKolom->sortBy('kode_cpl', SORT_NATURAL) as $li)
+        foreach($getKolom->sortBy('kode_cpl', SORT_NATURAL) as $li => $value)
         {
-            PDF::Cell(23, 8, $li->kode_cpl, 1, 0, 'C');
+            PDF::Cell(23, 8, $value->kode_cpl, 1, 0, 'C');
+        }
+        $jumlah_kolom = count($getKolom);
+        if ($jumlah_kolom < 8)
+        {
+            $sisa_kolom = 8 - $jumlah_kolom;
+            for ($x = 0; $x < $sisa_kolom; $x ++)
+            {
+                PDF::Cell(23, 8, '', 1, 0, 'C');
+            }
         }
 
         PDF::SetFont('Times', '', 11);
@@ -229,6 +238,16 @@ class KcplController extends Controller
                         PDF::Cell(23, 7,  round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2), 1, 0, 'C');
                     }
 
+                }
+            }
+            if ($jumlah_kolom < 8)
+            {
+                $sisa_kolom = 8 - $jumlah_kolom;
+                for ($x = 0; $x < $sisa_kolom; $x ++)
+                {
+                    PDF::SetFillColor(211,211,211);
+                    PDF::Cell(23, 7, '', 1, 0, 'C', 1);
+                    PDF::SetFillColor(255,255,255);
                 }
             }
             PDF::Ln();

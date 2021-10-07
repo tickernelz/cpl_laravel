@@ -291,6 +291,13 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-main-item">
+                            <a class="nav-main-link{{ request()->is('dpna','dpna/*') ? ' active' : '' }}"
+                               href="{{URL::to('dpna')}}">
+                                <i class="nav-main-link-icon far fa-list-alt"></i>
+                                <span class="nav-main-link-name">DPNA</span>
+                            </a>
+                        </li>
                         @endhasanyrole
                 </ul>
             </div>
