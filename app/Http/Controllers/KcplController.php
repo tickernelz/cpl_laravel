@@ -125,7 +125,7 @@ class KcplController extends Controller
             $pdf->MultiCell(290, 4, "UNIVERSITAS PALANGKA RAYA", 0, 'C');
             $pdf->MultiCell(290, 4, "FAKULTAS TEKNIK", 0, 'C');
             $pdf->Ln(1);
-            $pdf->SetFont('Times','',8);
+            $pdf->SetFont('arialn','',8);
             $pdf->MultiCell(290, 3, "Alamat : Kampus UPR Tunjung Nyaho Jalan Yos Sudarso Kotak Pos 2/PLKUP Palangka Raya 73112 Kalimantan Tengah - INDONESIA", 0, 'C');
             $pdf->MultiCell(290, 3, "Telepon/Fax: +62 536-3226487 ; laman: www.upr.ac.id E-Mail: fakultas_teknik@eng.upr.ac.id", 0, 'C');
             $pdf->Line(10, 38, 285, 38);
