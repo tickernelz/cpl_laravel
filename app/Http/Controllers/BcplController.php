@@ -6,9 +6,12 @@ use App\Models\Bobotcpl;
 use App\Models\Btp;
 use App\Models\Cpl;
 use App\Models\Cpmk;
+use App\Models\DosenAdmin;
 use App\Models\kcpl;
 use App\Models\MataKuliah;
+use App\Models\Rolesmk;
 use App\Models\TahunAjaran;
+use Auth;
 use Crypt;
 use Illuminate\Http\Request;
 
@@ -71,35 +74,46 @@ class BcplController extends Controller
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_kelas = Crypt::decrypt($request->kelas);
-        $cpmk_mk = Cpmk::with('mata_kuliah')->where('mata_kuliah_id', $id_mk)->get();
-        $tampil = Bobotcpl::with(
-            'tahun_ajaran',
-            'mata_kuliah',
-            'cpmk',
-            'cpl',
-            'btp'
-        )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'"
-        )->get();
-        $sum_bobot = $tampil->sum('bobot_cpl');
+        $id_user = Auth::user()->id;
+        $cekstatus = Auth::user()->status;
+        $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();
+        $id_dosen = $dosenadmin->id;
+        $getDosen = Rolesmk::with('dosen_admin')
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
+            ->first();
+        if(isset($getDosen) || $cekstatus === 'Admin')
+        {
+            $cpmk_mk = Cpmk::with('mata_kuliah')->where('mata_kuliah_id', $id_mk)->get();
+            $tampil = Bobotcpl::with(
+                'tahun_ajaran',
+                'mata_kuliah',
+                'cpmk',
+                'cpl',
+                'btp'
+            )->whereRaw(
+                "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'"
+            )->get();
+            $sum_bobot = $tampil->sum('bobot_cpl');
 
-        return view('bcpl.cari', [
-            'data' => $tampil,
-            'total_bobot' => $sum_bobot,
-            'ta' => $ta,
-            'cpmk' => $cpmk,
-            'cpmk_mk' => $cpmk_mk,
-            'mk' => $mk,
-            'id_ta' => $id_ta,
-            'id_sem' => $id_sem,
-            'id_mk' => $id_mk,
-            'cpl' => $cpl,
-            'btp' => $btp,
-            'judul' => $judul,
-            'judulform' => $judulform,
-            'parent' => $parent,
-            'subparent' => $subparent,
-        ]);
+            return view('bcpl.cari', [
+                'data' => $tampil,
+                'total_bobot' => $sum_bobot,
+                'ta' => $ta,
+                'cpmk' => $cpmk,
+                'cpmk_mk' => $cpmk_mk,
+                'mk' => $mk,
+                'id_ta' => $id_ta,
+                'id_sem' => $id_sem,
+                'id_mk' => $id_mk,
+                'cpl' => $cpl,
+                'btp' => $btp,
+                'judul' => $judul,
+                'judulform' => $judulform,
+                'parent' => $parent,
+                'subparent' => $subparent,
+            ]);
+        }
+        return redirect()->route('bcpl')->with('error', 'Maaf anda bukan dosen koordinator!');
     }
 
     public function store(Request $request)
