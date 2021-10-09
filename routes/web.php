@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cpl/edit/{id}', [CPLController::class, 'editindex']);
         Route::post('cpl/edit/{id}/post', [CPLController::class, 'edit']);
     });
-    Route::group(['middleware' => ['role:admin|dosen_koordinator']], function () {
+    Route::group(['middleware' => ['role:admin|dosen']], function () {
         // CPMK
         Route::get('cpmk', [CPMKController::class, 'index'])->name('cpmk');
         Route::get('cpmk/tambah/', [CPMKController::class, 'tambahindex'])->name('tambahcpmk');
@@ -118,8 +118,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('dpna', [DpnaController::class, 'index'])->name('dpna');
         Route::get('dpna/cari', [DpnaController::class, 'cari'])->name('dpnacari');
         Route::get('dpna-cetak', [DpnaController::class, 'downloadPDF'])->name('dpna-cetak');
-    });
-    Route::group(['middleware' => ['role:admin|dosen_koordinator|dosen_pengampu']], function () {
         // Nilai
         Route::get('nilai', [NilaiController::class, 'index'])->name('nilai');
         Route::get('nilai/cari', [NilaiController::class, 'cari'])->name('nilaicari');

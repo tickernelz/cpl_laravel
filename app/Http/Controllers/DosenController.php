@@ -16,7 +16,7 @@ class DosenController extends Controller
         $parent = 'Dosen';
 
         $tampil = DosenAdmin::whereHas('user', function ($query) {
-            return $query->whereRaw("status IN ('Dosen Koordinator','Dosen Pengampu')");
+            return $query->whereRaw("status IN ('Dosen')");
         })->get();
 
         return view('dosen.index', [
@@ -89,15 +89,10 @@ class DosenController extends Controller
 
         $user = new User;
         $user->username = $request->input('username');
-        $user->status = $request->input('status');
+        $user->status = 'Dosen';
         $user->password = bcrypt($request->input('password'));
         $user->save();
-        $status = $request->input('status');
-        if ($status === 'Dosen Koordinator') {
-            $user->assignRole('dosen_koordinator');
-        } elseif ($status === 'Dosen Pengampu') {
-            $user->assignRole('dosen_pengampu');
-        }
+        $user->assignRole('dosen');
 
         $dosenadmin = new DosenAdmin;
         $dosenadmin->nip = $request->input('nip');
@@ -208,12 +203,7 @@ class DosenController extends Controller
         }
         $dosenadmin->user->save();
         $dosenadmin->save();
-        $status = $request->input('status');
-        if ($status === 'Dosen Koordinator') {
-            User::find($id)->assignRole('dosen_koordinator');
-        } elseif ($status === 'Dosen Pengampu') {
-            User::find($id)->assignRole('dosen_pengampu');
-        }
+        User::find($id)->assignRole('dosen');
 
         return back()->with('success', 'Data Berhasil Diubah!.');
     }

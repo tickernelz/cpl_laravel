@@ -91,21 +91,6 @@
                                            placeholder="Masukkan Nama Lengkap..." required>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label" for="status">Status Dosen</label>
-                                    <select class="js-select2 form-select" name="status" id="status">
-                                        <option
-                                            value="Dosen Koordinator" @if ($dosen->user->status === "Dosen Koordinator")
-                                        selected="selected"
-                                            @endif>Dosen Koordinator
-                                        </option>
-                                        <option
-                                            value="Dosen Pengampu" @if ($dosen->user->status === "Dosen Pengampu")
-                                        selected="selected"
-                                            @endif>Dosen Pengampu
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="mb-4">
                                     <label class="form-label" for="username">Username</label>
                                     <input name="username-ori" type="hidden" value="{{ $dosen->user->username }}">
                                     <input type="text" class="form-control" id="username"

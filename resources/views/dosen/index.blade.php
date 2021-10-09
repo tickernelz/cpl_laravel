@@ -68,7 +68,6 @@
                             <th>NIP</th>
                             <th>Username</th>
                             <th>Nama</th>
-                            <th>Status</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                         </thead>
@@ -79,7 +78,6 @@
                                 <td>{{ $adm->nip }}</td>
                                 <td>{{ $adm->user->username }}</td>
                                 <td>{{ $adm->nama }}</td>
-                                <td>{{ $adm->user->status }}</td>
                                 <td class="text-center" style="width: 100px">
                                     <div class="btn-group">
                                         <a type="button" href="{{ Request::url() }}/edit/{{ $adm->id }}"

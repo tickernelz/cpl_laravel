@@ -229,7 +229,7 @@
                     @else
                         <li class="nav-main-heading">Kelola</li>
                         @endrole
-                        @hasanyrole('dosen_koordinator|admin')
+                        @hasanyrole('dosen|admin')
                         <li class="nav-main-item">
                             <a class="nav-main-link{{ request()->is('cpmk','cpmk/*') ? ' active' : '' }}"
                                href="{{URL::to('cpmk')}}">
@@ -258,9 +258,6 @@
                                 </li>
                             </ul>
                         </li>
-
-                        @endhasanyrole
-                        @hasanyrole('dosen_koordinator|dosen_pengampu|admin')
                         <li class="nav-main-item">
                             <a class="nav-main-link{{ request()->is('nilai','nilai/*') ? ' active' : '' }}"
                                href="{{URL::to('nilai')}}">
@@ -268,8 +265,6 @@
                                 <span class="nav-main-link-name">Nilai</span>
                             </a>
                         </li>
-                        @endhasanyrole
-                        @hasanyrole('dosen_koordinator|admin')
                         <li class="nav-main-item{{ request()->is('kcpmk','kcpl','kcpmk/*','kcpl/*') ? ' open' : '' }}">
                             <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
                                aria-expanded="true" href="#">

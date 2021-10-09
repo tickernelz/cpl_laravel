@@ -90,13 +90,6 @@
                                            placeholder="Masukkan Nama Lengkap..." required>
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label" for="status">Status Dosen</label>
-                                    <select class="js-select2 form-select" name="status" id="status">
-                                        <option value="Dosen Koordinator">Dosen Koordinator</option>
-                                        <option value="Dosen Pengampu">Dosen Pengampu</option>
-                                    </select>
-                                </div>
-                                <div class="mb-4">
                                     <label class="form-label" for="username">Username</label>
                                     <input type="text" class="form-control" id="username"
                                            value="{{ old('username') }}"
