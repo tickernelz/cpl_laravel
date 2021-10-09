@@ -14,9 +14,9 @@ class RolesmkController extends Controller
 {
     public function index()
     {
-        $judul = 'Kelola Peran Dosen';
-        $parent = 'Peran Dosen';
-        $judulform = 'Cari Data Peran Dosen';
+        $judul = 'Kelola Koordinator MK';
+        $parent = 'Koordinator MK';
+        $judulform = 'Cari Data Koordinator MK';
 
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
@@ -35,10 +35,10 @@ class RolesmkController extends Controller
         setlocale(LC_TIME, 'id_ID');
         Carbon::setLocale('id');
         // Nilai tetap
-        $judul = 'Kelola Peran Dosen';
-        $parent = 'Peran Dosen';
+        $judul = 'Kelola Koordinator MK';
+        $parent = 'Koordinator MK';
         $subparent = 'Cari';
-        $judulform = 'Cari Data Peran Dosen';
+        $judulform = 'Cari Data Koordinator MK';
 
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
@@ -71,7 +71,7 @@ class RolesmkController extends Controller
         $id_dosen = $request->id_dosen;
         $id_kelas = $request->id_kelas;
         $semester = $request->semester;
-        $status = $request->status;
+        $status = 'koordinator';
 
         $tambah = Rolesmk::Create(
             [

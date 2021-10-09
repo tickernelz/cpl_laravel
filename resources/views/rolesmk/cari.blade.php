@@ -255,26 +255,21 @@
                             @php
                                 $cekstatus = $getDosen->firstWhere('status', 'koordinator');
                             @endphp
-                            <div class="mb-3">
-                                <label class="form-label" for="status">Status</label>
-                                <select class="js-select2 form-select" name="status"
-                                        id="status">
-                                    @if (isset($cekstatus))
-                                        <option value="pengampu">Pengampu</option>
-                                    @else
-                                        <option value="koordinator">Koordinator</option>
-                                        <option value="pengampu">Pengampu</option>
-                                    @endif
-                                </select>
-                            </div>
                         </div>
                         <div class="block-content block-content-full text-end bg-body">
                             <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-dismiss="modal">Tutup
                             </button>
-                            <button type="button" id="btn-submit" onclick="tambahFunc()"
-                                    class="btn btn-sm btn-primary">
-                                Simpan
-                            </button>
+                            @if (isset($cekstatus))
+                                <button type="button" id="btn-submit" onclick="tambahFunc()"
+                                        class="btn btn-sm btn-primary" disabled>
+                                    Simpan
+                                </button>
+                            @else
+                                <button type="button" id="btn-submit" onclick="tambahFunc()"
+                                        class="btn btn-sm btn-primary">
+                                    Simpan
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
