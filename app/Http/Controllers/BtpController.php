@@ -53,7 +53,9 @@ class BtpController extends Controller
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
         $cpmk = Cpmk::orderBy('nama_cpmk')->get();
-        $da = DosenAdmin::orderBy('nama')->get();
+        $da = DosenAdmin::whereHas('user', function ($query) {
+            return $query->whereRaw("status = 'Dosen'");
+        })->orderBy('nama')->get();
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);

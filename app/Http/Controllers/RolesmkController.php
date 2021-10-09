@@ -51,7 +51,9 @@ class RolesmkController extends Controller
             ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")
             ->get();
         $arraydosen = $getDosen->pluck('dosen_admin_id')->toArray();
-        $getDosenselain = DosenAdmin::whereNotIn('id', $arraydosen)->get();
+        $getDosenselain = DosenAdmin::whereHas('user', function ($query) {
+            return $query->whereRaw("status = 'Dosen'");
+        })->whereNotIn('id', $arraydosen)->get();
         return view('rolesmk.cari', [
             'getDosenselain' => $getDosenselain,
             'getDosen' => $getDosen,
