@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|MataKuliah whereSemester($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\kcpl[] $kcpl
  * @property-read int|null $kcpl_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rolesmk[] $rolesmk
+ * @property-read int|null $rolesmk_count
  */
 class MataKuliah extends Model
 {
@@ -76,5 +78,10 @@ class MataKuliah extends Model
     public function kcpl()
     {
         return $this->hasMany(Kcpl::class);
+    }
+
+    public function rolesmk()
+    {
+        return $this->hasMany(Rolesmk::class);
     }
 }

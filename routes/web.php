@@ -15,6 +15,7 @@ use App\Http\Controllers\KRSController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\RolesmkController;
 use App\Http\Controllers\TahunAjaranController;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +83,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cpl/hapus/{id}', [CPLController::class, 'hapus']);
         Route::get('cpl/edit/{id}', [CPLController::class, 'editindex']);
         Route::post('cpl/edit/{id}/post', [CPLController::class, 'edit']);
+        // Peran Dosen
+        Route::get('rolesmk', [RolesmkController::class, 'index'])->name('rolesmk');
+        Route::get('rolesmk/cari', [RolesmkController::class, 'cari'])->name('carirolesmk');
+        Route::post('tambah-rolesmk', [RolesmkController::class, 'store']);
+        Route::post('hapus-rolesmk', [RolesmkController::class, 'hapus']);
     });
     Route::group(['middleware' => ['role:admin|dosen']], function () {
         // CPMK

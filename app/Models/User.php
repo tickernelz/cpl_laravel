@@ -42,6 +42,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  * @mixin \Eloquent
  * @property-read int|null $dosenadmin_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DosenAdmin[] $dosen_admin
+ * @property-read int|null $dosen_admin_count
  */
 class User extends Authenticatable
 {
@@ -66,7 +68,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function dosenadmin()
+    public function dosen_admin()
     {
         return $this->hasMany(DosenAdmin::class);
     }

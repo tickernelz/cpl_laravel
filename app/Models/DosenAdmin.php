@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|DosenAdmin whereUserId($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Btp[] $btp
  * @property-read int|null $btp_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Rolesmk[] $rolesmk
+ * @property-read int|null $rolesmk_count
  */
 class DosenAdmin extends Model
 {
@@ -50,5 +52,10 @@ class DosenAdmin extends Model
     public function btp()
     {
         return $this->hasMany(Btp::class);
+    }
+
+    public function rolesmk()
+    {
+        return $this->hasMany(Rolesmk::class);
     }
 }

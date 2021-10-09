@@ -213,6 +213,13 @@
                         </a>
                     </li>
                     <li class="nav-main-item">
+                        <a class="nav-main-link{{ request()->is('rolesmk','rolesmk/*') ? ' active' : '' }}"
+                           href="{{URL::to('rolesmk')}}">
+                            <i class="nav-main-link-icon fa fa-user-cog"></i>
+                            <span class="nav-main-link-name">Peran Dosen</span>
+                        </a>
+                    </li>
+                    <li class="nav-main-item">
                         <a class="nav-main-link{{ request()->is('krs','krs/*') ? ' active' : '' }}"
                            href="{{URL::to('krs')}}">
                             <i class="nav-main-link-icon fa fa-sticky-note"></i>
