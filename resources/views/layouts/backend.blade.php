@@ -190,6 +190,13 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link{{ request()->is('rolesmk','rolesmk/*') ? ' active' : '' }}"
+                           href="{{URL::to('rolesmk')}}">
+                            <i class="nav-main-link-icon fa fa-user-cog"></i>
+                            <span class="nav-main-link-name">Peran Dosen</span>
+                        </a>
+                    </li>
                     <li class="nav-main-heading">Kelola</li>
                     <li class="nav-main-item">
                         <a class="nav-main-link{{ request()->is('mhs','mhs/*') ? ' active' : '' }}"
@@ -213,13 +220,6 @@
                         </a>
                     </li>
                     <li class="nav-main-item">
-                        <a class="nav-main-link{{ request()->is('rolesmk','rolesmk/*') ? ' active' : '' }}"
-                           href="{{URL::to('rolesmk')}}">
-                            <i class="nav-main-link-icon fa fa-user-cog"></i>
-                            <span class="nav-main-link-name">Peran Dosen</span>
-                        </a>
-                    </li>
-                    <li class="nav-main-item">
                         <a class="nav-main-link{{ request()->is('krs','krs/*') ? ' active' : '' }}"
                            href="{{URL::to('krs')}}">
                             <i class="nav-main-link-icon fa fa-sticky-note"></i>
@@ -233,17 +233,17 @@
                             <span class="nav-main-link-name">CPL</span>
                         </a>
                     </li>
+                    <li class="nav-main-item">
+                        <a class="nav-main-link{{ request()->is('cpmk','cpmk/*') ? ' active' : '' }}"
+                           href="{{URL::to('cpmk')}}">
+                            <i class="nav-main-link-icon si si-notebook"></i>
+                            <span class="nav-main-link-name">CPMK</span>
+                        </a>
+                    </li>
                     @else
                         <li class="nav-main-heading">Kelola</li>
                         @endrole
                         @hasanyrole('dosen|admin')
-                        <li class="nav-main-item">
-                            <a class="nav-main-link{{ request()->is('cpmk','cpmk/*') ? ' active' : '' }}"
-                               href="{{URL::to('cpmk')}}">
-                                <i class="nav-main-link-icon si si-notebook"></i>
-                                <span class="nav-main-link-name">CPMK</span>
-                            </a>
-                        </li>
                         <li class="nav-main-item{{ request()->is('btp','bcpl','btp/*','bcpl/*') ? ' open' : '' }}">
                             <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true"
                                aria-expanded="true" href="#">

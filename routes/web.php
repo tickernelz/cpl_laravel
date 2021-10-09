@@ -83,13 +83,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cpl/hapus/{id}', [CPLController::class, 'hapus']);
         Route::get('cpl/edit/{id}', [CPLController::class, 'editindex']);
         Route::post('cpl/edit/{id}/post', [CPLController::class, 'edit']);
-        // Peran Dosen
-        Route::get('rolesmk', [RolesmkController::class, 'index'])->name('rolesmk');
-        Route::get('rolesmk/cari', [RolesmkController::class, 'cari'])->name('carirolesmk');
-        Route::post('tambah-rolesmk', [RolesmkController::class, 'store']);
-        Route::post('hapus-rolesmk', [RolesmkController::class, 'hapus']);
-    });
-    Route::group(['middleware' => ['role:admin|dosen']], function () {
         // CPMK
         Route::get('cpmk', [CPMKController::class, 'index'])->name('cpmk');
         Route::get('cpmk/tambah/', [CPMKController::class, 'tambahindex'])->name('tambahcpmk');
@@ -97,6 +90,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cpmk/hapus/{id}', [CPMKController::class, 'hapus']);
         Route::get('cpmk/edit/{id}', [CPMKController::class, 'editindex']);
         Route::post('cpmk/edit/{id}/post', [CPMKController::class, 'edit']);
+        // Peran Dosen
+        Route::get('rolesmk', [RolesmkController::class, 'index'])->name('rolesmk');
+        Route::get('rolesmk/cari', [RolesmkController::class, 'cari'])->name('carirolesmk');
+        Route::post('tambah-rolesmk', [RolesmkController::class, 'store']);
+        Route::post('hapus-rolesmk', [RolesmkController::class, 'hapus']);
+    });
+    Route::group(['middleware' => ['role:admin|dosen']], function () {
         // Bobot Teknik Penilaian
         Route::get('btp', [BtpController::class, 'index'])->name('btp');
         Route::get('btp/cari', [BtpController::class, 'cari'])->name('btpcari');
