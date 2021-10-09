@@ -53,11 +53,13 @@ class BtpController extends Controller
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
         $cpmk = Cpmk::orderBy('nama_cpmk')->get();
-        $da = DosenAdmin::orderBy('nama')->get();
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_kelas = Crypt::decrypt($request->kelas);
+        $da = Rolesmk::with('dosen_admin')
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")
+            ->get();
         $id_user = Auth::user()->id;
         $cekstatus = Auth::user()->status;
         $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();

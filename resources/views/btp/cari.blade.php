@@ -339,7 +339,7 @@
                                         id="dosen">
                                     @foreach($da as $d)
                                         <option
-                                            value="{{ $d->id }}">{{$d->nama}}
+                                            value="{{ $d->dosen_admin->id }}">{{$d->dosen_admin->nama}}
                                         </option>
                                     @endforeach
                                 </select>
@@ -416,7 +416,7 @@
                                         id="dosen1">
                                     @foreach($da as $d)
                                         <option
-                                            value="{{ $d->id }}">{{$d->nama}}
+                                            value="{{ $d->dosen_admin->id }}">{{$d->dosen_admin->nama}}
                                         </option>
                                     @endforeach
                                 </select>
