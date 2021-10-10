@@ -403,9 +403,8 @@ class DpnaController extends Controller
         PDF::Cell(15, 5, 'E', 1, 0, 'C');
         PDF::Cell(15, 5, jumlahmutu($rekap,'E'), 1, 0, 'C');
         PDF::Cell(15, 5, "".persentase($rekap,'E',$jumlah_mhs)."%", 1, 0, 'C');
-
-        PDF::SetTitle("DPNA-" . (strtoupper($mata_kuliah->nama)) . "-KELAS(" . ($id_kelas) . ")");
-        $nama_file = 'DPNA-' . (strtoupper($mata_kuliah->nama)) . '-KELAS(' . ($id_kelas) . ').pdf';
+        PDF::SetTitle("NILAI-" . (strtoupper($mata_kuliah->nama)) . "(" . (strtoupper($mata_kuliah->kode)) . ")-KELAS(" . ($id_kelas) . ")");
+        $nama_file = "NILAI-" . (strtoupper($mata_kuliah->nama)) . "(" . (strtoupper($mata_kuliah->kode)) . ")-KELAS(" . ($id_kelas) . ").pdf";
         PDF::Output(storage_path('app') . '/public/' . $nama_file, 'F');
         return response()->file(storage_path('app') . '/public/' . $nama_file);
     }
