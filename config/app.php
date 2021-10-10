@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\GetController;
-
 return [
 
     /*
@@ -233,9 +231,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'GetController' => GetController::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
-
     ],
 
 ];
