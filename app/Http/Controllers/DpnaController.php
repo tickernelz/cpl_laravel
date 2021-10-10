@@ -127,6 +127,9 @@ class DpnaController extends Controller
 
     public function downloadPDF(Request $request)
     {
+        setlocale(LC_TIME, 'id_ID');
+        Carbon::setLocale('id');
+        Carbon::now()->formatLocalized("%A, %d %B %Y");
         // GET
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
         $id_sem = Crypt::decrypt($request->semester);
@@ -145,6 +148,10 @@ class DpnaController extends Controller
         $dosen = DosenAdmin::whereHas('btp', function ($query) use ($id_kelas, $id_mk, $id_sem, $id_ta) {
             return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'");
         })->get();
+
+        $dosenkoor = Rolesmk::with('dosen_admin')
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND status = 'koordinator'")
+            ->first();
 
         $getnilaitugas = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
             $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '1'");
@@ -274,17 +281,24 @@ class DpnaController extends Controller
 
         PDF::Cell(28, 5, 'Dosen ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
+        PDF::SetX(41);
+        PDF::Cell(3, 5, "" . '1' . ".", 0, 0, 'L');
+        PDF::Cell(172, 5, "" . ($dosenkoor->dosen_admin->nama) . " (" . ($dosenkoor->dosen_admin->nip) . ")", 0, 1, 'L');
+        $no = 2;
         foreach ($dosen as $li => $value) {
-            if (($li + 1) > 4) {
+            if($value->nama === $dosenkoor->dosen_admin->nama)
+            {
+                continue;
+            }
+            if ($no > 4) {
                 PDF::SetY(70);
                 PDF::SetX(160);
-                PDF::Cell(3, 5, "" . ($li + 1) . ".", 0, 0, 'L');
-                PDF::Cell(172, 5, "" . ($value->nama) . " (" . ($value->nip) . ")", 0, 1, 'L');
             } else {
                 PDF::SetX(41);
-                PDF::Cell(3, 5, "" . ($li + 1) . ".", 0, 0, 'L');
-                PDF::Cell(172, 5, "" . ($value->nama) . " (" . ($value->nip) . ")", 0, 1, 'L');
             }
+            PDF::Cell(3, 5, "" . $no . ".", 0, 0, 'L');
+            PDF::Cell(172, 5, "" . ($value->nama) . " (" . ($value->nip) . ")", 0, 1, 'L');
+            ++$no;
         }
         PDF::SetY(60);
         PDF::SetX(145);
@@ -353,10 +367,14 @@ class DpnaController extends Controller
         PDF::Cell(15, 5, 'Nilai', 1, 0, 'C');
         PDF::Cell(15, 5, 'Jumlah', 1, 0, 'C');
         PDF::Cell(15, 5, 'Persentase', 1, 0, 'C');
+        PDF::SetX(140);
+        PDF::Cell(25, 5, "Palangka Raya, ".Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'A', 1, 0, 'C');
         PDF::Cell(15, 5, jumlahmutu($rekap,'A'), 1, 0, 'C');
         PDF::Cell(15, 5, "".persentase($rekap,'A',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::SetX(140);
+        PDF::Cell(25, 5, 'Dosen,', 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'B+', 1, 0, 'C');
         PDF::Cell(15, 5, jumlahmutu($rekap,'B+'), 1, 0, 'C');
@@ -373,10 +391,14 @@ class DpnaController extends Controller
         PDF::Cell(15, 5, 'C', 1, 0, 'C');
         PDF::Cell(15, 5, jumlahmutu($rekap,'C'), 1, 0, 'C');
         PDF::Cell(15, 5, "".persentase($rekap,'C',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::SetX(140);
+        PDF::Cell(25, 5, $dosenkoor->dosen_admin->nama, 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'D', 1, 0, 'C');
         PDF::Cell(15, 5, jumlahmutu($rekap,'D'), 1, 0, 'C');
         PDF::Cell(15, 5, "".persentase($rekap,'D',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::SetX(140);
+        PDF::Cell(25, 5, $dosenkoor->dosen_admin->nip, 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'E', 1, 0, 'C');
         PDF::Cell(15, 5, jumlahmutu($rekap,'E'), 1, 0, 'C');
