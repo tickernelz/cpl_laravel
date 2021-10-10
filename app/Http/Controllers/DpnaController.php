@@ -243,7 +243,7 @@ class DpnaController extends Controller
             $pdf->Line(10, 45, 200, 45);
         });
 
-        //Header
+        // Footer
         PDF::setFooterCallback(function ($pdf) {
             // Position at 15 mm from bottom
             $pdf->SetY(-15);

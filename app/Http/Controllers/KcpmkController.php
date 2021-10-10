@@ -110,11 +110,14 @@ class KcpmkController extends Controller
 
     public function downloadPDF(Request $request)
     {
+        setlocale(LC_TIME, 'id_ID');
+        Carbon::setLocale('id');
+        Carbon::now()->formatLocalized("%A, %d %B %Y");
+
         // GET
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
-        $id_mhs = Crypt::decrypt($request->mhs);
         $id_kelas = Crypt::decrypt($request->kelas);
         $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
 
@@ -128,6 +131,10 @@ class KcpmkController extends Controller
         $dosen = DosenAdmin::whereHas('btp', function ($query) use ($id_kelas, $id_mk, $id_sem, $id_ta) {
             return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'");
         })->get();
+
+        $dosenkoor = Rolesmk::with('dosen_admin')
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND status = 'koordinator'")
+            ->first();
 
         // TCPDF
 
@@ -144,6 +151,16 @@ class KcpmkController extends Controller
             $pdf->MultiCell(290, 3, "Alamat : Kampus UPR Tunjung Nyaho Jalan Yos Sudarso Kotak Pos 2/PLKUP Palangka Raya 73112 Kalimantan Tengah - INDONESIA", 0, 'C');
             $pdf->MultiCell(290, 3, "Telepon/Fax: +62 536-3226487 ; laman: www.upr.ac.id E-Mail: fakultas_teknik@eng.upr.ac.id", 0, 'C');
             $pdf->Line(10, 38, 285, 38);
+        });
+
+        // Footer
+        PDF::setFooterCallback(function ($pdf) {
+            // Position at 15 mm from bottom
+            $pdf->SetY(-15);
+            // Set font
+            $pdf->SetFont('ariali', '', 8);
+            // Page number
+            $pdf->Cell(0, 10, 'Halaman ' . $pdf->getAliasNumPage() . '/' . $pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
         });
 
         // Isi
@@ -174,19 +191,24 @@ class KcpmkController extends Controller
 
         PDF::Cell(28, 5, 'Dosen ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
-        foreach ($dosen as $li => $value)
-        {
-            if (($li + 1) > 4)
+        PDF::SetX(41);
+        PDF::Cell(3, 5, "" . '1' . ".", 0, 0, 'L');
+        PDF::Cell(172, 5, "" . ($dosenkoor->dosen_admin->nama) . " (" . ($dosenkoor->dosen_admin->nip) . ")", 0, 1, 'L');
+        $no = 2;
+        foreach ($dosen as $li => $value) {
+            if($value->nama === $dosenkoor->dosen_admin->nama)
             {
+                continue;
+            }
+            if ($no > 4) {
                 PDF::SetY(70);
                 PDF::SetX(160);
-                PDF::Cell(3, 5, "" . ($li + 1).".", 0, 0, 'L');
-                PDF::Cell(172, 5, "".($value->nama)." (".($value->nip).")", 0, 1, 'L');
             } else {
                 PDF::SetX(41);
-                PDF::Cell(3, 5, "" . ($li + 1).".", 0, 0, 'L');
-                PDF::Cell(172, 5, "".($value->nama)." (".($value->nip).")", 0, 1, 'L');
             }
+            PDF::Cell(3, 5, "" . $no . ".", 0, 0, 'L');
+            PDF::Cell(172, 5, "" . ($value->nama) . " (" . ($value->nip) . ")", 0, 1, 'L');
+            ++$no;
         }
         PDF::SetY(50);
         PDF::SetX(180);
@@ -244,6 +266,19 @@ class KcpmkController extends Controller
             }
             PDF::Ln();
         }
+        PDF::Ln(10);
+        PDF::SetFont('Times', '', 10);
+        PDF::SetX(220);
+        PDF::Cell(25, 5, "Palangka Raya, ".Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
+        PDF::Ln();
+        PDF::SetX(220);
+        PDF::Cell(25, 5, 'Dosen,', 0, 0, 'L');
+        PDF::Ln(25);
+        PDF::SetX(220);
+        PDF::Cell(25, 5, $dosenkoor->dosen_admin->nama, 0, 0, 'L');
+        PDF::Ln();
+        PDF::SetX(220);
+        PDF::Cell(25, 5, $dosenkoor->dosen_admin->nip, 0, 0, 'L');
         PDF::SetTitle("KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).")");
         $nama_file = 'KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($id_kelas).').pdf';
         PDF::Output(storage_path('app').'/public/'.$nama_file, 'F');
