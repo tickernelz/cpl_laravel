@@ -37,6 +37,29 @@ class KcplController extends Controller
         ]);
     }
 
+    public function editkolom(Request $request)
+    {
+        $nama_kolom = $request->get('nama_kolom');
+        $urutan = $request->get('urutan');
+
+        $maxkolom = count($nama_kolom);
+
+        for ($x = 0; $x < $maxkolom; $x ++)
+        {
+            $nama_kolom_array = $nama_kolom[$x];
+            $urutan_array = $urutan[$x];
+            $getKolom = kcpl::whereRaw("kode_cpl = '$nama_kolom_array'")->get();
+            foreach ($getKolom as $li)
+            {
+                $id = $li->id;
+                $li::where('id',$id)->update([
+                    'urutan' => $urutan_array
+                ]);
+            }
+        }
+        return Response()->json($getKolom);
+    }
+
     public function cari(Request $request)
     {
         setlocale(LC_TIME, 'id_ID');
@@ -68,7 +91,7 @@ class KcplController extends Controller
             if ($id_mhs === 'semua') {
                 $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
                 $getUpdated = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->orderBy('updated_at', 'desc')->first();
-                $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('kode_cpl')->groupBy('kode_cpl')->get();
+                $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select(['kode_cpl', 'urutan'])->groupBy('kode_cpl')->get();
                 $kcpl = kcpl::class;
                 return view('kcpl.cari', [
                     'getmhs' => $getMhs,
@@ -114,7 +137,7 @@ class KcplController extends Controller
         $id_mk = Crypt::decrypt($request->mk);
         $id_mhs = Crypt::decrypt($request->mhs);
         $id_kelas = Crypt::decrypt($request->kelas);
-        $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('kode_cpl')->groupBy('kode_cpl')->get();
+        $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('kode_cpl')->get();
 
         // Variabel
         $mata_kuliah = MataKuliah::whereId($id_mk)->first();
@@ -230,7 +253,7 @@ class KcplController extends Controller
         PDF::Cell(184, 8, 'KETERCAPAIAN CAPAIAN PEMBELAJARAN LULUSAN (CPL)', 1, 0, 'C');
         PDF::SetY(103);
         PDF::SetX(105);
-        foreach($getKolom->sortBy('kode_cpl', SORT_NATURAL) as $li => $value)
+        foreach($getKolom->sortBy('urutan', SORT_NATURAL) as $li => $value)
         {
             PDF::Cell(23, 8, $value->kode_cpl, 1, 0, 'C');
         }
@@ -251,7 +274,7 @@ class KcplController extends Controller
             PDF::Cell(10, 7, $li+1, 1, 0, 'C');
             PDF::Cell(35, 7, $value->mahasiswa->nim, 1, 0, 'C');
             PDF::Cell(50, 7, $value->mahasiswa->nama, 1, 0, 'C');
-            foreach($getKolom->sortBy('kode_cpl', SORT_NATURAL) as $lii)
+            foreach($getKolom->sortBy('urutan', SORT_NATURAL) as $lii)
             {
                 foreach(kcpl::where([
                     ['mahasiswa_id', '=', $value->mahasiswa->id],
@@ -260,7 +283,7 @@ class KcplController extends Controller
                     ['semester', '=', $id_sem],
                     ['kode_cpl', '=', $lii->kode_cpl],])
                             ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
-                            ->groupBy('kode_cpl')->get()->sortBy('kode_cpl', SORT_NATURAL) as $liii)
+                            ->groupBy('kode_cpl')->get()->sortBy('urutan', SORT_NATURAL) as $liii)
                 {
                     if(round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) < 60){
                         PDF::SetTextColor(198, 40, 40);

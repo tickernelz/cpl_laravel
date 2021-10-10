@@ -30,6 +30,7 @@ class CreateKcplsTable extends Migration
             $table->enum('kelas', ['A', 'B', 'C']);
             $table->float('nilai_cpl')->nullable()->default('0');
             $table->float('bobot_cpl')->nullable()->default('0');
+            $table->integer('urutan')->nullable()->default('1');
             $table->timestamps();
         });
     }

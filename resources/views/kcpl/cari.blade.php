@@ -34,6 +34,38 @@
     <!-- Page JS Code -->
     <script src="{{ asset('js/pages/tables_datatables.js') }}"></script>
     <script>Dashmix.helpersOnLoad(['jq-select2']);</script>
+    <script>
+        function simpankolom() {
+            const nama_kolom = $('input[name="nama_kolom[]"]').map(function () {
+                return this.value;
+            }).get();
+            const urutan = $('input[name="urutan[]"]').map(function () {
+                return this.value;
+            }).get();
+            $.ajax({
+                type: "POST",
+                url: "{{ URL::to('edit-kolom-cpl') }}",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
+                    id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
+                    id_kelas: '{{ Crypt::decrypt(Request::get('kelas')) }}',
+                    semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
+                    'nama_kolom[]': nama_kolom,
+                    'urutan[]': urutan,
+                },
+                dataType: 'json',
+                success: function (res) {
+                    $("#editkolom").modal('hide');
+                    location.reload();
+                },
+                error: function (data) {
+                    alert('Gagal Input!')
+                    console.log(data);
+                }
+            });
+        }
+    </script>
 @endsection
 
 @section('content')
@@ -186,6 +218,45 @@
         </div>
         <!-- END Cari Data -->
 
+        <!-- Modal Edit -->
+        <div class="modal fade" id="editkolom" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="block block-rounded block-themed block-transparent mb-0">
+                        <div class="block-header bg-primary-dark">
+                            <h3 class="block-title">Edit Urutan Kolom CPL</h3>
+                            <div class="block-options">
+                                <button type="button" class="btn-block-option" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                    <i class="fa fa-fw fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="block-content">
+                            @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $li)
+                                <div class="mb-3">
+                                    <label class="form-label" for="urutan{{ $loop->iteration }}">{{ $li->kode_cpl }}</label>
+                                    <input type="hidden" name="nama_kolom[]" value="{{ $li->kode_cpl }}">
+                                    <input type="number" name="urutan[]" id="urutan{{ $loop->iteration }}"
+                                           class="form-control" value="{{ $li->urutan }}">
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="block-content block-content-full text-end bg-body">
+                            <button type="button" class="btn btn-sm btn-alt-secondary" data-bs-dismiss="modal">Tutup
+                            </button>
+                            <button type="button" id="btn-submit" onclick="simpankolom()"
+                                    class="btn btn-sm btn-primary">
+                                Simpan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Modal Edit -->
+
         <!-- Dynamic Table with Export Buttons -->
         <div class="block block-rounded">
             <div class="block-header block-header-default">
@@ -203,7 +274,11 @@
                                value="{{ Request::get('kelas') }}">
                         <input name="mhs" type="hidden"
                                value="{{ Request::get('mhs') }}">
-                        <input type="submit" class="btn btn-sm btn-primary" value="Cetak">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="submit" class="btn btn-outline-primary">Cetak</button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    data-bs-target="#editkolom">Atur Kolom</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -216,7 +291,7 @@
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th style="width: 80px;">NIM</th>
                                 <th style="width: 80px;">Nama Mahasiswa</th>
-                                @foreach($getkolom->sortBy('kode_cpl', SORT_NATURAL) as $li)
+                                @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $li)
                                     <th class="text-center">{{ $li->kode_cpl }}</th>
                                 @endforeach
                                 <th class="text-center">Terakhir Diperbarui</th>
@@ -229,7 +304,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $li->mahasiswa->nim }}</td>
                                         <td>{{ $li->mahasiswa->nama }}</td>
-                                        @foreach($getkolom->sortBy('kode_cpl', SORT_NATURAL) as $lii)
+                                        @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
                                             @php
                                                 $get_kcpl = $kcpl::where([
                                                     ['mahasiswa_id', '=', $li->mahasiswa->id],
@@ -240,7 +315,7 @@
                                                     ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                                     ->groupBy('kode_cpl')->get()
                                             @endphp
-                                            @foreach($get_kcpl->sortBy('kode_cpl', SORT_NATURAL) as $liii)
+                                            @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
                                                 @if($get_kcpl->isEmpty())
                                                     <td class="text-center">Kosong!</td>
                                                 @else

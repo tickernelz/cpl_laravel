@@ -120,6 +120,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('kcpl', [KcplController::class, 'index'])->name('kcpl');
         Route::get('kcpl/cari', [KcplController::class, 'cari'])->name('kcplcari');
         Route::get('kcpl-cetak', [KcplController::class, 'downloadPDF'])->name('kcpl-cetak');
+        Route::post('edit-kolom-cpl', [KcplController::class, 'editkolom']);
         // DPNA
         Route::get('dpna', [DpnaController::class, 'index'])->name('dpna');
         Route::get('dpna/cari', [DpnaController::class, 'cari'])->name('dpnacari');

@@ -43,6 +43,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property float|null $bobot_cpl
  * @method static \Illuminate\Database\Eloquent\Builder|kcpl whereBobotCpl($value)
+ * @property int|null $urutan
+ * @method static \Illuminate\Database\Eloquent\Builder|kcpl whereUrutan($value)
  */
 class kcpl extends Model
 {
