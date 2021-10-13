@@ -12,8 +12,8 @@ Login
             <div class="p-3 w-100">
                 <!-- Header -->
                 <div class="mb-3 text-center">
-                    <a class="link-fx fw-bold fs-1" href="index.html">
-                        <span class="text-dark">SI</span><span class="text-primary">CPL</span>
+                    <a class="link-fx fw-bold fs-1" href="/">
+                        <span class="text-dark">A</span><span class="text-primary">CAPELA</span>
                     </a>
                     <p class="text-uppercase fw-bold fs-sm text-muted">Sign In</p>
                 </div>
@@ -79,7 +79,7 @@ Login
             class="hero-static col-md-6 d-none d-md-flex align-items-md-center justify-content-md-center text-md-center">
             <div class="p-3">
                 <p class="display-4 fw-bold text-white mb-3">
-                    Sistem Informasi CPL
+                    Asesmen Capaian Pembelajaran Lulusan
                 </p>
                 <p class="fs-lg fw-semibold text-white-75 mb-0">
                     Copyright &copy; <span data-toggle="year-copy"></span> TI UPR
