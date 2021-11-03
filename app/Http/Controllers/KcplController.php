@@ -107,15 +107,15 @@ class KcplController extends Controller
                     'subparent' => $subparent,
                 ]);
             }
-            $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
-            $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->select('kode_cpl')->groupBy('kode_cpl')->get();
-            $getUpdated = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->orderBy('updated_at', 'desc')->first();
-            $getNilai = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->select('*', DB::raw('AVG(nilai_cpl) average'))->groupBy('kode_cpl')->get();
+            $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+            $getUpdated = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->orderBy('updated_at', 'desc')->first();
+            $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->select(['kode_cpl', 'urutan'])->groupBy('kode_cpl')->get();
+            $kcpl = kcpl::class;
 
             return view('kcpl.cari', [
                 'getmhs' => $getMhs,
                 'getkolom' => $getKolom,
-                'getnilai' => $getNilai,
+                'kcpl' => $kcpl,
                 'getUpdated' => $getUpdated,
                 'ta' => $ta,
                 'mk' => $mk,

@@ -341,6 +341,7 @@
                                 @foreach($getkolom->sortBy('kode_cpl', SORT_NATURAL) as $li)
                                     <th class="text-center">{{ $li->kode_cpl }}</th>
                                 @endforeach
+                                <th class="text-center">Terakhir Diperbarui</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -349,9 +350,26 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $li->mahasiswa->nim }}</td>
                                     <td>{{ $li->mahasiswa->nama }}</td>
-                                    @foreach($getnilai->sortBy('kode_cpl', SORT_NATURAL) as $lii)
-                                        <td class="text-center">{{ $lii->average }}</td>
+                                    @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
+                                        @php
+                                            $get_kcpl = $kcpl::where([
+                                                ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
+                                                ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                ['kode_cpl', '=', $lii->kode_cpl],])
+                                                ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                ->groupBy('kode_cpl')->get()
+                                        @endphp
+                                        @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
+                                            @if($get_kcpl->isEmpty())
+                                                <td class="text-center">Kosong!</td>
+                                            @else
+                                                <td class="text-center">{{ round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) }}</td>
+                                            @endif
+                                        @endforeach
                                     @endforeach
+                                    <td class="text-center">{{ $getUpdated->updated_at->diffForHumans() }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
