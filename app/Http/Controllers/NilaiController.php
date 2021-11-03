@@ -45,7 +45,7 @@ class NilaiController extends Controller
 
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
-        $id_user = Auth::user()->id; // returns an instance of the authenticated user...
+        $id_user = Auth::user()->id;
         $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();
         $id_dosen = $dosenadmin->id;
         $id_ta = Crypt::decrypt($request->tahunajaran);
@@ -55,10 +55,16 @@ class NilaiController extends Controller
         $getMhs = KRS::with('mahasiswa')->whereRaw(
             "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
         )->get();
-        $getTeknik = Btp::with('cpmk')->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'
+        if (Auth::user()->status === 'Admin') {
+            $getTeknik = Btp::with('cpmk')->whereRaw(
+                "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'"
+            )->get();
+        } else {
+            $getTeknik = Btp::with('cpmk')->whereRaw(
+                "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'
             AND dosen_admin_id = '$id_dosen' AND kelas = '$id_kelas'"
-        )->get();
+            )->get();
+        }
 
         return view('nilai.cari', [
             'ta' => $ta,
@@ -88,12 +94,10 @@ class NilaiController extends Controller
 
         $maxidmhs = count($id_mhs);
 
-        for ($x = 0; $x < $maxidmhs; $x ++)
-        {
+        for ($x = 0; $x < $maxidmhs; $x++) {
             $btpbymhs = $id_btp[$x];
             $maxidbtp = count($btpbymhs);
-            for ($y = 0; $y < $maxidbtp; $y ++)
-            {
+            for ($y = 0; $y < $maxidbtp; $y++) {
 
                 $id_mhs_array = $id_mhs[$x];
                 $id_cpmk_array = $id_cpmk[$x][$y];
@@ -104,7 +108,7 @@ class NilaiController extends Controller
 
                 $getBobotCPL = Bobotcpl::with('cpl')
                     ->whereRaw(
-                    "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND cpmk_id = '$id_cpmk_array' AND btp_id = '$id_btp_array'")
+                        "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND cpmk_id = '$id_cpmk_array' AND btp_id = '$id_btp_array'")
                     ->get();
 
                 // Nilai
@@ -139,7 +143,7 @@ class NilaiController extends Controller
                     ['nilai_kcpmk', '=', $nilaiori_array],
                 ])->first();
 
-                if(!is_null($cek_kcpmk)) {
+                if (!is_null($cek_kcpmk)) {
                     $cek_kcpmk->update([
                         'nilai_kcpmk' => $nilai_array,
                     ]);
@@ -158,8 +162,7 @@ class NilaiController extends Controller
                 }
 
                 // Ketercapaian CPL
-                foreach ($getBobotCPL as $value)
-                {
+                foreach ($getBobotCPL as $value) {
                     $cek_kcpl = kcpl::where([
                         ['tahun_ajaran_id', '=', $id_ta],
                         ['mahasiswa_id', '=', $id_mhs_array],
@@ -171,7 +174,7 @@ class NilaiController extends Controller
                         ['kelas', '=', $id_kelas],
                     ])->first();
 
-                    if(!is_null($cek_kcpl)) {
+                    if (!is_null($cek_kcpl)) {
                         $cek_kcpl->update([
                             'nilai_cpl' => ($nilai_array * $value->bobot_cpl),
                             'bobot_cpl' => ($value->bobot_cpl),
