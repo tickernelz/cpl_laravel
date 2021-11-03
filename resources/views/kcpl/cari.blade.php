@@ -159,6 +159,7 @@
                                     <div class="mb-4">
                                         <label class="form-label" for="mk">Mata Kuliah</label>
                                         <select class="js-select2 form-select" name="mk" id="mk">
+                                            <option value="{{ Crypt::encrypt('semua') }}">Semua</option>
                                             @foreach($mk as $m)
                                                 <option
                                                     value="{{ Crypt::encrypt($m->id) }}"
@@ -236,7 +237,8 @@
                         <div class="block-content">
                             @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $li)
                                 <div class="mb-3">
-                                    <label class="form-label" for="urutan{{ $loop->iteration }}">{{ $li->kode_cpl }}</label>
+                                    <label class="form-label"
+                                           for="urutan{{ $loop->iteration }}">{{ $li->kode_cpl }}</label>
                                     <input type="hidden" name="nama_kolom[]" value="{{ $li->kode_cpl }}">
                                     <input type="number" name="urutan[]" id="urutan{{ $loop->iteration }}"
                                            class="form-control" value="{{ $li->urutan }}">
@@ -277,12 +279,37 @@
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="submit" class="btn btn-outline-primary">Cetak</button>
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                    data-bs-target="#editkolom">Atur Kolom</button>
+                                    data-bs-target="#editkolom">Atur Kolom
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="block-content block-content-full">
+                @php
+                    function hitungrata($kcpl,$getmatkul,$mahasiswa,$kodecpl)
+                    {
+                        $matkul = $getmatkul;
+                        $total_matkul = count($matkul);
+                        $rata = array();
+                        foreach($matkul as $li)
+                            {
+                                $get_kcpl = $kcpl::where([
+                                                            ['mahasiswa_id', '=', $mahasiswa],
+                                                            ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                            ['mata_kuliah_id', '=', $li->mata_kuliah_id],
+                                                            ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                            ['kode_cpl', '=', $kodecpl],])
+                                                            ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                            ->groupBy('kode_cpl')->get();
+                                foreach($get_kcpl as $kcpl1)
+                                {
+                                    $rata[] = round(($kcpl1->jumlah_nilai / $kcpl1->jumlah_bobot), 2);
+                                }
+                            }
+                        return round((array_sum($rata)/$total_matkul), 2);
+                    }
+                @endphp
                 @if (Crypt::decrypt(Request::get('mhs')) === 'semua')
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-vcenter js-dataTable-full">
@@ -305,23 +332,43 @@
                                         <td>{{ $li->mahasiswa->nim }}</td>
                                         <td>{{ $li->mahasiswa->nama }}</td>
                                         @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
-                                            @php
-                                                $get_kcpl = $kcpl::where([
-                                                    ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                                    ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
-                                                    ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
-                                                    ['semester', '=', Crypt::decrypt(Request::get('semester'))],
-                                                    ['kode_cpl', '=', $lii->kode_cpl],])
-                                                    ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
-                                                    ->groupBy('kode_cpl')->get()
-                                            @endphp
-                                            @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
-                                                @if($get_kcpl->isEmpty())
-                                                    <td class="text-center">Kosong!</td>
-                                                @else
-                                                    <td class="text-center">{{ round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) }}</td>
-                                                @endif
-                                            @endforeach
+                                            @if (Crypt::decrypt(Request::get('mk')) === 'semua')
+                                                @php
+                                                    $get_kcpl = $kcpl::where([
+                                                            ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                            ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                            ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                            ['kode_cpl', '=', $lii->kode_cpl],])
+                                                            ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                            ->groupBy('kode_cpl')->get();
+                                                        $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl);
+                                                @endphp
+                                                @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
+                                                    @if($get_kcpl->isEmpty())
+                                                        <td class="text-center">Kosong!</td>
+                                                    @else
+                                                        <td class="text-center">{{ $hitungrata }}</td>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                @php
+                                                    $get_kcpl = $kcpl::where([
+                                                        ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                        ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                        ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
+                                                        ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                        ['kode_cpl', '=', $lii->kode_cpl],])
+                                                        ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                        ->groupBy('kode_cpl')->get()
+                                                @endphp
+                                                @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
+                                                    @if($get_kcpl->isEmpty())
+                                                        <td class="text-center">Kosong!</td>
+                                                    @else
+                                                        <td class="text-center">{{ round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) }}</td>
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         @endforeach
                                         <td class="text-center">{{ $getUpdated->updated_at->diffForHumans() }}</td>
                                     </tr>
@@ -351,23 +398,43 @@
                                     <td>{{ $li->mahasiswa->nim }}</td>
                                     <td>{{ $li->mahasiswa->nama }}</td>
                                     @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
-                                        @php
-                                            $get_kcpl = $kcpl::where([
-                                                ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                                ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
-                                                ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
-                                                ['semester', '=', Crypt::decrypt(Request::get('semester'))],
-                                                ['kode_cpl', '=', $lii->kode_cpl],])
-                                                ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
-                                                ->groupBy('kode_cpl')->get()
-                                        @endphp
-                                        @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
-                                            @if($get_kcpl->isEmpty())
-                                                <td class="text-center">Kosong!</td>
-                                            @else
-                                                <td class="text-center">{{ round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) }}</td>
-                                            @endif
-                                        @endforeach
+                                        @if (Crypt::decrypt(Request::get('mk')) === 'semua')
+                                            @php
+                                                $get_kcpl = $kcpl::where([
+                                                        ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                        ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                        ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                        ['kode_cpl', '=', $lii->kode_cpl],])
+                                                        ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                        ->groupBy('kode_cpl')->get();
+                                                    $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl);
+                                            @endphp
+                                            @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
+                                                @if($get_kcpl->isEmpty())
+                                                    <td class="text-center">Kosong!</td>
+                                                @else
+                                                    <td class="text-center">{{ $hitungrata }}</td>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            @php
+                                                $get_kcpl = $kcpl::where([
+                                                    ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                    ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                    ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
+                                                    ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                    ['kode_cpl', '=', $lii->kode_cpl],])
+                                                    ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                    ->groupBy('kode_cpl')->get()
+                                            @endphp
+                                            @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
+                                                @if($get_kcpl->isEmpty())
+                                                    <td class="text-center">Kosong!</td>
+                                                @else
+                                                    <td class="text-center">{{ round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) }}</td>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     @endforeach
                                     <td class="text-center">{{ $getUpdated->updated_at->diffForHumans() }}</td>
                                 </tr>
