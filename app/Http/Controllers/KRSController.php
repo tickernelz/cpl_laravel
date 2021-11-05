@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Btp;
+use App\Models\kcpl;
+use App\Models\kcpmk;
 use App\Models\KRS;
 use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
+use App\Models\Nilai;
 use App\Models\TahunAjaran;
 use Crypt;
 use Illuminate\Http\Request;
@@ -107,8 +111,57 @@ class KRSController extends Controller
     public function hapus(Request $request)
     {
         $krsId = $request->id;
-        $hapus = KRS::find($krsId)->delete();
+        $data_krs = KRS::where('id',$krsId)->first();
+        $data_btp = Btp::where([
+            ['tahun_ajaran_id', $data_krs->tahun_ajaran_id],
+            ['mata_kuliah_id', $data_krs->mata_kuliah_id],
+            ['semester', $data_krs->semester],
+        ])->get();
+        $data_kcpl = Kcpl::where([
+            ['tahun_ajaran_id', $data_krs->tahun_ajaran_id],
+            ['mata_kuliah_id', $data_krs->mata_kuliah_id],
+            ['semester', $data_krs->semester],
+            ['mahasiswa_id', $data_krs->mahasiswa_id],
+        ])->get();
+        $data_kcpmk = Kcpmk::where([
+            ['tahun_ajaran_id', $data_krs->tahun_ajaran_id],
+            ['mata_kuliah_id', $data_krs->mata_kuliah_id],
+            ['semester', $data_krs->semester],
+            ['mahasiswa_id', $data_krs->mahasiswa_id],
+        ])->get();
 
-        return Response()->json($hapus);
+        function hapus_data($data_krs, $data_btp, $data_kcpl, $data_kcpmk) :void
+        {
+            // Hapus Data KCPL
+            foreach ($data_kcpl as $kcpl)
+            {
+                $kcpl->delete();
+            }
+
+            // Hapus Data KCPMK
+            foreach ($data_kcpmk as $kcpmk)
+            {
+                $kcpmk->delete();
+            }
+
+            // Hapus Data Nilai
+            foreach($data_btp as $btp)
+            {
+                $data_nilai = Nilai::where([
+                    ['mahasiswa_id', $data_krs->mahasiswa_id],
+                    ['btp_id', $btp->id],
+                ])->get();
+                foreach ($data_nilai as $nilai)
+                {
+                    $nilai->delete();
+                }
+            }
+
+            // Hapus KRS
+            $data_krs->delete();
+        }
+
+
+        return Response()->json(hapus_data($data_krs, $data_btp, $data_kcpl, $data_kcpmk));
     }
 }

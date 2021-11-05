@@ -179,7 +179,7 @@
                                                     value="{{ Crypt::encrypt($item->id) }}"
                                                     @if (Crypt::decrypt(Request::get('mhs')) === $item->id)
                                                     selected="selected"
-                                                    @endif>{{$item->nim}}
+                                                    @endif>{{$item->nim}} ({{$item->nama}})
                                                 </option>
                                             @endforeach
                                         </select>
@@ -287,10 +287,10 @@
             </div>
             <div class="block-content block-content-full">
                 @php
-                    function hitungrata($kcpl,$getmatkul,$mahasiswa,$kodecpl)
+                    function hitungrata($kcpl,$getmatkul,$mahasiswa,$kodecpl,$total_cpl)
                     {
                         $matkul = $getmatkul;
-                        $total_matkul = count($matkul);
+                        $total_cpl_matkul = count($total_cpl);
                         $rata = array();
                         foreach($matkul as $li)
                             {
@@ -302,12 +302,17 @@
                                                             ['kode_cpl', '=', $kodecpl],])
                                                             ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                                             ->groupBy('kode_cpl')->get();
-                                foreach($get_kcpl as $kcpl1)
+                                foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $kcpl1)
                                 {
                                     $rata[] = round(($kcpl1->jumlah_nilai / $kcpl1->jumlah_bobot), 2);
                                 }
                             }
-                        return round((array_sum($rata)/$total_matkul), 2);
+                        if(count($total_cpl))
+                            {
+                                return round((array_sum($rata)/$total_cpl_matkul), 2);
+                            } else {
+                                return NULL;
+                            }
                     }
                 @endphp
                 @if (Crypt::decrypt(Request::get('mhs')) === 'semua')
@@ -334,22 +339,29 @@
                                         @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
                                             @if (Crypt::decrypt(Request::get('mk')) === 'semua')
                                                 @php
+                                                    $total_cpl = $kcpl::where([
+                                                                ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                                ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                                ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                                ['kode_cpl', '=', $lii->kode_cpl],])
+                                                                ->groupBy('mata_kuliah_id')
+                                                                ->get();
                                                     $get_kcpl = $kcpl::where([
-                                                            ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                                            ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
-                                                            ['semester', '=', Crypt::decrypt(Request::get('semester'))],
-                                                            ['kode_cpl', '=', $lii->kode_cpl],])
-                                                            ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
-                                                            ->groupBy('kode_cpl')->get();
-                                                        $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl);
+                                                               ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                               ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                               ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                               ['kode_cpl', '=', $lii->kode_cpl],])
+                                                               ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                               ->groupBy('kode_cpl')->get();
+                                                           $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl, $total_cpl);
                                                 @endphp
-                                                @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
-                                                    @if($get_kcpl->isEmpty())
-                                                        <td class="text-center">Kosong!</td>
-                                                    @else
+                                                @if($get_kcpl->isEmpty() || is_null($hitungrata))
+                                                    <td class="text-center">Kosong!</td>
+                                                @else
+                                                    @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
                                                         <td class="text-center">{{ $hitungrata }}</td>
-                                                    @endif
-                                                @endforeach
+                                                    @endforeach
+                                                @endif
                                             @else
                                                 @php
                                                     $get_kcpl = $kcpl::where([
@@ -385,7 +397,7 @@
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th style="width: 80px;">NIM</th>
                                 <th style="width: 80px;">Nama Mahasiswa</th>
-                                @foreach($getkolom->sortBy('kode_cpl', SORT_NATURAL) as $li)
+                                @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $li)
                                     <th class="text-center">{{ $li->kode_cpl }}</th>
                                 @endforeach
                                 <th class="text-center">Terakhir Diperbarui</th>
@@ -400,22 +412,29 @@
                                     @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
                                         @if (Crypt::decrypt(Request::get('mk')) === 'semua')
                                             @php
-                                                $get_kcpl = $kcpl::where([
-                                                        ['mahasiswa_id', '=', $li->mahasiswa->id],
-                                                        ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
-                                                        ['semester', '=', Crypt::decrypt(Request::get('semester'))],
-                                                        ['kode_cpl', '=', $lii->kode_cpl],])
-                                                        ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
-                                                        ->groupBy('kode_cpl')->get();
-                                                    $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl);
+                                                $total_cpl = $kcpl::where([
+                                                                    ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                                    ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                                    ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                                    ['kode_cpl', '=', $lii->kode_cpl],])
+                                                                    ->groupBy('mata_kuliah_id')
+                                                                    ->get();
+                                                    $get_kcpl = $kcpl::where([
+                                                            ['mahasiswa_id', '=', $li->mahasiswa->id],
+                                                            ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
+                                                            ['semester', '=', Crypt::decrypt(Request::get('semester'))],
+                                                            ['kode_cpl', '=', $lii->kode_cpl],])
+                                                            ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
+                                                            ->groupBy('kode_cpl')->get();
+                                                        $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl, $total_cpl);
                                             @endphp
-                                            @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
-                                                @if($get_kcpl->isEmpty())
-                                                    <td class="text-center">Kosong!</td>
-                                                @else
+                                            @if($get_kcpl->isEmpty() || is_null($hitungrata))
+                                                <td class="text-center">Kosong!</td>
+                                            @else
+                                                @foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $liii)
                                                     <td class="text-center">{{ $hitungrata }}</td>
-                                                @endif
-                                            @endforeach
+                                                @endforeach
+                                            @endif
                                         @else
                                             @php
                                                 $get_kcpl = $kcpl::where([

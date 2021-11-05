@@ -107,7 +107,7 @@
                                             <option value="{{ Crypt::encrypt('semua') }}">Semua</option>
                                             @foreach($mhs as $item)
                                                 <option
-                                                    value="{{ Crypt::encrypt($item->id) }}">{{$item->nim}}
+                                                    value="{{ Crypt::encrypt($item->id) }}">{{$item->nim}} ({{$item->nama}})
                                                 </option>
                                             @endforeach
                                         </select>
