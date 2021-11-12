@@ -52,7 +52,7 @@ class TahunAjaranController extends Controller
             'judul' => $judul,
             'parent' => $parent,
             'subparent' => $subparent,
-            'tahunajaran' => $tampil
+            'tahunajaran' => $tampil,
         ]);
     }
 
@@ -62,13 +62,7 @@ class TahunAjaranController extends Controller
             'tahun' => 'required|string|unique:tahun_ajarans',
         ];
 
-        $messages = [
-            'tahun.required' => 'Tahun Ajaran wajib diisi',
-            'tahun.unique' => 'Tahun Ajaran harus beda dari yang lain',
-            'tahun.string' => 'Tahun Ajaran tidak valid',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
@@ -83,43 +77,18 @@ class TahunAjaranController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $taori = $request->input('ta-ori');
-        $taedit = $request->input('tahun');
+        $ta = TahunAjaran::firstWhere('id', $id);
 
-        $rules1 = [
-            'tahun' => 'required|string',
+        $rules = [
+            'tahun' => 'required|string|unique:tahun_ajarans,tahun,' . $ta->id,
         ];
 
-        $rules2 = [
-            'tahun' => 'required|string|unique:tahun_ajarans',
-        ];
-
-        $messages = [
-            'tahun.required' => 'Tahun Ajaran wajib diisi',
-            'tahun.unique' => 'Tahun Ajaran harus beda dari yang lain',
-            'tahun.string' => 'Tahun Ajaran tidak valid',
-        ];
-
-        if ($taori === $taedit) {
-            $validator = Validator::make($request->all(), $rules1, $messages);
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput($request->all);
-            }
-
-            $ta = TahunAjaran::where('id', $id)->first();
-            $ta->tahun = $request->input('tahun');
-            $ta->save();
-
-            return back()->with('success', 'Data Berhasil Diubah!.');
-        }
-        $validator = Validator::make($request->all(), $rules2, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $ta = TahunAjaran::where('id', $id)->first();
         $ta->tahun = $request->input('tahun');
         $ta->save();
 

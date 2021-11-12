@@ -14,10 +14,9 @@ class BackendController extends Controller
 
     public static function getNama()
     {
-        $user = Auth::user(); // returns an instance of the authenticated user...
-        $id = $user->id;
-        $dosenadmin = DosenAdmin::with('user')->where('id', $id)->first();
-        return $dosenadmin->nama;
-    }
+        // returns an instance of the authenticated user...
+        $id = Auth::user()->id;
 
+        return DosenAdmin::with('user')->firstWhere('id', $id)->nama;
+    }
 }

@@ -52,7 +52,7 @@ class CPLController extends Controller
             'judul' => $judul,
             'parent' => $parent,
             'subparent' => $subparent,
-            'cpl' => $tampil
+            'cpl' => $tampil,
         ]);
     }
 
@@ -63,15 +63,7 @@ class CPLController extends Controller
             'nama_cpl' => 'required|string',
         ];
 
-        $messages = [
-            'kode_cpl.required' => 'Kode CPL wajib diisi',
-            'kode_cpl.unique' => 'Kode CPL harus beda dari yang lain',
-            'kode_cpl.string' => 'Kode CPL tidak valid',
-            'nama_cpl.required' => 'Nama CPL wajib diisi',
-            'nama_cpl.string' => 'Nama CPL tidak valid',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
@@ -87,48 +79,19 @@ class CPLController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $kodeori = $request->input('kode_cpl-ori');
-        $kodeedit = $request->input('kode_cpl');
+        $cpl = Cpl::firstWhere('id', $id);
 
-        $rules1 = [
-            'kode_cpl' => 'required|string',
+        $rules = [
+            'kode_cpl' => 'required|string|unique:cpls,kode_cpl,'.$cpl->id,
             'nama_cpl' => 'required|string',
         ];
 
-        $rules2 = [
-            'kode_cpl' => 'required|string|unique:cpls',
-            'nama_cpl' => 'required|string',
-        ];
-
-        $messages = [
-            'kode_cpl.required' => 'Kode CPL wajib diisi',
-            'kode_cpl.unique' => 'Kode CPL harus beda dari yang lain',
-            'kode_cpl.string' => 'Kode CPL tidak valid',
-            'nama_cpl.required' => 'Nama CPL wajib diisi',
-            'nama_cpl.string' => 'Nama CPL tidak valid',
-        ];
-
-        if ($kodeori === $kodeedit) {
-            $validator = Validator::make($request->all(), $rules1, $messages);
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput($request->all);
-            }
-
-            $cpl = Cpl::where('id', $id)->first();
-            $cpl->kode_cpl = $request->input('kode_cpl');
-            $cpl->nama_cpl = $request->input('nama_cpl');
-            $cpl->save();
-
-            return back()->with('success', 'Data Berhasil Diubah!.');
-        }
-        $validator = Validator::make($request->all(), $rules2, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $cpl = Cpl::where('id', $id)->first();
         $cpl->kode_cpl = $request->input('kode_cpl');
         $cpl->nama_cpl = $request->input('nama_cpl');
         $cpl->save();

@@ -88,6 +88,7 @@ class KRSController extends Controller
                 ]
             );
         }
+
         return redirect()->route('krs')->with('error', 'Data tidak ditemukan!.');
     }
 
@@ -107,11 +108,10 @@ class KRSController extends Controller
         return Response()->json($krs);
     }
 
-
     public function hapus(Request $request)
     {
         $krsId = $request->id;
-        $data_krs = KRS::where('id',$krsId)->first();
+        $data_krs = KRS::where('id', $krsId)->first();
         $data_btp = Btp::where([
             ['tahun_ajaran_id', $data_krs->tahun_ajaran_id],
             ['mata_kuliah_id', $data_krs->mata_kuliah_id],
@@ -133,26 +133,22 @@ class KRSController extends Controller
         function hapus_data($data_krs, $data_btp, $data_kcpl, $data_kcpmk) :void
         {
             // Hapus Data KCPL
-            foreach ($data_kcpl as $kcpl)
-            {
+            foreach ($data_kcpl as $kcpl) {
                 $kcpl->delete();
             }
 
             // Hapus Data KCPMK
-            foreach ($data_kcpmk as $kcpmk)
-            {
+            foreach ($data_kcpmk as $kcpmk) {
                 $kcpmk->delete();
             }
 
             // Hapus Data Nilai
-            foreach($data_btp as $btp)
-            {
+            foreach ($data_btp as $btp) {
                 $data_nilai = Nilai::where([
                     ['mahasiswa_id', $data_krs->mahasiswa_id],
                     ['btp_id', $btp->id],
                 ])->get();
-                foreach ($data_nilai as $nilai)
-                {
+                foreach ($data_nilai as $nilai) {
                     $nilai->delete();
                 }
             }
@@ -160,7 +156,6 @@ class KRSController extends Controller
             // Hapus KRS
             $data_krs->delete();
         }
-
 
         return Response()->json(hapus_data($data_krs, $data_btp, $data_kcpl, $data_kcpmk));
     }

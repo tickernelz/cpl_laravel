@@ -54,6 +54,7 @@ class RolesmkController extends Controller
         $getDosenselain = DosenAdmin::whereHas('user', function ($query) {
             return $query->whereRaw("status = 'Dosen'");
         })->whereNotIn('id', $arraydosen)->get();
+
         return view('rolesmk.cari', [
             'getDosenselain' => $getDosenselain,
             'getDosen' => $getDosen,
@@ -85,6 +86,7 @@ class RolesmkController extends Controller
                 'status' => $status,
             ]
         );
+
         return Response()->json($tambah);
     }
 
@@ -92,6 +94,7 @@ class RolesmkController extends Controller
     {
         $id = $request->id;
         $hapus = Rolesmk::find($id)->delete();
+
         return Response()->json($hapus);
     }
 }

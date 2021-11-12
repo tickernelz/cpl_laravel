@@ -60,7 +60,7 @@ class CPMKController extends Controller
             'parent' => $parent,
             'subparent' => $subparent,
             'cpmk' => $cpmk,
-            'mk' => $mk
+            'mk' => $mk,
         ]);
     }
 
@@ -70,11 +70,10 @@ class CPMKController extends Controller
         $kode_cpmk = $request->input('kode_cpmk');
         $cek_ada = Cpmk::where([
             ['mata_kuliah_id', '=', $id_mk],
-            ['kode_cpmk', '=', $kode_cpmk]
+            ['kode_cpmk', '=', $kode_cpmk],
         ])->count();
 
-        if ($cek_ada !== 0)
-        {
+        if ($cek_ada !== 0) {
             return back()->with('error', 'Mata Kuliah Dengan Kode CPMK Yang Dimasukkan Sudah Ada!');
         }
 
@@ -83,14 +82,7 @@ class CPMKController extends Controller
             'nama_cpmk' => 'required|string',
         ];
 
-        $messages = [
-            'kode_cpmk.required' => 'Kode CPMK wajib diisi',
-            'kode_cpmk.string' => 'Kode CPMK tidak valid',
-            'nama_cpmk.required' => 'Nama CPMK wajib diisi',
-            'nama_cpmk.string' => 'Nama CPMK tidak valid',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
@@ -107,13 +99,11 @@ class CPMKController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $id_mk_ori = $request->input('mata_kuliah-ori');
-        $kode_cpmk_ori = $request->input('kode_cpmk-ori');
         $id_mk = $request->input('mata_kuliah');
         $kode_cpmk = $request->input('kode_cpmk');
         $cek_ada = Cpmk::where([
             ['mata_kuliah_id', '=', $id_mk],
-            ['kode_cpmk', '=', (string)$kode_cpmk]
+            ['kode_cpmk', '=', (string) $kode_cpmk],
         ])->count();
 
         $rules = [
@@ -121,41 +111,17 @@ class CPMKController extends Controller
             'nama_cpmk' => 'required|string',
         ];
 
-        $messages = [
-            'kode_cpmk.required' => 'Kode CPMK wajib diisi',
-            'kode_cpmk.string' => 'Kode CPMK Kuliah tidak valid',
-            'nama_cpmk.required' => 'Nama CPMK wajib diisi',
-            'nama_cpmk.string' => 'Nama CPMK tidak valid',
-        ];
-
-        if ($id_mk_ori !== $id_mk || $kode_cpmk_ori !== $kode_cpmk)
-        {
-            if ($cek_ada !== 0)
-            {
-                return back()->with('error', 'Mata Kuliah Dengan Kode CPMK Yang Dimasukkan Sudah Ada!');
-            }
-            $validator = Validator::make($request->all(), $rules, $messages);
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput($request->all);
-            }
-
-            $cpmk = Cpmk::where('id', $id)->first();
-            $cpmk->mata_kuliah_id = $request->input('mata_kuliah');
-            $cpmk->kode_cpmk = $request->input('kode_cpmk');
-            $cpmk->nama_cpmk = $request->input('nama_cpmk');
-            $cpmk->save();
-
-            return back()->with('success', 'Data Berhasil Diubah!.');
+        if ($cek_ada !== 0) {
+            return back()->with('error', 'Mata Kuliah Dengan Kode CPMK Yang Dimasukkan Sudah Ada!');
         }
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $cpmk = Cpmk::where('id', $id)->first();
+        $cpmk = Cpmk::firstWhere('id', $id);
         $cpmk->mata_kuliah_id = $request->input('mata_kuliah');
         $cpmk->kode_cpmk = $request->input('kode_cpmk');
         $cpmk->nama_cpmk = $request->input('nama_cpmk');

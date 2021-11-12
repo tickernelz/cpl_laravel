@@ -55,7 +55,7 @@ class AdminController extends Controller
             'judul' => $judul,
             'parent' => $parent,
             'subparent' => $subparent,
-            'admin' => $user
+            'admin' => $user,
         ]);
     }
 
@@ -92,7 +92,7 @@ class AdminController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $data = DosenAdmin::with('user')->where('id', $id)->first();
+        $data = DosenAdmin::with('user')->firstWhere('id', $id);
 
         $rules = [
             'nip' => 'required|integer|unique:dosen_admins,nip,'.$data->id,

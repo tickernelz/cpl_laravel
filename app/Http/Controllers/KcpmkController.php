@@ -17,7 +17,6 @@ use PDF;
 
 class KcpmkController extends Controller
 {
-
     public function index()
     {
         $judul = 'Kelola Ketercapaian CPMK';
@@ -65,13 +64,13 @@ class KcpmkController extends Controller
         $getDosen = Rolesmk::with('dosen_admin')
             ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
             ->first();
-        if(isset($getDosen) || $cekstatus === 'Admin')
-        {
+        if (isset($getDosen) || $cekstatus === 'Admin') {
             if ($id_mhs === 'semua') {
                 $getMhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
                 $getUpdated = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->orderBy('updated_at', 'desc')->first();
                 $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
                 $kcpmk = kcpmk::class;
+
                 return view('kcpmk.cari', [
                     'getmhs' => $getMhs,
                     'getkolom' => $getKolom,
@@ -105,6 +104,7 @@ class KcpmkController extends Controller
                 'subparent' => $subparent,
             ]);
         }
+
         return redirect()->route('kcpmk')->with('error', 'Maaf anda bukan dosen koordinator!');
     }
 
@@ -112,7 +112,7 @@ class KcpmkController extends Controller
     {
         setlocale(LC_TIME, 'id_ID');
         Carbon::setLocale('id');
-        Carbon::now()->formatLocalized("%A, %d %B %Y");
+        Carbon::now()->formatLocalized('%A, %d %B %Y');
 
         // GET
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
@@ -139,17 +139,17 @@ class KcpmkController extends Controller
         // TCPDF
 
         //Header
-        PDF::setHeaderCallback(function($pdf){
-            $pdf->Image(asset('media/photos/UPR.jpg'),10, 10, 25, 25);
-            $pdf->SetFont('Times','B',11.5);
+        PDF::setHeaderCallback(function ($pdf) {
+            $pdf->Image(asset('media/photos/UPR.jpg'), 10, 10, 25, 25);
+            $pdf->SetFont('Times', 'B', 11.5);
             $pdf->Ln(10);
-            $pdf->MultiCell(290, 4, "KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI ", 0, 'C');
-            $pdf->MultiCell(290, 4, "UNIVERSITAS PALANGKA RAYA", 0, 'C');
-            $pdf->MultiCell(290, 4, "FAKULTAS TEKNIK", 0, 'C');
+            $pdf->MultiCell(290, 4, 'KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI ', 0, 'C');
+            $pdf->MultiCell(290, 4, 'UNIVERSITAS PALANGKA RAYA', 0, 'C');
+            $pdf->MultiCell(290, 4, 'FAKULTAS TEKNIK', 0, 'C');
             $pdf->Ln(1);
-            $pdf->SetFont('Times','',8);
-            $pdf->MultiCell(290, 3, "Alamat : Kampus UPR Tunjung Nyaho Jalan Yos Sudarso Kotak Pos 2/PLKUP Palangka Raya 73112 Kalimantan Tengah - INDONESIA", 0, 'C');
-            $pdf->MultiCell(290, 3, "Telepon/Fax: +62 536-3226487 ; laman: www.upr.ac.id E-Mail: fakultas_teknik@eng.upr.ac.id", 0, 'C');
+            $pdf->SetFont('Times', '', 8);
+            $pdf->MultiCell(290, 3, 'Alamat : Kampus UPR Tunjung Nyaho Jalan Yos Sudarso Kotak Pos 2/PLKUP Palangka Raya 73112 Kalimantan Tengah - INDONESIA', 0, 'C');
+            $pdf->MultiCell(290, 3, 'Telepon/Fax: +62 536-3226487 ; laman: www.upr.ac.id E-Mail: fakultas_teknik@eng.upr.ac.id', 0, 'C');
             $pdf->Line(10, 38, 285, 38);
         });
 
@@ -160,21 +160,21 @@ class KcpmkController extends Controller
             // Set font
             $pdf->SetFont('ariali', '', 8);
             // Page number
-            $pdf->Cell(0, 10, 'Halaman ' . $pdf->getAliasNumPage() . '/' . $pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(0, 10, 'Halaman '.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
         });
 
         // Isi
         PDF::Addpage('L', 'A4');
         PDF::SetY(40);
         PDF::SetFont('Times', 'B', 11.5);
-        PDF::MultiCell(260, 8, "KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)", 0, 'C');
+        PDF::MultiCell(260, 8, 'KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)', 0, 'C');
 
         PDF::SetFont('Times', '', 9);
         PDF::SetY(50);
         PDF::Cell(28, 5, 'Mata Kuliah ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
         PDF::SetFont('Times', 'B', 9);
-        PDF::Cell(172, 5, "".(strtoupper($mata_kuliah->nama))." (".(strtoupper($mata_kuliah->kode)).")", 0, 1, 'L');
+        PDF::Cell(172, 5, ''.(strtoupper($mata_kuliah->nama)).' ('.(strtoupper($mata_kuliah->kode)).')', 0, 1, 'L');
 
         PDF::SetFont('Times', '', 9);
         PDF::Cell(28, 5, 'Jumlah SKS ', 0, 0, 'L');
@@ -192,12 +192,11 @@ class KcpmkController extends Controller
         PDF::Cell(28, 5, 'Dosen ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
         PDF::SetX(41);
-        PDF::Cell(3, 5, "" . '1' . ".", 0, 0, 'L');
-        PDF::Cell(172, 5, "" . ($dosenkoor->dosen_admin->nama) . " (" . ($dosenkoor->dosen_admin->nip) . ")", 0, 1, 'L');
+        PDF::Cell(3, 5, ''.'1'.'.', 0, 0, 'L');
+        PDF::Cell(172, 5, ''.($dosenkoor->dosen_admin->nama).' ('.($dosenkoor->dosen_admin->nip).')', 0, 1, 'L');
         $no = 2;
         foreach ($dosen as $li => $value) {
-            if($value->nama === $dosenkoor->dosen_admin->nama)
-            {
+            if ($value->nama === $dosenkoor->dosen_admin->nama) {
                 continue;
             }
             if ($no > 4) {
@@ -206,9 +205,9 @@ class KcpmkController extends Controller
             } else {
                 PDF::SetX(41);
             }
-            PDF::Cell(3, 5, "" . $no . ".", 0, 0, 'L');
-            PDF::Cell(172, 5, "" . ($value->nama) . " (" . ($value->nip) . ")", 0, 1, 'L');
-            ++$no;
+            PDF::Cell(3, 5, ''.$no.'.', 0, 0, 'L');
+            PDF::Cell(172, 5, ''.($value->nama).' ('.($value->nip).')', 0, 1, 'L');
+            $no++;
         }
         PDF::SetY(50);
         PDF::SetX(180);
@@ -235,41 +234,38 @@ class KcpmkController extends Controller
         PDF::Cell(180, 8, 'KETERCAPAIAN CAPAIAN PEMBELAJARAN MATA KULIAH (CPMK)', 1, 0, 'C');
         PDF::SetY(103);
         PDF::SetX(105);
-        foreach($getKolom->sortBy('kode_cpmk', SORT_NATURAL) as $li)
-        {
+        foreach ($getKolom->sortBy('kode_cpmk', SORT_NATURAL) as $li) {
             PDF::Cell(18, 8, $li->kode_cpmk, 1, 0, 'C');
         }
 
         PDF::SetFont('Times', '', 11);
         PDF::SetY(111);
-        foreach($getmhs as $li => $value) {
+        foreach ($getmhs as $li => $value) {
             PDF::SetX(10);
-            PDF::Cell(10, 7, $li+1, 1, 0, 'C');
+            PDF::Cell(10, 7, $li + 1, 1, 0, 'C');
             PDF::Cell(35, 7, $value->mahasiswa->nim, 1, 0, 'C');
             PDF::Cell(50, 7, $value->mahasiswa->nama, 1, 0, 'C');
-            foreach(kcpmk::where([
+            foreach (kcpmk::where([
                 ['mahasiswa_id', '=', $value->mahasiswa->id],
                 ['tahun_ajaran_id', '=', $id_ta],
                 ['mata_kuliah_id', '=', $id_mk],
-                ['semester', '=', $id_sem],])
-                         ->select('*',DB::raw('AVG(nilai_kcpmk) average'))
-                         ->groupBy('kode_cpmk')->get()->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
-            {
-                if($lii->average < 60){
+                ['semester', '=', $id_sem], ])
+                         ->select('*', DB::raw('AVG(nilai_kcpmk) average'))
+                         ->groupBy('kode_cpmk')->get()->sortBy('kode_cpmk', SORT_NATURAL) as $lii) {
+                if ($lii->average < 60) {
                     PDF::SetTextColor(198, 40, 40);
-                    PDF::Cell(18, 7,  $lii->average, 1, 0, 'C');
+                    PDF::Cell(18, 7, $lii->average, 1, 0, 'C');
                     PDF::SetTextColor(0, 0, 0);
                 } else {
-                    PDF::Cell(18, 7,  $lii->average, 1, 0, 'C');
+                    PDF::Cell(18, 7, $lii->average, 1, 0, 'C');
                 }
-
             }
             PDF::Ln();
         }
         PDF::Ln(10);
         PDF::SetFont('Times', '', 10);
         PDF::SetX(220);
-        PDF::Cell(25, 5, "Palangka Raya, ".Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
+        PDF::Cell(25, 5, 'Palangka Raya, '.Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
         PDF::Ln();
         PDF::SetX(220);
         PDF::Cell(25, 5, 'Dosen,', 0, 0, 'L');
@@ -279,9 +275,10 @@ class KcpmkController extends Controller
         PDF::Ln();
         PDF::SetX(220);
         PDF::Cell(25, 5, $dosenkoor->dosen_admin->nip, 0, 0, 'L');
-        PDF::SetTitle("KETERCAPAIAN CPMK-".(strtoupper($mata_kuliah->nama))."-KELAS(".($id_kelas).")");
+        PDF::SetTitle('KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($id_kelas).')');
         $nama_file = 'KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($id_kelas).').pdf';
         PDF::Output(storage_path('app').'/public/'.$nama_file, 'F');
+
         return response()->file(storage_path('app').'/public/'.$nama_file);
     }
 }

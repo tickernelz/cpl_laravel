@@ -52,7 +52,7 @@ class MataKuliahController extends Controller
             'judul' => $judul,
             'parent' => $parent,
             'subparent' => $subparent,
-            'matakuliah' => $tampil
+            'matakuliah' => $tampil,
         ]);
     }
 
@@ -65,19 +65,7 @@ class MataKuliahController extends Controller
             'semester' => 'required|integer',
         ];
 
-        $messages = [
-            'kode.required' => 'Kode Mata Kuliah wajib diisi',
-            'kode.unique' => 'Kode Mata Kuliah harus beda dari yang lain',
-            'kode.string' => 'Kode Mata Kuliah tidak valid',
-            'nama.required' => 'Nama Mata Kuliah wajib diisi',
-            'nama.string' => 'Nama Mata Kuliah tidak valid',
-            'sks.required' => 'SKS wajib diisi',
-            'sks.integer' => 'SKS Harus Berupa Angka',
-            'semester.required' => 'Semester wajib diisi',
-            'semester.integer' => 'Semester Harus Berupa Angka',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
@@ -95,52 +83,16 @@ class MataKuliahController extends Controller
 
     public function edit(Request $request, int $id)
     {
-        $mkori = $request->input('kode-ori');
-        $mkedit = $request->input('kode');
+        $mk = MataKuliah::firstWhere('id', $id);
 
-        $rules1 = [
-            'kode' => 'required|string',
+        $rules = [
+            'kode' => 'required|string|unique:mata_kuliahs,kode,' . $mk->id,
             'nama' => 'required|string',
             'sks' => 'required|integer',
             'semester' => 'required|integer',
         ];
 
-        $rules2 = [
-            'kode' => 'required|string|unique:mata_kuliahs',
-            'nama' => 'required|string',
-            'sks' => 'required|integer',
-            'semester' => 'required|integer',
-        ];
-
-        $messages = [
-            'kode.required' => 'Kode Mata Kuliah wajib diisi',
-            'kode.unique' => 'Kode Mata Kuliah harus beda dari yang lain',
-            'kode.string' => 'Kode Mata Kuliah tidak valid',
-            'nama.required' => 'Nama Mata Kuliah wajib diisi',
-            'nama.string' => 'Nama Mata Kuliah tidak valid',
-            'sks.required' => 'SKS wajib diisi',
-            'sks.integer' => 'SKS Harus Berupa Angka',
-            'semester.required' => 'Semester wajib diisi',
-            'semester.integer' => 'Semester Harus Berupa Angka',
-        ];
-
-        if ($mkori === $mkedit) {
-            $validator = Validator::make($request->all(), $rules1, $messages);
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput($request->all);
-            }
-
-            $mk = MataKuliah::where('id', $id)->first();
-            $mk->kode = $request->input('kode');
-            $mk->nama = $request->input('nama');
-            $mk->sks = $request->input('sks');
-            $mk->semester = $request->input('semester');
-            $mk->save();
-
-            return back()->with('success', 'Data Berhasil Diubah!.');
-        }
-        $validator = Validator::make($request->all(), $rules2, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
@@ -153,7 +105,7 @@ class MataKuliahController extends Controller
         $mk->semester = $request->input('semester');
         $mk->save();
 
-        return back()->with('success', 'Data Berhasil Diubah!.');
+        return back()->with('success', 'Data Berhasil Diubah!');
     }
 
     public function hapus(int $id)

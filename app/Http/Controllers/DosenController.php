@@ -55,7 +55,7 @@ class DosenController extends Controller
             'judul' => $judul,
             'parent' => $parent,
             'subparent' => $subparent,
-            'dosen' => $user
+            'dosen' => $user,
         ]);
     }
 

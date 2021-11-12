@@ -62,21 +62,28 @@ class BtpController extends Controller
         $id_kelas = Crypt::decrypt($request->kelas);
         $id_user = Auth::user()->id;
         $cekstatus = Auth::user()->status;
-        $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();
-        $id_dosen = $dosenadmin->id;
-        $getDosen = Rolesmk::with('dosen_admin')
-            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
-            ->first();
-        if(isset($getDosen) || $cekstatus === 'Admin')
-        {
+        $id_dosen = DosenAdmin::with('user')->firstWhere('id', $id_user)->id;
+        $getDosen = Rolesmk::with('dosen_admin')->firstWhere([
+            ['tahun_ajaran_id' => $id_ta],
+            ['mata_kuliah_id' => $id_mk],
+            ['semester' => $id_sem],
+            ['kelas' => $id_kelas],
+            ['dosen_admin_id' => $id_dosen],
+            ['status' => 'koordinator'],
+        ]);
+        if (isset($getDosen) || $cekstatus === 'Admin') {
             $cpmk_mk = Cpmk::with('mata_kuliah')->where('mata_kuliah_id', $id_mk)->get();
             $tampil = Btp::with(
                 'tahun_ajaran',
                 'mata_kuliah',
                 'cpmk',
-                'dosen_admin')
-                ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")
-                ->get();
+                'dosen_admin'
+            )->where([
+                ['tahun_ajaran_id' => $id_ta],
+                ['mata_kuliah_id' => $id_mk],
+                ['semester' => $id_sem],
+                ['kelas' => $id_kelas],
+            ])->get();
             $sum_bobot = $tampil->sum('bobot');
 
             return view('btp.cari', [
@@ -96,6 +103,7 @@ class BtpController extends Controller
                 'subparent' => $subparent,
             ]);
         }
+
         return redirect()->route('btp')->with('error', 'Maaf anda bukan dosen koordinator!');
     }
 
@@ -115,9 +123,12 @@ class BtpController extends Controller
             'mata_kuliah',
             'cpmk',
             'dosen_admin'
-        )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
-        )->get();
+        )->where([
+            ['tahun_ajaran_id' => $id_ta],
+            ['mata_kuliah_id' => $id_mk],
+            ['semester' => $semester],
+            ['kelas' => $id_kelas],
+        ])->get();
         $sum_bobot = $tampil->sum('bobot') + $bobot;
         if ($sum_bobot <= 100.1) {
             $btp = Btp::Create(
@@ -156,9 +167,12 @@ class BtpController extends Controller
             'mata_kuliah',
             'cpmk',
             'dosen_admin'
-        )->whereRaw(
-            "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$semester' AND kelas = '$id_kelas'"
-        )->get();
+        )->where([
+            ['tahun_ajaran_id' => $id_ta],
+            ['mata_kuliah_id' => $id_mk],
+            ['semester' => $semester],
+            ['kelas' => $id_kelas],
+        ])->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot') + $bobot;
         if ($sum_bobot <= 100.1) {
             $btp = Btp::find($id);
@@ -166,9 +180,9 @@ class BtpController extends Controller
             $btp->mata_kuliah_id = $id_mk;
             $btp->cpmk_id = $id_cpmk;
             $btp->dosen_admin_id = $id_dosen;
-            $btp->nama = (string)$teknik;
-            $btp->semester = (string)$semester;
-            $btp->kategori = (string)$kategori;
+            $btp->nama = (string) $teknik;
+            $btp->semester = (string) $semester;
+            $btp->kategori = (string) $kategori;
             $btp->bobot = $bobot;
             $save = $btp->save();
 
@@ -185,12 +199,13 @@ class BtpController extends Controller
         if ($cek === 0) {
             $hapus_btp = Btp::find($id)->delete();
             $hapus_nilai = Nilai::where('btp_id')->get();
-            foreach ($hapus_nilai as $li)
-            {
+            foreach ($hapus_nilai as $li) {
                 $li->delete();
             }
+
             return Response()->json([$hapus_btp, $hapus_nilai]);
         }
+
         return response()->json(['error' => 'Data yang ingin dihapus masih digunakan!'], 409);
     }
 }

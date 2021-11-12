@@ -66,8 +66,7 @@ class DpnaController extends Controller
         $getDosen = Rolesmk::with('dosen_admin')
             ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
             ->first();
-        if(isset($getDosen) || $cekstatus === 'Admin')
-        {
+        if (isset($getDosen) || $cekstatus === 'Admin') {
             $getnilaitugas = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
                 $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '1'");
             })->get();
@@ -84,6 +83,7 @@ class DpnaController extends Controller
                 $getMhs = KRS::with('mahasiswa')->whereRaw(
                     "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
                 )->get();
+
                 return view('dpna.cari', [
                     'getmhs' => $getMhs,
                     'getnilaiuts' => $getnilaiuts,
@@ -122,6 +122,7 @@ class DpnaController extends Controller
                 'subparent' => $subparent,
             ]);
         }
+
         return redirect()->route('dpna')->with('error', 'Maaf anda bukan dosen koordinator!');
     }
 
@@ -129,7 +130,7 @@ class DpnaController extends Controller
     {
         setlocale(LC_TIME, 'id_ID');
         Carbon::setLocale('id');
-        Carbon::now()->formatLocalized("%A, %d %B %Y");
+        Carbon::now()->formatLocalized('%A, %d %B %Y');
         // GET
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
         $id_sem = Crypt::decrypt($request->semester);
@@ -165,14 +166,15 @@ class DpnaController extends Controller
         $getbobottugas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '1'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
         $getbobotuts = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '2'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
         $getbobotuas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '3'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
-        $rekap = array();
+        $rekap = [];
         function hitung($getnilai, $bobot, $list): float
         {
             $mhs = $getnilai->where('mahasiswa_id', $list);
-            $nilai = array();
+            $nilai = [];
             foreach ($mhs as $lii) {
                 $nilai[] = $lii->nilai * $lii->btp->bobot;
             }
+
             return round((array_sum($nilai) / $bobot), 2);
         }
 
@@ -201,17 +203,18 @@ class DpnaController extends Controller
             }
         }
 
-        function jumlahmutu($rekap,$mutu)
+        function jumlahmutu($rekap, $mutu)
         {
             return $rekap[$mutu] ?? '0';
         }
 
-        function persentase($rekap,$mutu,$jumlah_mhs)
+        function persentase($rekap, $mutu, $jumlah_mhs)
         {
-           if(isset($rekap[$mutu])){
-               return ($rekap[$mutu]/$jumlah_mhs)*100;
-           }
-           return '0';
+            if (isset($rekap[$mutu])) {
+                return ($rekap[$mutu] / $jumlah_mhs) * 100;
+            }
+
+            return '0';
         }
 
         function kelulusan($nilaiakhir)
@@ -231,15 +234,15 @@ class DpnaController extends Controller
             $pdf->Image(asset('media/photos/UPR.jpg'), 10, 10, 25, 25);
             $pdf->SetFont('arialbd', '', 14);
             $pdf->Ln(10);
-            $pdf->MultiCell(210, 4, "KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,", 0, 'C');
-            $pdf->MultiCell(210, 4, "RISET, DAN TEKNOLOGI ", 0, 'C');
+            $pdf->MultiCell(210, 4, 'KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,', 0, 'C');
+            $pdf->MultiCell(210, 4, 'RISET, DAN TEKNOLOGI ', 0, 'C');
             $pdf->SetFont('arialbd', '', 16);
-            $pdf->MultiCell(210, 4, "UNIVERSITAS PALANGKA RAYA", 0, 'C');
-            $pdf->MultiCell(210, 4, "FAKULTAS TEKNIK", 0, 'C');
+            $pdf->MultiCell(210, 4, 'UNIVERSITAS PALANGKA RAYA', 0, 'C');
+            $pdf->MultiCell(210, 4, 'FAKULTAS TEKNIK', 0, 'C');
             $pdf->Ln(1);
             $pdf->SetFont('arialbd', '', 7);
-            $pdf->MultiCell(210, 3, "Alamat : Kampus UPR Tunjung Nyaho Jalan Yos Sudarso Kotak Pos 2/PLKUP Palangka Raya 73112 Kalimantan Tengah - INDONESIA", 0, 'C');
-            $pdf->MultiCell(210, 3, "Telepon/Fax: +62 536-3226487 ; laman: www.upr.ac.id E-Mail: fakultas_teknik@eng.upr.ac.id", 0, 'C');
+            $pdf->MultiCell(210, 3, 'Alamat : Kampus UPR Tunjung Nyaho Jalan Yos Sudarso Kotak Pos 2/PLKUP Palangka Raya 73112 Kalimantan Tengah - INDONESIA', 0, 'C');
+            $pdf->MultiCell(210, 3, 'Telepon/Fax: +62 536-3226487 ; laman: www.upr.ac.id E-Mail: fakultas_teknik@eng.upr.ac.id', 0, 'C');
             $pdf->Line(10, 45, 200, 45);
         });
 
@@ -250,21 +253,21 @@ class DpnaController extends Controller
             // Set font
             $pdf->SetFont('ariali', '', 8);
             // Page number
-            $pdf->Cell(0, 10, 'Halaman ' . $pdf->getAliasNumPage() . '/' . $pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(0, 10, 'Halaman '.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
         });
 
         // Isi
         PDF::Addpage('P', 'A4');
         PDF::SetY(50);
         PDF::SetFont('arialbd', '', 12);
-        PDF::MultiCell(210, 8, "DAFTAR HADIR UJIAN DAN ISIAN NILAI", 0, 'C');
+        PDF::MultiCell(210, 8, 'DAFTAR HADIR UJIAN DAN ISIAN NILAI', 0, 'C');
 
         PDF::SetFont('arialbd', '', 7);
         PDF::SetY(60);
         PDF::Cell(28, 5, 'Mata Kuliah ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
         PDF::SetFont('arialbd', '', 7);
-        PDF::Cell(172, 5, "" . (strtoupper($mata_kuliah->nama)) . " (" . (strtoupper($mata_kuliah->kode)) . ")", 0, 1, 'L');
+        PDF::Cell(172, 5, ''.(strtoupper($mata_kuliah->nama)).' ('.(strtoupper($mata_kuliah->kode)).')', 0, 1, 'L');
 
         PDF::SetFont('arialbd', '', 7);
         PDF::Cell(28, 5, 'Jumlah SKS ', 0, 0, 'L');
@@ -282,12 +285,11 @@ class DpnaController extends Controller
         PDF::Cell(28, 5, 'Dosen ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
         PDF::SetX(41);
-        PDF::Cell(3, 5, "" . '1' . ".", 0, 0, 'L');
-        PDF::Cell(172, 5, "" . ($dosenkoor->dosen_admin->nama) . " (" . ($dosenkoor->dosen_admin->nip) . ")", 0, 1, 'L');
+        PDF::Cell(3, 5, ''.'1'.'.', 0, 0, 'L');
+        PDF::Cell(172, 5, ''.($dosenkoor->dosen_admin->nama).' ('.($dosenkoor->dosen_admin->nip).')', 0, 1, 'L');
         $no = 2;
         foreach ($dosen as $li => $value) {
-            if($value->nama === $dosenkoor->dosen_admin->nama)
-            {
+            if ($value->nama === $dosenkoor->dosen_admin->nama) {
                 continue;
             }
             if ($no > 4) {
@@ -296,9 +298,9 @@ class DpnaController extends Controller
             } else {
                 PDF::SetX(41);
             }
-            PDF::Cell(3, 5, "" . $no . ".", 0, 0, 'L');
-            PDF::Cell(172, 5, "" . ($value->nama) . " (" . ($value->nip) . ")", 0, 1, 'L');
-            ++$no;
+            PDF::Cell(3, 5, ''.$no.'.', 0, 0, 'L');
+            PDF::Cell(172, 5, ''.($value->nama).' ('.($value->nip).')', 0, 1, 'L');
+            $no++;
         }
         PDF::SetY(60);
         PDF::SetX(145);
@@ -344,7 +346,7 @@ class DpnaController extends Controller
             $hitunguas = hitung($getnilaiuas, $getbobotuas, $value->mahasiswa->id);
             $hitungnilaiakhir = round(((hitung($getnilaitugas, $getbobottugas, $value->mahasiswa->id) * ($getbobottugas / 100)) + (hitung($getnilaiuts, $getbobotuts, $value->mahasiswa->id) * ($getbobotuts / 100)) + (hitung($getnilaiuas, $getbobotuas, $value->mahasiswa->id) * ($getbobotuas / 100))), 2);
             $rekap[] = mutunilai($hitungnilaiakhir);
-                PDF::SetX(10);
+            PDF::SetX(10);
             PDF::Cell(10, 7, $li + 1, 1, 0, 'C');
             PDF::Cell(20, 7, $value->mahasiswa->nim, 1, 0, 'C');
             PDF::Cell(50, 7, strtoupper($value->mahasiswa->nama), 1, 0, 'C');
@@ -368,44 +370,45 @@ class DpnaController extends Controller
         PDF::Cell(15, 5, 'Jumlah', 1, 0, 'C');
         PDF::Cell(15, 5, 'Persentase', 1, 0, 'C');
         PDF::SetX(140);
-        PDF::Cell(25, 5, "Palangka Raya, ".Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
+        PDF::Cell(25, 5, 'Palangka Raya, '.Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'A', 1, 0, 'C');
-        PDF::Cell(15, 5, jumlahmutu($rekap,'A'), 1, 0, 'C');
-        PDF::Cell(15, 5, "".persentase($rekap,'A',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::Cell(15, 5, jumlahmutu($rekap, 'A'), 1, 0, 'C');
+        PDF::Cell(15, 5, ''.persentase($rekap, 'A', $jumlah_mhs).'%', 1, 0, 'C');
         PDF::SetX(140);
         PDF::Cell(25, 5, 'Dosen,', 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'B+', 1, 0, 'C');
-        PDF::Cell(15, 5, jumlahmutu($rekap,'B+'), 1, 0, 'C');
-        PDF::Cell(15, 5, "".persentase($rekap,'B+',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::Cell(15, 5, jumlahmutu($rekap, 'B+'), 1, 0, 'C');
+        PDF::Cell(15, 5, ''.persentase($rekap, 'B+', $jumlah_mhs).'%', 1, 0, 'C');
         PDF::Ln();
         PDF::Cell(15, 5, 'B', 1, 0, 'C');
-        PDF::Cell(15, 5, jumlahmutu($rekap,'B'), 1, 0, 'C');
-        PDF::Cell(15, 5, "".persentase($rekap,'B',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::Cell(15, 5, jumlahmutu($rekap, 'B'), 1, 0, 'C');
+        PDF::Cell(15, 5, ''.persentase($rekap, 'B', $jumlah_mhs).'%', 1, 0, 'C');
         PDF::Ln();
         PDF::Cell(15, 5, 'C+', 1, 0, 'C');
-        PDF::Cell(15, 5, jumlahmutu($rekap,'C+'), 1, 0, 'C');
-        PDF::Cell(15, 5, "".persentase($rekap,'C+',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::Cell(15, 5, jumlahmutu($rekap, 'C+'), 1, 0, 'C');
+        PDF::Cell(15, 5, ''.persentase($rekap, 'C+', $jumlah_mhs).'%', 1, 0, 'C');
         PDF::Ln();
         PDF::Cell(15, 5, 'C', 1, 0, 'C');
-        PDF::Cell(15, 5, jumlahmutu($rekap,'C'), 1, 0, 'C');
-        PDF::Cell(15, 5, "".persentase($rekap,'C',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::Cell(15, 5, jumlahmutu($rekap, 'C'), 1, 0, 'C');
+        PDF::Cell(15, 5, ''.persentase($rekap, 'C', $jumlah_mhs).'%', 1, 0, 'C');
         PDF::SetX(140);
         PDF::Cell(25, 5, $dosenkoor->dosen_admin->nama, 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'D', 1, 0, 'C');
-        PDF::Cell(15, 5, jumlahmutu($rekap,'D'), 1, 0, 'C');
-        PDF::Cell(15, 5, "".persentase($rekap,'D',$jumlah_mhs)."%", 1, 0, 'C');
+        PDF::Cell(15, 5, jumlahmutu($rekap, 'D'), 1, 0, 'C');
+        PDF::Cell(15, 5, ''.persentase($rekap, 'D', $jumlah_mhs).'%', 1, 0, 'C');
         PDF::SetX(140);
         PDF::Cell(25, 5, $dosenkoor->dosen_admin->nip, 0, 0, 'L');
         PDF::Ln();
         PDF::Cell(15, 5, 'E', 1, 0, 'C');
-        PDF::Cell(15, 5, jumlahmutu($rekap,'E'), 1, 0, 'C');
-        PDF::Cell(15, 5, "".persentase($rekap,'E',$jumlah_mhs)."%", 1, 0, 'C');
-        PDF::SetTitle("NILAI-" . (strtoupper($mata_kuliah->nama)) . "(" . (strtoupper($mata_kuliah->kode)) . ")-KELAS(" . ($id_kelas) . ")");
-        $nama_file = "NILAI-" . (strtoupper($mata_kuliah->nama)) . "(" . (strtoupper($mata_kuliah->kode)) . ")-KELAS(" . ($id_kelas) . ").pdf";
-        PDF::Output(storage_path('app') . '/public/' . $nama_file, 'F');
-        return response()->file(storage_path('app') . '/public/' . $nama_file);
+        PDF::Cell(15, 5, jumlahmutu($rekap, 'E'), 1, 0, 'C');
+        PDF::Cell(15, 5, ''.persentase($rekap, 'E', $jumlah_mhs).'%', 1, 0, 'C');
+        PDF::SetTitle('NILAI-'.(strtoupper($mata_kuliah->nama)).'('.(strtoupper($mata_kuliah->kode)).')-KELAS('.($id_kelas).')');
+        $nama_file = 'NILAI-'.(strtoupper($mata_kuliah->nama)).'('.(strtoupper($mata_kuliah->kode)).')-KELAS('.($id_kelas).').pdf';
+        PDF::Output(storage_path('app').'/public/'.$nama_file, 'F');
+
+        return response()->file(storage_path('app').'/public/'.$nama_file);
     }
 }

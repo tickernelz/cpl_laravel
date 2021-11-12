@@ -98,7 +98,6 @@ class NilaiController extends Controller
             $btpbymhs = $id_btp[$x];
             $maxidbtp = count($btpbymhs);
             for ($y = 0; $y < $maxidbtp; $y++) {
-
                 $id_mhs_array = $id_mhs[$x];
                 $id_cpmk_array = $id_cpmk[$x][$y];
                 $kode_cpmk_array = $kode_cpmk[$x][$y];
@@ -108,7 +107,8 @@ class NilaiController extends Controller
 
                 $getBobotCPL = Bobotcpl::with('cpl')
                     ->whereRaw(
-                        "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND cpmk_id = '$id_cpmk_array' AND btp_id = '$id_btp_array'")
+                        "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND cpmk_id = '$id_cpmk_array' AND btp_id = '$id_btp_array'"
+                    )
                     ->get();
 
                 // Nilai
@@ -118,7 +118,7 @@ class NilaiController extends Controller
                     ['nilai', '=', $nilaiori_array],
                 ])->first();
 
-                if (!is_null($cek_nilai)) {
+                if (! is_null($cek_nilai)) {
                     $cek_nilai->update([
                         'nilai' => $nilai_array,
                     ]);
@@ -143,7 +143,7 @@ class NilaiController extends Controller
                     ['nilai_kcpmk', '=', $nilaiori_array],
                 ])->first();
 
-                if (!is_null($cek_kcpmk)) {
+                if (! is_null($cek_kcpmk)) {
                     $cek_kcpmk->update([
                         'nilai_kcpmk' => $nilai_array,
                     ]);
@@ -174,7 +174,7 @@ class NilaiController extends Controller
                         ['kelas', '=', $id_kelas],
                     ])->first();
 
-                    if (!is_null($cek_kcpl)) {
+                    if (! is_null($cek_kcpl)) {
                         $cek_kcpl->update([
                             'nilai_cpl' => ($nilai_array * $value->bobot_cpl),
                             'bobot_cpl' => ($value->bobot_cpl),
@@ -196,6 +196,7 @@ class NilaiController extends Controller
                 }
             }
         }
+
         return back()->with('success', 'Data Berhasil Ditambahkan!.');
     }
 }
