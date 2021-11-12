@@ -26,14 +26,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ];
 
-        $messages = [
-            'username.required' => 'Username wajib diisi',
-            'username.string' => 'Username tidak valid',
-            'password.required' => 'Password wajib diisi',
-            'password.string' => 'Password harus berupa string',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput($request->all);
