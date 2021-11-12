@@ -26,11 +26,13 @@ class KcplController extends Controller
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
         $mhs = Mahasiswa::orderBy('nim')->get();
+        $angkatan = Mahasiswa::orderBy('nim')->pluck('angkatan');
 
         return view('kcpl.index', [
             'ta' => $ta,
             'mk' => $mk,
             'mhs' => $mhs,
+            'angkatan' => $angkatan,
             'judul' => $judul,
             'judulform' => $judulform,
             'parent' => $parent,
@@ -72,24 +74,32 @@ class KcplController extends Controller
         $ta = TahunAjaran::orderBy('tahun')->get();
         $mk = MataKuliah::orderBy('nama')->get();
         $mhs = Mahasiswa::orderBy('nim')->get();
+        $angkatan = Mahasiswa::orderBy('nim')->pluck('angkatan');
 
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_mhs = Crypt::decrypt($request->mhs);
+        $id_angkatan = Crypt::decrypt($request->angkatan);
         $id_kelas = Crypt::decrypt($request->kelas);
 
         $id_user = Auth::user()->id;
         $cekstatus = Auth::user()->status;
-        $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();
-        $id_dosen = $dosenadmin->id;
+        $id_dosen = DosenAdmin::with('user')->where('id', $id_user)->first()->id;
         $getDosen = Rolesmk::with('dosen_admin')
             ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
             ->first();
         if (isset($getDosen) || $cekstatus === 'Admin') {
             if ($id_mhs === 'semua') {
                 if ($id_mk === 'semua') {
-                    $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
+                    if ($id_angkatan === 'semua')
+                    {
+                        $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
+                    } else {
+                        $getMhs = kcpl::with('mahasiswa')->whereHas('mahasiswa', function ($query) use ($id_angkatan) {
+                            return $query->where('angkatan', $id_angkatan);
+                        })->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
+                    }
                     $getUpdated = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas'")->orderBy('updated_at', 'desc')->first();
                     $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select(['kode_cpl', 'urutan'])->groupBy('kode_cpl')->get();
                     $getMatkul = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('mata_kuliah_id')->groupBy('mata_kuliah_id')->get();
@@ -104,13 +114,21 @@ class KcplController extends Controller
                         'ta' => $ta,
                         'mk' => $mk,
                         'mhs' => $mhs,
+                        'angkatan' => $angkatan,
                         'judul' => $judul,
                         'judulform' => $judulform,
                         'parent' => $parent,
                         'subparent' => $subparent,
                     ]);
                 }
-                $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
+                if ($id_angkatan === 'semua')
+                {
+                    $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
+                } else {
+                    $getMhs = kcpl::with('mahasiswa')->whereHas('mahasiswa', function ($query) use ($id_angkatan) {
+                        return $query->where('angkatan', $id_angkatan);
+                    })->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
+                }
                 $getUpdated = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->orderBy('updated_at', 'desc')->first();
                 $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select(['kode_cpl', 'urutan'])->groupBy('kode_cpl')->get();
                 $kcpl = kcpl::class;
@@ -123,6 +141,7 @@ class KcplController extends Controller
                     'ta' => $ta,
                     'mk' => $mk,
                     'mhs' => $mhs,
+                    'angkatan' => $angkatan,
                     'judul' => $judul,
                     'judulform' => $judulform,
                     'parent' => $parent,
@@ -130,7 +149,14 @@ class KcplController extends Controller
                 ]);
             }
             if ($id_mk === 'semua') {
-                $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+                if ($id_angkatan === 'semua')
+                {
+                    $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+                } else {
+                    $getMhs = kcpl::with('mahasiswa')->whereHas('mahasiswa', function ($query) use ($id_angkatan) {
+                        return $query->where('angkatan', $id_angkatan);
+                    })->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+                }
                 $getUpdated = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->orderBy('updated_at', 'desc')->first();
                 $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->select(['kode_cpl', 'urutan'])->groupBy('kode_cpl')->get();
                 $getMatkul = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('mata_kuliah_id')->groupBy('mata_kuliah_id')->get();
@@ -145,13 +171,21 @@ class KcplController extends Controller
                     'ta' => $ta,
                     'mk' => $mk,
                     'mhs' => $mhs,
+                    'angkatan' => $angkatan,
                     'judul' => $judul,
                     'judulform' => $judulform,
                     'parent' => $parent,
                     'subparent' => $subparent,
                 ]);
             }
-            $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+            if ($id_angkatan === 'semua')
+            {
+                $getMhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+            } else {
+                $getMhs = kcpl::with('mahasiswa')->whereHas('mahasiswa', function ($query) use ($id_angkatan) {
+                    return $query->where('angkatan', $id_angkatan);
+                })->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+            }
             $getUpdated = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->orderBy('updated_at', 'desc')->first();
             $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND mahasiswa_id = '$id_mhs'")->select(['kode_cpl', 'urutan'])->groupBy('kode_cpl')->get();
             $kcpl = kcpl::class;
@@ -164,6 +198,7 @@ class KcplController extends Controller
                 'ta' => $ta,
                 'mk' => $mk,
                 'mhs' => $mhs,
+                'angkatan' => $angkatan,
                 'judul' => $judul,
                 'judulform' => $judulform,
                 'parent' => $parent,
@@ -181,6 +216,7 @@ class KcplController extends Controller
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_mhs = Crypt::decrypt($request->mhs);
+        $id_angkatan = Crypt::decrypt($request->angkatan);
         $id_kelas = Crypt::decrypt($request->kelas);
         $getKolom = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('kode_cpl')->get();
 
