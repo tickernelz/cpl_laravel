@@ -110,7 +110,7 @@ class DosenController extends Controller
         $data->nip = $request->input('nip');
         $data->nama = $request->input('nama');
         $data->user->username = $request->input('username');
-        if ($data->user->password !== bcrypt($request->input('password'))) {
+        if ($data->user->password !== $request->input('password')) {
             $data->user->password = bcrypt($request->input('password'));
         }
         $data->user->save();
