@@ -187,7 +187,7 @@
         <!-- Modal Tambah KRS -->
         <div class="modal fade" id="tambahkrs" tabindex="-1" role="dialog" aria-labelledby="tambahkrs"
              aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="block block-rounded block-themed block-transparent mb-0">
                         <div class="block-header bg-primary-dark">
@@ -203,26 +203,27 @@
                             <div class="table-rep-plugin">
                                 <div class="table-responsive mb-0"
                                      data-bs-pattern="priority-columns">
-                                    <table id="datatable2" class="table table-striped">
+                                    <table id="datatable2" class="table table-striped js-dataTable-full text-center">
                                         <thead>
                                         <tr>
                                             <th>Kode Mata Kuliah</th>
                                             <th>Nama Mata Kuliah</th>
-                                            <th class="text-center">SKS</th>
-                                            <th class="text-center">Semester</th>
-                                            <th class="text-center">Aksi</th>
+                                            <th>Kelas</th>
+                                            <th>SKS</th>
+                                            <th>Semester</th>
+                                            <th>Aksi</th>
                                         </tr>
                                         </thead>
-
                                         <tbody>
                                         @if(isset($dataselain))
                                             @foreach($dataselain as $ds)
                                                 <tr>
                                                     <td>{{ $ds->kode }}</td>
                                                     <td>{{ $ds->nama }}</td>
-                                                    <td class="text-center">{{ $ds->sks }}</td>
-                                                    <td class="text-center">{{ $ds->semester }}</td>
-                                                    <td class="text-center"
+                                                    <td>{{ $ds->kelas }}</td>
+                                                    <td>{{ $ds->sks }}</td>
+                                                    <td>{{ $ds->semester }}</td>
+                                                    <td
                                                         style="width: 100px">
                                                         <a href="javascript:void(0)"
                                                            onclick="tambahFunc({{ $ds->id }})"
@@ -285,15 +286,16 @@
                 </div>
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
+                    <table class="table table-bordered table-striped table-vcenter text-center js-dataTable-buttons">
                         <thead>
                         <tr>
-                            <th class="text-center" style="width: 80px;">#</th>
+                            <th style="width: 80px;">#</th>
                             <th>Kode Mata Kuliah</th>
                             <th>Nama Mata Kuliah</th>
-                            <th class="text-center">SKS</th>
-                            <th class="text-center">Semester Mata Kuliah</th>
-                            <th class="text-center">Aksi</th>
+                            <th>Kelas</th>
+                            <th>SKS</th>
+                            <th>Semester Mata Kuliah</th>
+                            <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -302,9 +304,10 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $li->mata_kuliah->kode }}</td>
                                 <td>{{ $li->mata_kuliah->nama }}</td>
-                                <td class="text-center">{{ $li->mata_kuliah->sks }}</td>
-                                <td class="text-center">{{ $li->mata_kuliah->semester }}</td>
-                                <td class="text-center" style="width: 100px">
+                                <td>{{ $li->mata_kuliah->kelas }}</td>
+                                <td>{{ $li->mata_kuliah->sks }}</td>
+                                <td>{{ $li->mata_kuliah->semester }}</td>
+                                <td style="width: 100px">
                                     <div class="btn-group">
                                         <a href="javascript:void(0)"
                                            class="btn btn-secondary btn-sm edit"

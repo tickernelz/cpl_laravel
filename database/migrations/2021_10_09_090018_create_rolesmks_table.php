@@ -22,7 +22,6 @@ class CreateRolesmksTable extends Migration
             $table->foreignIdFor(MataKuliah::class);
             $table->foreignIdFor(DosenAdmin::class);
             $table->enum('semester', ['1', '2']);
-            $table->enum('kelas', ['A', 'B', 'C']);
             $table->enum('status', ['koordinator', 'pengampu']);
             $table->timestamps();
         });

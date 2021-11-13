@@ -25,7 +25,6 @@ class CreateBtpsTable extends Migration
             $table->foreignIdFor(DosenAdmin::class);
             $table->string('nama');
             $table->enum('semester', ['1', '2']);
-            $table->enum('kelas', ['A', 'B', 'C']);
             $table->integer('kategori');
             $table->float('bobot');
             $table->timestamps();

@@ -57,28 +57,26 @@ class DpnaController extends Controller
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_mhs = Crypt::decrypt($request->mhs);
-        $id_kelas = Crypt::decrypt($request->kelas);
 
         $id_user = Auth::user()->id;
         $cekstatus = Auth::user()->status;
-        $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();
-        $id_dosen = $dosenadmin->id;
+        $id_dosen = DosenAdmin::with('user')->firstWhere('id', $id_user)->id;
         $getDosen = Rolesmk::with('dosen_admin')
-            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
             ->first();
         if (isset($getDosen) || $cekstatus === 'Admin') {
-            $getnilaitugas = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
-                $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '1'");
+            $getnilaitugas = Nilai::whereHas('btp', function ($q) use ($id_sem, $id_mk, $id_ta) {
+                $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '1'");
             })->get();
-            $getnilaiuts = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
-                $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '2'");
+            $getnilaiuts = Nilai::whereHas('btp', function ($q) use ($id_sem, $id_mk, $id_ta) {
+                $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '2'");
             })->get();
-            $getnilaiuas = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
-                $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '3'");
+            $getnilaiuas = Nilai::whereHas('btp', function ($q) use ($id_sem, $id_mk, $id_ta) {
+                $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '3'");
             })->get();
-            $getbobottugas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '1'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
-            $getbobotuts = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '2'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
-            $getbobotuas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '3'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
+            $getbobottugas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '1'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
+            $getbobotuts = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '2'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
+            $getbobotuas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '3'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
             if ($id_mhs === 'semua') {
                 $getMhs = KRS::with('mahasiswa')->whereRaw(
                     "tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'"
@@ -135,7 +133,6 @@ class DpnaController extends Controller
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
-        $id_kelas = Crypt::decrypt($request->kelas);
 
         // Variabel
         $mata_kuliah = MataKuliah::whereId($id_mk)->first();
@@ -145,27 +142,26 @@ class DpnaController extends Controller
         $jumlah_mhs = $getMhs->count();
         $jumlah_sks = MataKuliah::whereId($id_mk)->value('sks');
         $semester = MataKuliah::whereId($id_mk)->value('semester');
-        $ruang = $id_kelas;
-        $dosen = DosenAdmin::whereHas('btp', function ($query) use ($id_kelas, $id_mk, $id_sem, $id_ta) {
-            return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'");
+        $dosen = DosenAdmin::whereHas('btp', function ($query) use ($id_mk, $id_sem, $id_ta) {
+            return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'");
         })->get();
 
         $dosenkoor = Rolesmk::with('dosen_admin')
-            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND status = 'koordinator'")
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND status = 'koordinator'")
             ->first();
 
-        $getnilaitugas = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
-            $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '1'");
+        $getnilaitugas = Nilai::whereHas('btp', function ($q) use ($id_sem, $id_mk, $id_ta) {
+            $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '1'");
         })->get();
-        $getnilaiuts = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
-            $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '2'");
+        $getnilaiuts = Nilai::whereHas('btp', function ($q) use ($id_sem, $id_mk, $id_ta) {
+            $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '2'");
         })->get();
-        $getnilaiuas = Nilai::whereHas('btp', function ($q) use ($id_kelas, $id_sem, $id_mk, $id_ta) {
-            $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '3'");
+        $getnilaiuas = Nilai::whereHas('btp', function ($q) use ($id_sem, $id_mk, $id_ta) {
+            $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '3'");
         })->get();
-        $getbobottugas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '1'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
-        $getbobotuts = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '2'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
-        $getbobotuas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND kategori = '3'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
+        $getbobottugas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '1'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
+        $getbobotuts = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '2'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
+        $getbobotuas = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '3'")->select(DB::raw('SUM(bobot) jumlah_bobot'))->groupBy('kategori')->value('jumlah_bobot');
         $rekap = [];
         function hitung($getnilai, $bobot, $list): float
         {
@@ -276,7 +272,7 @@ class DpnaController extends Controller
 
         PDF::Cell(28, 5, 'Ruang/Kelas ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
-        PDF::Cell(172, 5, $ruang, 0, 1, 'L');
+        PDF::Cell(172, 5, $mata_kuliah->kelas, 0, 1, 'L');
 
         PDF::Cell(28, 5, 'Jumlah Mahasiswa ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
@@ -286,7 +282,11 @@ class DpnaController extends Controller
         PDF::Cell(3, 5, ':', 0, 0, 'L');
         PDF::SetX(41);
         PDF::Cell(3, 5, ''.'1'.'.', 0, 0, 'L');
-        PDF::Cell(172, 5, ''.($dosenkoor->dosen_admin->nama).' ('.($dosenkoor->dosen_admin->nip).')', 0, 1, 'L');
+        if (isset($dosenkoor)) {
+            PDF::Cell(172, 5, ''.($dosenkoor->dosen_admin->nama).' ('.($dosenkoor->dosen_admin->nip).')', 0, 1, 'L');
+        } else {
+            return redirect()->back()->with('error', 'Dosen koor tidak ditemukan!');
+        }
         $no = 2;
         foreach ($dosen as $li => $value) {
             if ($value->nama === $dosenkoor->dosen_admin->nama) {
@@ -405,8 +405,8 @@ class DpnaController extends Controller
         PDF::Cell(15, 5, 'E', 1, 0, 'C');
         PDF::Cell(15, 5, jumlahmutu($rekap, 'E'), 1, 0, 'C');
         PDF::Cell(15, 5, ''.persentase($rekap, 'E', $jumlah_mhs).'%', 1, 0, 'C');
-        PDF::SetTitle('NILAI-'.(strtoupper($mata_kuliah->nama)).'('.(strtoupper($mata_kuliah->kode)).')-KELAS('.($id_kelas).')');
-        $nama_file = 'NILAI-'.(strtoupper($mata_kuliah->nama)).'('.(strtoupper($mata_kuliah->kode)).')-KELAS('.($id_kelas).').pdf';
+        PDF::SetTitle('NILAI-'.(strtoupper($mata_kuliah->nama)).'('.(strtoupper($mata_kuliah->kode)).')-KELAS('.($mata_kuliah->kelas).')');
+        $nama_file = 'NILAI-'.(strtoupper($mata_kuliah->nama)).'('.(strtoupper($mata_kuliah->kode)).')-KELAS('.($mata_kuliah->kelas).').pdf';
         PDF::Output(storage_path('app').'/public/'.$nama_file, 'F');
 
         return response()->file(storage_path('app').'/public/'.$nama_file);

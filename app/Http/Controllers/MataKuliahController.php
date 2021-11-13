@@ -59,8 +59,9 @@ class MataKuliahController extends Controller
     public function tambah(Request $request)
     {
         $rules = [
-            'kode' => 'required|string|unique:mata_kuliahs',
+            'kode' => 'required|string',
             'nama' => 'required|string',
+            'kelas' => 'string|nullable',
             'sks' => 'required|integer',
             'semester' => 'required|integer',
         ];
@@ -74,11 +75,12 @@ class MataKuliahController extends Controller
         $mk = new MataKuliah();
         $mk->kode = $request->input('kode');
         $mk->nama = $request->input('nama');
+        $mk->kelas = $request->input('kelas');
         $mk->sks = $request->input('sks');
         $mk->semester = $request->input('semester');
         $mk->save();
 
-        return back()->with('success', 'Data Berhasil Ditambahkan!.');
+        return back()->with('success', 'Data Berhasil Ditambahkan!');
     }
 
     public function edit(Request $request, int $id)
@@ -86,8 +88,9 @@ class MataKuliahController extends Controller
         $mk = MataKuliah::firstWhere('id', $id);
 
         $rules = [
-            'kode' => 'required|string|unique:mata_kuliahs,kode,' . $mk->id,
+            'kode' => 'required|string',
             'nama' => 'required|string',
+            'kelas' => 'string|nullable',
             'sks' => 'required|integer',
             'semester' => 'required|integer',
         ];
@@ -98,9 +101,9 @@ class MataKuliahController extends Controller
             return redirect()->back()->withErrors($validator)->withInput($request->all);
         }
 
-        $mk = MataKuliah::where('id', $id)->first();
         $mk->kode = $request->input('kode');
         $mk->nama = $request->input('nama');
+        $mk->kelas = $request->input('kelas');
         $mk->sks = $request->input('sks');
         $mk->semester = $request->input('semester');
         $mk->save();

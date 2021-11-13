@@ -56,19 +56,17 @@ class KcpmkController extends Controller
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
         $id_mhs = Crypt::decrypt($request->mhs);
-        $id_kelas = Crypt::decrypt($request->kelas);
         $id_user = Auth::user()->id;
         $cekstatus = Auth::user()->status;
-        $dosenadmin = DosenAdmin::with('user')->where('id', $id_user)->first();
-        $id_dosen = $dosenadmin->id;
+        $id_dosen = DosenAdmin::with('user')->firstWhere('id', $id_user)->id;
         $getDosen = Rolesmk::with('dosen_admin')
-            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
             ->first();
         if (isset($getDosen) || $cekstatus === 'Admin') {
             if ($id_mhs === 'semua') {
-                $getMhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
-                $getUpdated = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->orderBy('updated_at', 'desc')->first();
-                $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+                $getMhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
+                $getUpdated = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->orderBy('updated_at', 'desc')->first();
+                $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
                 $kcpmk = kcpmk::class;
 
                 return view('kcpmk.cari', [
@@ -85,10 +83,10 @@ class KcpmkController extends Controller
                     'subparent' => $subparent,
                 ]);
             }
-            $getMhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
-            $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
-            $getUpdated = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->orderBy('updated_at', 'desc')->first();
-            $getNilai = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs' AND kelas = '$id_kelas'")->select('*', DB::raw('AVG(nilai_kcpmk) average'))->groupBy('kode_cpmk')->get();
+            $getMhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+            $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+            $getUpdated = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->orderBy('updated_at', 'desc')->first();
+            $getNilai = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('*', DB::raw('AVG(nilai_kcpmk) average'))->groupBy('kode_cpmk')->get();
 
             return view('kcpmk.cari', [
                 'getmhs' => $getMhs,
@@ -118,22 +116,20 @@ class KcpmkController extends Controller
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
-        $id_kelas = Crypt::decrypt($request->kelas);
-        $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+        $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
 
         // Variabel
         $mata_kuliah = MataKuliah::whereId($id_mk)->first();
-        $getmhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'")->groupBy('mahasiswa_id')->get();
+        $getmhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
         $jumlah_mhs = $getmhs->count();
         $jumlah_sks = MataKuliah::whereId($id_mk)->value('sks');
         $semester = MataKuliah::whereId($id_mk)->value('semester');
-        $ruang = $id_kelas;
-        $dosen = DosenAdmin::whereHas('btp', function ($query) use ($id_kelas, $id_mk, $id_sem, $id_ta) {
-            return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas'");
+        $dosen = DosenAdmin::whereHas('btp', function ($query) use ($id_mk, $id_sem, $id_ta) {
+            return $query->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'");
         })->get();
 
         $dosenkoor = Rolesmk::with('dosen_admin')
-            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kelas = '$id_kelas' AND status = 'koordinator'")
+            ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND status = 'koordinator'")
             ->first();
 
         // TCPDF
@@ -183,7 +179,7 @@ class KcpmkController extends Controller
 
         PDF::Cell(28, 5, 'Ruang/Kelas ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
-        PDF::Cell(172, 5, $ruang, 0, 1, 'L');
+        PDF::Cell(172, 5, $mata_kuliah->kelas, 0, 1, 'L');
 
         PDF::Cell(28, 5, 'Jumlah Mahasiswa ', 0, 0, 'L');
         PDF::Cell(3, 5, ':', 0, 0, 'L');
@@ -193,7 +189,11 @@ class KcpmkController extends Controller
         PDF::Cell(3, 5, ':', 0, 0, 'L');
         PDF::SetX(41);
         PDF::Cell(3, 5, ''.'1'.'.', 0, 0, 'L');
-        PDF::Cell(172, 5, ''.($dosenkoor->dosen_admin->nama).' ('.($dosenkoor->dosen_admin->nip).')', 0, 1, 'L');
+        if (isset($dosenkoor)) {
+            PDF::Cell(172, 5, ''.($dosenkoor->dosen_admin->nama).' ('.($dosenkoor->dosen_admin->nip).')', 0, 1, 'L');
+        } else {
+            return redirect()->back()->with('error', 'Dosen koor tidak ditemukan!');
+        }
         $no = 2;
         foreach ($dosen as $li => $value) {
             if ($value->nama === $dosenkoor->dosen_admin->nama) {
@@ -275,8 +275,8 @@ class KcpmkController extends Controller
         PDF::Ln();
         PDF::SetX(220);
         PDF::Cell(25, 5, $dosenkoor->dosen_admin->nip, 0, 0, 'L');
-        PDF::SetTitle('KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($id_kelas).')');
-        $nama_file = 'KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($id_kelas).').pdf';
+        PDF::SetTitle('KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($mata_kuliah->kelas).')');
+        $nama_file = 'KETERCAPAIAN CPMK-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($mata_kuliah->kelas).').pdf';
         PDF::Output(storage_path('app').'/public/'.$nama_file, 'F');
 
         return response()->file(storage_path('app').'/public/'.$nama_file);

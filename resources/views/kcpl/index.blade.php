@@ -97,7 +97,7 @@
                                             <option value="{{ Crypt::encrypt('semua') }}">Semua</option>
                                             @foreach($mk as $m)
                                                 <option
-                                                    value="{{ Crypt::encrypt($m->id) }}">{{$m->nama}}</option>
+                                                    value="{{ Crypt::encrypt($m->id) }}">{{$m->nama}} ({{$m->kelas}})</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -122,23 +122,6 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Ruang/Kelas</label>
-                                        <div class="space-x-2">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas1" name="kelas" value="{{ Crypt::encrypt('A') }}" checked="">
-                                                <label class="form-check-label" for="kelas1">Kelas A</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas2" name="kelas" value="{{ Crypt::encrypt('B') }}">
-                                                <label class="form-check-label" for="kelas2">Kelas B</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas3" name="kelas" value="{{ Crypt::encrypt('C') }}">
-                                                <label class="form-check-label" for="kelas3">Kelas C</label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

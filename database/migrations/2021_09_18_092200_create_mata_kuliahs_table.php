@@ -17,6 +17,7 @@ class CreateMataKuliahsTable extends Migration
             $table->id();
             $table->string('kode');
             $table->string('nama');
+            $table->string('kelas')->nullable();
             $table->integer('sks');
             $table->integer('semester');
             $table->timestamps();

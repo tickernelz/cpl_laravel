@@ -48,14 +48,12 @@ class BcplController extends Controller
         $id_ta = Crypt::decrypt($request->id_ta);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->id_mk);
-        $id_kelas = Crypt::decrypt($request->id_kelas);
         $cpmk = $request->cpmk;
         $tampil = Btp::where([
-            ['tahun_ajaran_id' => $id_ta],
-            ['mata_kuliah_id' => $id_mk],
-            ['semester' => $id_sem],
-            ['cpmk_id' => $cpmk],
-            ['kelas' => $id_kelas],
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $id_sem],
+            ['cpmk_id', '=', $cpmk],
         ])->get();
 
         return Response()->json($tampil);
@@ -77,17 +75,15 @@ class BcplController extends Controller
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
-        $id_kelas = Crypt::decrypt($request->kelas);
         $id_user = Auth::user()->id;
         $cekstatus = Auth::user()->status;
         $id_dosen = DosenAdmin::with('user')->firstWhere('id', $id_user)->id;
         $getDosen = Rolesmk::with('dosen_admin')->firstWhere([
-            ['tahun_ajaran_id' => $id_ta],
-            ['mata_kuliah_id' => $id_mk],
-            ['semester' => $id_sem],
-            ['kelas' => $id_kelas],
-            ['dosen_admin_id' => $id_dosen],
-            ['status' => 'koordinator'],
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $id_sem],
+            ['dosen_admin_id', '=', $id_dosen],
+            ['status', '=', 'koordinator'],
         ]);
         if (isset($getDosen) || $cekstatus === 'Admin') {
             $cpmk_mk = Cpmk::with('mata_kuliah')->where('mata_kuliah_id', $id_mk)->get();
@@ -98,10 +94,9 @@ class BcplController extends Controller
                 'cpl',
                 'btp'
             )->where([
-                ['tahun_ajaran_id' => $id_ta],
-                ['mata_kuliah_id' => $id_mk],
-                ['semester' => $id_sem],
-                ['kelas' => $id_kelas],
+                ['tahun_ajaran_id', '=', $id_ta],
+                ['mata_kuliah_id', '=', $id_mk],
+                ['semester', '=', $id_sem],
             ])->get();
             $sum_bobot = $tampil->sum('bobot_cpl');
 
@@ -131,7 +126,6 @@ class BcplController extends Controller
     {
         $id_ta = $request->id_ta;
         $id_mk = $request->id_mk;
-        $id_kelas = $request->id_kelas;
         $id_cpmk = $request->id_cpmk;
         $id_cpl = $request->id_cpl;
         $id_btp = $request->id_btp;
@@ -144,10 +138,9 @@ class BcplController extends Controller
             'cpl',
             'btp'
         )->where([
-            ['tahun_ajaran_id' => $id_ta],
-            ['mata_kuliah_id' => $id_mk],
-            ['semester' => $semester],
-            ['kelas' => $id_kelas],
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $semester],
         ])->get();
         $sum_bobot = $tampil->sum('bobot_cpl') + $bobot;
         if ($id_btp !== '0' && isset($id_btp) && $sum_bobot <= 100.1) {
@@ -159,7 +152,6 @@ class BcplController extends Controller
                     'cpl_id' => $id_cpl,
                     'btp_id' => $id_btp,
                     'semester' => $semester,
-                    'kelas' => $id_kelas,
                     'bobot_cpl' => $bobot,
                 ]
             );
@@ -175,7 +167,6 @@ class BcplController extends Controller
         $id = $request->id;
         $id_ta = $request->id_ta;
         $id_mk = $request->id_mk;
-        $id_kelas = $request->id_kelas;
         $id_cpmk = $request->id_cpmk;
         $id_cpl = $request->id_cpl;
         $id_btp = $request->id_btp;
@@ -188,10 +179,9 @@ class BcplController extends Controller
             'cpl',
             'btp'
         )->where([
-            ['tahun_ajaran_id' => $id_ta],
-            ['mata_kuliah_id' => $id_mk],
-            ['semester' => $semester],
-            ['kelas' => $id_kelas],
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $semester],
         ])->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot_cpl') + $bobot;
         if ($id_btp !== '0' && isset($id_btp) && $sum_bobot <= 100.1) {
@@ -202,7 +192,6 @@ class BcplController extends Controller
             $btp->cpl_id = $id_cpl;
             $btp->btp_id = $id_btp;
             $btp->semester = (string) $semester;
-            $btp->kelas = (string) $id_kelas;
             $btp->bobot_cpl = $bobot;
             $save = $btp->save();
 

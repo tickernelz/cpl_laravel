@@ -132,7 +132,7 @@
                                                     value="{{ Crypt::encrypt($m->id) }}"
                                                     @if (Crypt::decrypt(Request::get('mk')) === $m->id)
                                                     selected="selected"
-                                                    @endif>{{$m->nama}}
+                                                    @endif>{{$m->nama}} ({{$m->kelas}})
                                                 </option>
                                             @endforeach
                                         </select>
@@ -146,36 +146,10 @@
                                                     value="{{ Crypt::encrypt($item->id) }}"
                                                     @if (Crypt::decrypt(Request::get('mhs')) === $item->id)
                                                     selected="selected"
-                                                    @endif>{{$item->nim}}
+                                                    @endif>{{$item->nim}} ({{$item->nama}})
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Ruang/Kelas</label>
-                                        <div class="space-x-2">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas1" name="kelas"
-                                                       value="{{ Crypt::encrypt('A') }}"
-                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'A')
-                                                       checked="" @endif>
-                                                <label class="form-check-label" for="kelas1">Kelas A</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas2" name="kelas"
-                                                       value="{{ Crypt::encrypt('B') }}"
-                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'B')
-                                                       checked="" @endif>
-                                                <label class="form-check-label" for="kelas2">Kelas B</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas3" name="kelas"
-                                                       value="{{ Crypt::encrypt('C') }}"
-                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'C')
-                                                       checked="" @endif>
-                                                <label class="form-check-label" for="kelas3">Kelas C</label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -199,8 +173,6 @@
                                value="{{ Request::get('semester') }}">
                         <input name="mk" type="hidden"
                                value="{{ Request::get('mk') }}">
-                        <input name="kelas" type="hidden"
-                               value="{{ Request::get('kelas') }}">
                         <input name="mhs" type="hidden"
                                value="{{ Request::get('mhs') }}">
                         <input type="submit" class="btn btn-sm btn-primary" value="Cetak">

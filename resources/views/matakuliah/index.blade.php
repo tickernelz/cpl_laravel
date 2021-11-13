@@ -61,15 +61,16 @@
             <div class="block-content block-content-full">
                 <!-- DataTables init on table by adding .js-dataTable-buttons class, functionality is initialized in js/pages/tables_datatables.js -->
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-vcenter js-dataTable-buttons">
+                    <table class="table table-bordered table-striped text-center table-vcenter js-dataTable-buttons">
                         <thead>
                         <tr>
-                            <th class="text-center" style="width: 80px;">#</th>
+                            <th style="width: 80px;">#</th>
                             <th>Kode Mata Kuliah</th>
                             <th>Nama Mata Kuliah</th>
-                            <th class="text-center">SKS</th>
-                            <th class="text-center">Semester</th>
-                            <th class="text-center">Aksi</th>
+                            <th>Kelas</th>
+                            <th>SKS</th>
+                            <th>Semester</th>
+                            <th>Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -78,9 +79,10 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $adm->kode }}</td>
                                 <td>{{ $adm->nama }}</td>
-                                <td class="text-center">{{ $adm->sks }}</td>
-                                <td class="text-center">{{ $adm->semester }}</td>
-                                <td class="text-center" style="width: 100px">
+                                <td>{{ $adm->kelas }}</td>
+                                <td>{{ $adm->sks }}</td>
+                                <td>{{ $adm->semester }}</td>
+                                <td style="width: 100px">
                                     <div class="btn-group">
                                         <a type="button" href="{{ Request::url() }}/edit/{{ $adm->id }}"
                                            class="btn btn-secondary btn-sm edit"

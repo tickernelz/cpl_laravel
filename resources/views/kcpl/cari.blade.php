@@ -49,7 +49,6 @@
                     _token: "{{ csrf_token() }}",
                     id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
                     id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
-                    id_kelas: '{{ Crypt::decrypt(Request::get('kelas')) }}',
                     semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
                     'nama_kolom[]': nama_kolom,
                     'urutan[]': urutan,
@@ -165,7 +164,7 @@
                                                     value="{{ Crypt::encrypt($m->id) }}"
                                                     @if (Crypt::decrypt(Request::get('mk')) === $m->id)
                                                     selected="selected"
-                                                    @endif>{{$m->nama}}
+                                                    @endif>{{$m->nama}} ({{$m->kelas}})
                                                 </option>
                                             @endforeach
                                         </select>
@@ -197,32 +196,6 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Ruang/Kelas</label>
-                                        <div class="space-x-2">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas1" name="kelas"
-                                                       value="{{ Crypt::encrypt('A') }}"
-                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'A')
-                                                       checked="" @endif>
-                                                <label class="form-check-label" for="kelas1">Kelas A</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas2" name="kelas"
-                                                       value="{{ Crypt::encrypt('B') }}"
-                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'B')
-                                                       checked="" @endif>
-                                                <label class="form-check-label" for="kelas2">Kelas B</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" id="kelas3" name="kelas"
-                                                       value="{{ Crypt::encrypt('C') }}"
-                                                       @if (Crypt::decrypt(Request::get('kelas')) === 'C')
-                                                       checked="" @endif>
-                                                <label class="form-check-label" for="kelas3">Kelas C</label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -286,10 +259,10 @@
                                value="{{ Request::get('semester') }}">
                         <input name="mk" type="hidden"
                                value="{{ Request::get('mk') }}">
-                        <input name="kelas" type="hidden"
-                               value="{{ Request::get('kelas') }}">
                         <input name="mhs" type="hidden"
                                value="{{ Request::get('mhs') }}">
+                        <input name="angkatan" type="hidden"
+                               value="{{ Request::get('angkatan') }}">
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="submit" class="btn btn-outline-primary">Cetak</button>
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"

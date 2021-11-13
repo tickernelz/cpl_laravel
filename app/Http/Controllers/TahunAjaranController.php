@@ -80,7 +80,7 @@ class TahunAjaranController extends Controller
         $ta = TahunAjaran::firstWhere('id', $id);
 
         $rules = [
-            'tahun' => 'required|string|unique:tahun_ajarans,tahun,' . $ta->id,
+            'tahun' => 'required|string|unique:tahun_ajarans,tahun,'.$ta->id,
         ];
 
         $validator = Validator::make($request->all(), $rules);

@@ -59,17 +59,15 @@ class BtpController extends Controller
         $id_ta = Crypt::decrypt($request->tahunajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
-        $id_kelas = Crypt::decrypt($request->kelas);
         $id_user = Auth::user()->id;
         $cekstatus = Auth::user()->status;
         $id_dosen = DosenAdmin::with('user')->firstWhere('id', $id_user)->id;
         $getDosen = Rolesmk::with('dosen_admin')->firstWhere([
-            ['tahun_ajaran_id' => $id_ta],
-            ['mata_kuliah_id' => $id_mk],
-            ['semester' => $id_sem],
-            ['kelas' => $id_kelas],
-            ['dosen_admin_id' => $id_dosen],
-            ['status' => 'koordinator'],
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $id_sem],
+            ['dosen_admin_id', '=', $id_dosen],
+            ['status', '=', 'koordinator'],
         ]);
         if (isset($getDosen) || $cekstatus === 'Admin') {
             $cpmk_mk = Cpmk::with('mata_kuliah')->where('mata_kuliah_id', $id_mk)->get();
@@ -79,10 +77,9 @@ class BtpController extends Controller
                 'cpmk',
                 'dosen_admin'
             )->where([
-                ['tahun_ajaran_id' => $id_ta],
-                ['mata_kuliah_id' => $id_mk],
-                ['semester' => $id_sem],
-                ['kelas' => $id_kelas],
+                ['tahun_ajaran_id', '=', $id_ta],
+                ['mata_kuliah_id', '=', $id_mk],
+                ['semester', '=', $id_sem],
             ])->get();
             $sum_bobot = $tampil->sum('bobot');
 
@@ -113,7 +110,6 @@ class BtpController extends Controller
         $id_mk = $request->id_mk;
         $id_cpmk = $request->id_cpmk;
         $id_dosen = $request->id_dosen;
-        $id_kelas = $request->kelas;
         $teknik = $request->teknik;
         $semester = $request->semester;
         $kategori = $request->kategori;
@@ -124,10 +120,9 @@ class BtpController extends Controller
             'cpmk',
             'dosen_admin'
         )->where([
-            ['tahun_ajaran_id' => $id_ta],
-            ['mata_kuliah_id' => $id_mk],
-            ['semester' => $semester],
-            ['kelas' => $id_kelas],
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $semester],
         ])->get();
         $sum_bobot = $tampil->sum('bobot') + $bobot;
         if ($sum_bobot <= 100.1) {
@@ -157,7 +152,6 @@ class BtpController extends Controller
         $id_mk = $request->id_mk;
         $id_cpmk = $request->id_cpmk;
         $id_dosen = $request->id_dosen;
-        $id_kelas = $request->kelas;
         $teknik = $request->teknik;
         $semester = $request->semester;
         $kategori = $request->kategori;
@@ -168,10 +162,9 @@ class BtpController extends Controller
             'cpmk',
             'dosen_admin'
         )->where([
-            ['tahun_ajaran_id' => $id_ta],
-            ['mata_kuliah_id' => $id_mk],
-            ['semester' => $semester],
-            ['kelas' => $id_kelas],
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $semester],
         ])->get();
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot') + $bobot;
         if ($sum_bobot <= 100.1) {

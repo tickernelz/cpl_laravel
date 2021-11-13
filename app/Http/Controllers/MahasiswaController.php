@@ -84,7 +84,7 @@ class MahasiswaController extends Controller
         $mhs = Mahasiswa::firstWhere('id', $id);
 
         $rules = [
-            'nim' => 'required|string|unique:mahasiswas,nim,' . $mhs->id,
+            'nim' => 'required|string|unique:mahasiswas,nim,'.$mhs->id,
             'nama' => 'required|string',
             'angkatan' => 'required|integer',
         ];
