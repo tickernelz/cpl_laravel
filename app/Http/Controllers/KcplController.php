@@ -231,11 +231,11 @@ class KcplController extends Controller
         $mata_kuliah = MataKuliah::whereId($id_mk)->first();
         if ($id_mk !== 'semua') {
             $getmhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
-        } else if ($id_angkatan !== 'semua') {
+        } elseif ($id_angkatan !== 'semua') {
             $getmhs = kcpl::with('mahasiswa')->whereHas('mahasiswa', function ($query) use ($id_angkatan) {
                 return $query->where('angkatan', $id_angkatan);
             })->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
-        } else if ($id_mhs !== 'semua') {
+        } elseif ($id_mhs !== 'semua') {
             $getmhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
         } else {
             $getmhs = kcpl::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
@@ -256,14 +256,14 @@ class KcplController extends Controller
         {
             $matkul = kcpl::whereRaw("tahun_ajaran_id = '$id_ta' AND semester = '$id_sem'")->select('mata_kuliah_id')->groupBy('mata_kuliah_id')->get();
             $total_cpl_matkul = count($total_cpl);
-            $rata = array();
+            $rata = [];
             foreach ($matkul as $li) {
                 $get_kcpl = Kcpl::where([
                     ['mahasiswa_id', '=', $mahasiswa],
                     ['tahun_ajaran_id', '=', $id_ta],
                     ['mata_kuliah_id', '=', $li->mata_kuliah_id],
                     ['semester', '=', $id_sem],
-                    ['kode_cpl', '=', $kodecpl],])
+                    ['kode_cpl', '=', $kodecpl], ])
                     ->select('*', DB::raw('SUM(bobot_cpl) jumlah_bobot'), DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                     ->groupBy('kode_cpl')->get();
                 foreach ($get_kcpl->sortBy('urutan', SORT_NATURAL) as $kcpl1) {
@@ -273,7 +273,7 @@ class KcplController extends Controller
             if (count($total_cpl)) {
                 return round((array_sum($rata) / $total_cpl_matkul), 2);
             } else {
-                return NULL;
+                return null;
             }
         }
 
@@ -301,7 +301,7 @@ class KcplController extends Controller
             // Set font
             $pdf->SetFont('ariali', '', 8);
             // Page number
-            $pdf->Cell(0, 10, 'Halaman ' . $pdf->getAliasNumPage() . '/' . $pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(0, 10, 'Halaman '.$pdf->getAliasNumPage().'/'.$pdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
         });
 
         // Isi
@@ -317,7 +317,7 @@ class KcplController extends Controller
             PDF::Cell(28, 5, 'Mata Kuliah ', 0, 0, 'L');
             PDF::Cell(3, 5, ':', 0, 0, 'L');
             PDF::SetFont('Times', 'B', 9);
-            PDF::Cell(172, 5, '' . (strtoupper($mata_kuliah->nama)) . ' (' . (strtoupper($mata_kuliah->kode)) . ')', 0, 1, 'L');
+            PDF::Cell(172, 5, ''.(strtoupper($mata_kuliah->nama)).' ('.(strtoupper($mata_kuliah->kode)).')', 0, 1, 'L');
 
             PDF::SetFont('Times', '', 9);
             PDF::Cell(28, 5, 'Jumlah SKS ', 0, 0, 'L');
@@ -335,9 +335,9 @@ class KcplController extends Controller
             PDF::Cell(28, 5, 'Dosen ', 0, 0, 'L');
             PDF::Cell(3, 5, ':', 0, 0, 'L');
             PDF::SetX(41);
-            PDF::Cell(3, 5, '' . '1' . '.', 0, 0, 'L');
+            PDF::Cell(3, 5, ''.'1'.'.', 0, 0, 'L');
             if (isset($dosenkoor)) {
-                PDF::Cell(172, 5, '' . ($dosenkoor->dosen_admin->nama) . ' (' . ($dosenkoor->dosen_admin->nip) . ')', 0, 1, 'L');
+                PDF::Cell(172, 5, ''.($dosenkoor->dosen_admin->nama).' ('.($dosenkoor->dosen_admin->nip).')', 0, 1, 'L');
             } else {
                 return redirect()->back()->with('error', 'Dosen koor tidak ditemukan!');
             }
@@ -352,8 +352,8 @@ class KcplController extends Controller
                 } else {
                     PDF::SetX(41);
                 }
-                PDF::Cell(3, 5, '' . $no . '.', 0, 0, 'L');
-                PDF::Cell(172, 5, '' . ($value->nama) . ' (' . ($value->nip) . ')', 0, 1, 'L');
+                PDF::Cell(3, 5, ''.$no.'.', 0, 0, 'L');
+                PDF::Cell(172, 5, ''.($value->nama).' ('.($value->nip).')', 0, 1, 'L');
                 $no++;
             }
             PDF::SetY(50);
@@ -447,7 +447,7 @@ class KcplController extends Controller
                         ['tahun_ajaran_id', '=', $id_ta],
                         ['mata_kuliah_id', '=', $id_mk],
                         ['semester', '=', $id_sem],
-                        ['kode_cpl', '=', $lii->kode_cpl],])
+                        ['kode_cpl', '=', $lii->kode_cpl], ])
                                  ->select('*', DB::raw('SUM(bobot_cpl) jumlah_bobot'), DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                  ->groupBy('kode_cpl')->get()->sortBy('urutan', SORT_NATURAL) as $liii) {
                         if (round(($liii->jumlah_nilai / $liii->jumlah_bobot), 2) < 60) {
@@ -463,7 +463,7 @@ class KcplController extends Controller
                         ['mahasiswa_id', '=', $value->mahasiswa->id],
                         ['tahun_ajaran_id', '=', $id_ta],
                         ['semester', '=', $id_sem],
-                        ['kode_cpl', '=', $lii->kode_cpl],])
+                        ['kode_cpl', '=', $lii->kode_cpl], ])
                         ->groupBy('mata_kuliah_id')
                         ->get();
                     $hitungrata = hitungrata($id_ta, $id_sem, $value->mahasiswa->id, $lii->kode_cpl, $total_cpl);
@@ -471,7 +471,7 @@ class KcplController extends Controller
                         ['mahasiswa_id', '=', $value->mahasiswa->id],
                         ['tahun_ajaran_id', '=', $id_ta],
                         ['semester', '=', $id_sem],
-                        ['kode_cpl', '=', $lii->kode_cpl],])
+                        ['kode_cpl', '=', $lii->kode_cpl], ])
                                  ->select('*', DB::raw('SUM(bobot_cpl) jumlah_bobot'), DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                  ->groupBy('kode_cpl')->get()->sortBy('urutan', SORT_NATURAL) as $liii) {
                         if (round(($hitungrata), 2) < 60) {
@@ -497,7 +497,7 @@ class KcplController extends Controller
         PDF::Ln(10);
         PDF::SetFont('Times', '', 10);
         PDF::SetX(220);
-        PDF::Cell(25, 5, 'Palangka Raya, ' . Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
+        PDF::Cell(25, 5, 'Palangka Raya, '.Carbon::now()->isoFormat('D MMMM Y'), 0, 0, 'L');
         PDF::Ln();
         if ($id_mk !== 'semua') {
             PDF::SetX(220);
@@ -510,13 +510,14 @@ class KcplController extends Controller
             PDF::Cell(25, 5, $dosenkoor->dosen_admin->nip, 0, 0, 'L');
         }
         if ($id_mk !== 'semua') {
-            PDF::SetTitle('KETERCAPAIAN CPL-' . (strtoupper($mata_kuliah->nama)) . '-KELAS(' . ($mata_kuliah->kelas) . ')');
-            $nama_file = 'KETERCAPAIAN CPL-' . (strtoupper($mata_kuliah->nama)) . '-KELAS(' . ($mata_kuliah->kelas) . ').pdf';
+            PDF::SetTitle('KETERCAPAIAN CPL-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($mata_kuliah->kelas).')');
+            $nama_file = 'KETERCAPAIAN CPL-'.(strtoupper($mata_kuliah->nama)).'-KELAS('.($mata_kuliah->kelas).').pdf';
         } else {
-            PDF::SetTitle('KETERCAPAIAN CPL-' . ($tahun_ajaran_filtered) . '-' . ($get_semester));
-            $nama_file = 'KETERCAPAIAN_CPL-' . ($tahun_ajaran_filtered) . '-' . ($get_semester) . '.pdf';
+            PDF::SetTitle('KETERCAPAIAN CPL-'.($tahun_ajaran_filtered).'-'.($get_semester));
+            $nama_file = 'KETERCAPAIAN_CPL-'.($tahun_ajaran_filtered).'-'.($get_semester).'.pdf';
         }
-        PDF::Output(public_path('file') . '/' . $nama_file, 'F');
-        return response()->file(public_path('file') . '/' . $nama_file);
+        PDF::Output(public_path('file').'/'.$nama_file, 'F');
+
+        return response()->file(public_path('file').'/'.$nama_file);
     }
 }

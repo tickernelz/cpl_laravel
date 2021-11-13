@@ -13,6 +13,7 @@ class HomeController extends Controller
         $dosen = count(DosenAdmin::get());
         $mahasiswa = count(Mahasiswa::get());
         $matakuliah = count(MataKuliah::get());
+
         return view('home', [
             'dosen' => $dosen,
             'mahasiswa' => $mahasiswa,
