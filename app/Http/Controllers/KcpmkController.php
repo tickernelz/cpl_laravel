@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Btp;
 use App\Models\DosenAdmin;
-use App\Models\kcpmk;
+use App\Models\Kcpmk;
 use App\Models\Mahasiswa;
 use App\Models\MataKuliah;
 use App\Models\Rolesmk;
@@ -27,7 +28,7 @@ class KcpmkController extends Controller
         $mk = MataKuliah::orderBy('nama')->get();
         $mhs = Mahasiswa::orderBy('nim')->get();
 
-        return view('kcpmk.index', [
+        return view('Kcpmk.index', [
             'ta' => $ta,
             'mk' => $mk,
             'mhs' => $mhs,
@@ -62,18 +63,20 @@ class KcpmkController extends Controller
         $getDosen = Rolesmk::with('dosen_admin')
             ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
             ->first();
-        if (isset($getDosen) || $cekstatus === 'Admin') {
+        $getDosenPengampu = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND dosen_admin_id = '$id_dosen'")
+            ->first();
+        if (isset($getDosen) || isset($getDosenPengampu) || $cekstatus === 'Admin') {
             if ($id_mhs === 'semua') {
-                $getMhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
-                $getUpdated = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->orderBy('updated_at', 'desc')->first();
-                $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
-                $kcpmk = kcpmk::class;
+                $getMhs = Kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
+                $getUpdated = Kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->orderBy('updated_at', 'desc')->first();
+                $getKolom = Kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+                $Kcpmk = Kcpmk::class;
 
-                return view('kcpmk.cari', [
+                return view('Kcpmk.cari', [
                     'getmhs' => $getMhs,
                     'getkolom' => $getKolom,
                     'getUpdated' => $getUpdated,
-                    'kcpmk' => $kcpmk,
+                    'Kcpmk' => $Kcpmk,
                     'ta' => $ta,
                     'mk' => $mk,
                     'mhs' => $mhs,
@@ -83,12 +86,12 @@ class KcpmkController extends Controller
                     'subparent' => $subparent,
                 ]);
             }
-            $getMhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
-            $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
-            $getUpdated = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->orderBy('updated_at', 'desc')->first();
-            $getNilai = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('*', DB::raw('AVG(nilai_kcpmk) average'))->groupBy('kode_cpmk')->get();
+            $getMhs = Kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->groupBy('mahasiswa_id')->get();
+            $getKolom = Kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+            $getUpdated = Kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->orderBy('updated_at', 'desc')->first();
+            $getNilai = Kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND mahasiswa_id = '$id_mhs'")->select('*', DB::raw('AVG(nilai_kcpmk) average'))->groupBy('kode_cpmk')->get();
 
-            return view('kcpmk.cari', [
+            return view('Kcpmk.cari', [
                 'getmhs' => $getMhs,
                 'getkolom' => $getKolom,
                 'getnilai' => $getNilai,
@@ -103,7 +106,7 @@ class KcpmkController extends Controller
             ]);
         }
 
-        return redirect()->route('kcpmk')->with('error', 'Maaf anda bukan dosen koordinator!');
+        return redirect()->route('Kcpmk')->with('error', 'Maaf anda bukan dosen koordinator!');
     }
 
     public function downloadPDF(Request $request)
@@ -116,11 +119,11 @@ class KcpmkController extends Controller
         $id_ta = Crypt::decrypt($request->tahun_ajaran);
         $id_sem = Crypt::decrypt($request->semester);
         $id_mk = Crypt::decrypt($request->mk);
-        $getKolom = kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
+        $getKolom = Kcpmk::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->select('kode_cpmk')->groupBy('kode_cpmk')->get();
 
         // Variabel
         $mata_kuliah = MataKuliah::whereId($id_mk)->first();
-        $getmhs = kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
+        $getmhs = Kcpmk::with('mahasiswa')->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem'")->groupBy('mahasiswa_id')->get();
         $jumlah_mhs = $getmhs->count();
         $jumlah_sks = MataKuliah::whereId($id_mk)->value('sks');
         $semester = MataKuliah::whereId($id_mk)->value('semester');
@@ -237,6 +240,13 @@ class KcpmkController extends Controller
         foreach ($getKolom->sortBy('kode_cpmk', SORT_NATURAL) as $li) {
             PDF::Cell(18, 8, $li->kode_cpmk, 1, 0, 'C');
         }
+        $jumlah_kolom = count($getKolom);
+        if ($jumlah_kolom < 10) {
+            $sisa_kolom = 10 - $jumlah_kolom;
+            for ($x = 0; $x < $sisa_kolom; $x++) {
+                PDF::Cell(18, 8, '', 1, 0, 'C');
+            }
+        }
 
         PDF::SetFont('Times', '', 11);
         PDF::SetY(111);
@@ -245,7 +255,7 @@ class KcpmkController extends Controller
             PDF::Cell(10, 7, $li + 1, 1, 0, 'C');
             PDF::Cell(35, 7, $value->mahasiswa->nim, 1, 0, 'C');
             PDF::Cell(50, 7, $value->mahasiswa->nama, 1, 0, 'C');
-            foreach (kcpmk::where([
+            foreach (Kcpmk::where([
                 ['mahasiswa_id', '=', $value->mahasiswa->id],
                 ['tahun_ajaran_id', '=', $id_ta],
                 ['mata_kuliah_id', '=', $id_mk],
@@ -258,6 +268,14 @@ class KcpmkController extends Controller
                     PDF::SetTextColor(0, 0, 0);
                 } else {
                     PDF::Cell(18, 7, $lii->average, 1, 0, 'C');
+                }
+            }
+            if ($jumlah_kolom < 10) {
+                $sisa_kolom = 10 - $jumlah_kolom;
+                for ($x = 0; $x < $sisa_kolom; $x++) {
+                    PDF::SetFillColor(211, 211, 211);
+                    PDF::Cell(18, 7, '', 1, 0, 'C', 1);
+                    PDF::SetFillColor(255, 255, 255);
                 }
             }
             PDF::Ln();

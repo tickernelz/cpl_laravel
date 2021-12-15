@@ -6,6 +6,7 @@ use App\Models\Bobotcpl;
 use App\Models\Btp;
 use App\Models\Cpmk;
 use App\Models\DosenAdmin;
+use App\Models\Kcpmk;
 use App\Models\MataKuliah;
 use App\Models\Nilai;
 use App\Models\Rolesmk;
@@ -124,8 +125,21 @@ class BtpController extends Controller
             ['mata_kuliah_id', '=', $id_mk],
             ['semester', '=', $semester],
         ])->get();
+        $cek = Btp::with(
+            'tahun_ajaran',
+            'mata_kuliah',
+            'cpmk',
+            'dosen_admin'
+        )->firstWhere([
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $semester],
+            ['cpmk_id', '=', $id_cpmk],
+            ['nama', '=', $teknik],
+            ['kategori', '=', $kategori],
+        ]);
         $sum_bobot = $tampil->sum('bobot') + $bobot;
-        if ($sum_bobot <= 100.1) {
+        if ($sum_bobot <= 100.1 && is_null($cek)) {
             $btp = Btp::Create(
                 [
                     'tahun_ajaran_id' => $id_ta,
@@ -150,8 +164,10 @@ class BtpController extends Controller
         $id = $request->id;
         $id_ta = $request->id_ta;
         $id_mk = $request->id_mk;
+        $id_cpmk_ori = $request->id_cpmk_ori;
         $id_cpmk = $request->id_cpmk;
         $id_dosen = $request->id_dosen;
+        $teknik_ori = $request->teknik_ori;
         $teknik = $request->teknik;
         $semester = $request->semester;
         $kategori = $request->kategori;
@@ -166,9 +182,33 @@ class BtpController extends Controller
             ['mata_kuliah_id', '=', $id_mk],
             ['semester', '=', $semester],
         ])->get();
+        if ($id_cpmk_ori !== $id_cpmk || $teknik_ori !== $teknik)
+        {
+            $cek = Btp::with(
+                'tahun_ajaran',
+                'mata_kuliah',
+                'cpmk',
+                'dosen_admin'
+            )->firstWhere([
+                ['tahun_ajaran_id', '=', $id_ta],
+                ['mata_kuliah_id', '=', $id_mk],
+                ['semester', '=', $semester],
+                ['cpmk_id', '=', $id_cpmk],
+                ['nama', '=', $teknik],
+            ]);
+        } else {
+            $cek = null;
+        }
+
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot') + $bobot;
-        if ($sum_bobot <= 100.1) {
+        if ($sum_bobot <= 100.1 && is_null($cek)) {
             $btp = Btp::find($id);
+            $Kcpmk = Kcpmk::firstWhere([
+                ['tahun_ajaran_id', '=', $id_ta],
+                ['mata_kuliah_id', '=', $id_mk],
+                ['semester', '=', $semester],
+                ['btp_id', '=', $id],
+            ]);
             $btp->tahun_ajaran_id = $id_ta;
             $btp->mata_kuliah_id = $id_mk;
             $btp->cpmk_id = $id_cpmk;
@@ -177,9 +217,16 @@ class BtpController extends Controller
             $btp->semester = (string) $semester;
             $btp->kategori = (string) $kategori;
             $btp->bobot = $bobot;
-            $save = $btp->save();
+            $btp->save();
+            $btp1 = Btp::with('cpmk')->firstWhere('id', $id);
+            if (isset($Kcpmk))
+            {
+                $Kcpmk->cpmk_id = $id_cpmk;
+                $Kcpmk->kode_cpmk = $btp1->cpmk->kode_cpmk;
+                $Kcpmk->save();
+            }
 
-            return Response()->json($save);
+            return Response()->json();
         }
 
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100!');

@@ -70,6 +70,7 @@
                 },
                 type: "GET",
                 success: function (data) {
+                    $('#btp1_ori').empty();
                     $('#btp1').empty();
                     $.each(data, function (i, item) {
                         $('#btp1').append($('<option>', {
@@ -122,8 +123,11 @@
                     id: $('#id1').val(),
                     id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
                     id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
+                    id_cpmk_ori: $('#cpmk1_ori').val(),
                     id_cpmk: $('#cpmk1').val(),
+                    id_cpl_ori: $('#cpl1_ori').val(),
                     id_cpl: $('#cpl1').val(),
+                    id_btp_ori: $('#btp1_ori').val(),
                     id_btp: $('#btp1').val(),
                     semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
                     bobot: $('#bobot1').val()
@@ -150,9 +154,12 @@
                     $.map(data, function (obj) {
                         $('#editbobot').modal('show');
                         $('[name="id1"]').val(obj.id);
+                        $('[name="cpmk1_ori"]').val(obj.cpmk_id);
                         $('[name="cpmk1"]').val(obj.cpmk_id);
+                        $('[name="cpl1_ori"]').val(obj.cpl_id);
                         $('[name="cpl1"]').val(obj.cpl_id);
                         $('[name="bobot1"]').val(obj.bobot_cpl);
+                        $('[name="btp1_ori"]').val(obj.btp_id);
                     });
                 },
                 complete: function (data) {
@@ -384,6 +391,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="cpmk1">Kode CPMK</label>
+                                <input type="hidden" name="cpmk1_ori" id="cpmk1_ori"
+                                       class="form-control">
                                 <select class="form-select" name="cpmk1"
                                         id="cpmk1" onclick="cekTeknik2()">
                                     @foreach($cpmk_mk as $d)
@@ -395,6 +404,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="cpl1">Kode CPL</label>
+                                <input type="hidden" name="cpl1_ori" id="cpl1_ori"
+                                       class="form-control">
                                 <select class="form-select" name="cpl1"
                                         id="cpl1">
                                     @foreach($cpl as $d)
@@ -406,6 +417,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="btp1">Teknik Penilaian</label>
+                                <input type="hidden" name="btp1_ori" id="btp1_ori"
+                                       class="form-control">
                                 <select class="form-select" name="btp1"
                                         id="btp1">
                                 </select>

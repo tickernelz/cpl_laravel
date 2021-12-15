@@ -64,7 +64,9 @@ class DpnaController extends Controller
         $getDosen = Rolesmk::with('dosen_admin')
             ->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND dosen_admin_id = '$id_dosen' AND status = 'koordinator'")
             ->first();
-        if (isset($getDosen) || $cekstatus === 'Admin') {
+        $getDosenPengampu = Btp::whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND dosen_admin_id = '$id_dosen'")
+            ->first();
+        if (isset($getDosen) || isset($getDosenPengampu) || $cekstatus === 'Admin') {
             $getnilaitugas = Nilai::whereHas('btp', function ($q) use ($id_sem, $id_mk, $id_ta) {
                 $q->whereRaw("tahun_ajaran_id = '$id_ta' AND mata_kuliah_id = '$id_mk' AND semester = '$id_sem' AND kategori = '1'");
             })->get();

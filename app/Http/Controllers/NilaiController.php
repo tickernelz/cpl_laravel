@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Bobotcpl;
 use App\Models\Btp;
 use App\Models\DosenAdmin;
-use App\Models\kcpl;
-use App\Models\kcpmk;
+use App\Models\Kcpl;
+use App\Models\Kcpmk;
 use App\Models\KRS;
 use App\Models\MataKuliah;
 use App\Models\Nilai;
@@ -114,6 +114,11 @@ class NilaiController extends Controller
                     ['nilai', '=', $nilaiori_array],
                 ])->first();
 
+                // Cek Nilai 0-100
+                if ($nilai_array < 0 || $nilai_array > 100) {
+                    return redirect()->back()->with('error', 'Nilai tidak boleh lebih dari 100 atau kurang dari 0');
+                }
+
                 if (! is_null($cek_nilai)) {
                     $cek_nilai->update([
                         'nilai' => $nilai_array,
@@ -127,7 +132,7 @@ class NilaiController extends Controller
                 }
 
                 // Ketercapaian CPMK
-                $cek_kcpmk = kcpmk::where([
+                $cek_Kcpmk = Kcpmk::where([
                     ['tahun_ajaran_id', '=', $id_ta],
                     ['btp_id', '=', $id_btp_array],
                     ['mahasiswa_id', '=', $id_mhs_array],
@@ -138,12 +143,12 @@ class NilaiController extends Controller
                     ['nilai_kcpmk', '=', $nilaiori_array],
                 ])->first();
 
-                if (! is_null($cek_kcpmk)) {
-                    $cek_kcpmk->update([
+                if (! is_null($cek_Kcpmk)) {
+                    $cek_Kcpmk->update([
                         'nilai_kcpmk' => $nilai_array,
                     ]);
                 } else {
-                    kcpmk::create([
+                    Kcpmk::create([
                         'tahun_ajaran_id' => $id_ta,
                         'btp_id' => $id_btp_array,
                         'mahasiswa_id' => $id_mhs_array,
@@ -157,7 +162,7 @@ class NilaiController extends Controller
 
                 // Ketercapaian CPL
                 foreach ($getBobotCPL as $value) {
-                    $cek_kcpl = kcpl::where([
+                    $cek_Kcpl = Kcpl::where([
                         ['tahun_ajaran_id', '=', $id_ta],
                         ['mahasiswa_id', '=', $id_mhs_array],
                         ['mata_kuliah_id', '=', $id_mk],
@@ -167,13 +172,13 @@ class NilaiController extends Controller
                         ['semester', '=', $id_sem],
                     ])->first();
 
-                    if (! is_null($cek_kcpl)) {
-                        $cek_kcpl->update([
+                    if (! is_null($cek_Kcpl)) {
+                        $cek_Kcpl->update([
                             'nilai_cpl' => ($nilai_array * $value->bobot_cpl),
                             'bobot_cpl' => ($value->bobot_cpl),
                         ]);
                     } else {
-                        kcpl::create([
+                        Kcpl::create([
                             'tahun_ajaran_id' => $id_ta,
                             'mahasiswa_id' => $id_mhs_array,
                             'mata_kuliah_id' => $id_mk,

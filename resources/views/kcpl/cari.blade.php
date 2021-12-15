@@ -274,14 +274,14 @@
             </div>
             <div class="block-content block-content-full">
                 @php
-                    function hitungrata($kcpl,$getmatkul,$mahasiswa,$kodecpl,$total_cpl)
+                    function hitungrata($Kcpl,$getmatkul,$mahasiswa,$kodecpl,$total_cpl)
                     {
                         $matkul = $getmatkul;
                         $total_cpl_matkul = count($total_cpl);
                         $rata = array();
                         foreach($matkul as $li)
                             {
-                                $get_kcpl = $kcpl::where([
+                                $get_kcpl = $Kcpl::where([
                                                             ['mahasiswa_id', '=', $mahasiswa],
                                                             ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                             ['mata_kuliah_id', '=', $li->mata_kuliah_id],
@@ -289,9 +289,9 @@
                                                             ['kode_cpl', '=', $kodecpl],])
                                                             ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                                             ->groupBy('kode_cpl')->get();
-                                foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $kcpl1)
+                                foreach($get_kcpl->sortBy('urutan', SORT_NATURAL) as $Kcpl1)
                                 {
-                                    $rata[] = round(($kcpl1->jumlah_nilai / $kcpl1->jumlah_bobot), 2);
+                                    $rata[] = round(($Kcpl1->jumlah_nilai / $Kcpl1->jumlah_bobot), 2);
                                 }
                             }
                         if(count($total_cpl))
@@ -326,21 +326,21 @@
                                         @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
                                             @if (Crypt::decrypt(Request::get('mk')) === 'semua')
                                                 @php
-                                                    $total_cpl = $kcpl::where([
+                                                    $total_cpl = $Kcpl::where([
                                                                 ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                                 ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                                 ['semester', '=', Crypt::decrypt(Request::get('semester'))],
                                                                 ['kode_cpl', '=', $lii->kode_cpl],])
                                                                 ->groupBy('mata_kuliah_id')
                                                                 ->get();
-                                                    $get_kcpl = $kcpl::where([
+                                                    $get_kcpl = $Kcpl::where([
                                                                ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                                ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                                ['semester', '=', Crypt::decrypt(Request::get('semester'))],
                                                                ['kode_cpl', '=', $lii->kode_cpl],])
                                                                ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                                                ->groupBy('kode_cpl')->get();
-                                                           $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl, $total_cpl);
+                                                           $hitungrata = hitungrata($Kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl, $total_cpl);
                                                 @endphp
                                                 @if($get_kcpl->isEmpty() || is_null($hitungrata))
                                                     <td class="text-center">Kosong!</td>
@@ -351,7 +351,7 @@
                                                 @endif
                                             @else
                                                 @php
-                                                    $get_kcpl = $kcpl::where([
+                                                    $get_kcpl = $Kcpl::where([
                                                         ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                         ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                         ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
@@ -399,21 +399,21 @@
                                     @foreach($getkolom->sortBy('urutan', SORT_NATURAL) as $lii)
                                         @if (Crypt::decrypt(Request::get('mk')) === 'semua')
                                             @php
-                                                $total_cpl = $kcpl::where([
+                                                $total_cpl = $Kcpl::where([
                                                                     ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                                     ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                                     ['semester', '=', Crypt::decrypt(Request::get('semester'))],
                                                                     ['kode_cpl', '=', $lii->kode_cpl],])
                                                                     ->groupBy('mata_kuliah_id')
                                                                     ->get();
-                                                    $get_kcpl = $kcpl::where([
+                                                    $get_kcpl = $Kcpl::where([
                                                             ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                             ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                             ['semester', '=', Crypt::decrypt(Request::get('semester'))],
                                                             ['kode_cpl', '=', $lii->kode_cpl],])
                                                             ->select('*',DB::raw('SUM(bobot_cpl) jumlah_bobot'),DB::raw('SUM(nilai_cpl) jumlah_nilai'))
                                                             ->groupBy('kode_cpl')->get();
-                                                        $hitungrata = hitungrata($kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl, $total_cpl);
+                                                        $hitungrata = hitungrata($Kcpl, $getMatkul, $li->mahasiswa->id, $lii->kode_cpl, $total_cpl);
                                             @endphp
                                             @if($get_kcpl->isEmpty() || is_null($hitungrata))
                                                 <td class="text-center">Kosong!</td>
@@ -424,7 +424,7 @@
                                             @endif
                                         @else
                                             @php
-                                                $get_kcpl = $kcpl::where([
+                                                $get_kcpl = $Kcpl::where([
                                                     ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                     ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                     ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],

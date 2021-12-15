@@ -91,8 +91,10 @@
                     id: $('#id1').val(),
                     id_ta: '{{ Crypt::decrypt(Request::get('tahunajaran')) }}',
                     id_mk: '{{ Crypt::decrypt(Request::get('mk')) }}',
+                    id_cpmk_ori: $('#cpmk1_ori').val(),
                     id_cpmk: $('#cpmk1').val(),
                     id_dosen: $('#dosen1').val(),
+                    teknik_ori: $('#teknik1_ori').val(),
                     teknik: $('#teknik1').val(),
                     semester: '{{ Crypt::decrypt(Request::get('semester')) }}',
                     kategori: $('#kategori1').val(),
@@ -120,7 +122,9 @@
                     $.map(data, function (obj) {
                         $('#editbobot').modal('show');
                         $('[name="id1"]').val(obj.id);
+                        $('[name="cpmk1_ori"]').val(obj.cpmk_id).trigger('change');
                         $('[name="cpmk1"]').val(obj.cpmk_id).trigger('change');
+                        $('[name="teknik1_ori"]').val(obj.nama);
                         $('[name="teknik1"]').val(obj.nama);
                         $('[name="kategori1"]').val(obj.kategori).trigger('change');
                         $('[name="dosen1"]').val(obj.dosen_admin_id).trigger('change');
@@ -359,6 +363,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="cpmk1">Kode CPMK</label>
+                                <input type="hidden" name="cpmk1_ori" id="cpmk1_ori"
+                                       class="form-control">
                                 <select class="js-select2 form-select" name="cpmk1"
                                         id="cpmk1">
                                     @foreach($cpmk_mk as $d)
@@ -370,6 +376,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="teknik1">Teknik Penilaian</label>
+                                <input type="hidden" name="teknik1_ori" id="teknik1_ori"
+                                       class="form-control">
                                 <input type="text" name="teknik1" id="teknik1"
                                        class="form-control" required>
                             </div>

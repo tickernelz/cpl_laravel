@@ -7,7 +7,7 @@ use App\Models\Btp;
 use App\Models\Cpl;
 use App\Models\Cpmk;
 use App\Models\DosenAdmin;
-use App\Models\kcpl;
+use App\Models\Kcpl;
 use App\Models\MataKuliah;
 use App\Models\Rolesmk;
 use App\Models\TahunAjaran;
@@ -142,8 +142,22 @@ class BcplController extends Controller
             ['mata_kuliah_id', '=', $id_mk],
             ['semester', '=', $semester],
         ])->get();
+        $cek = Bobotcpl::with(
+            'tahun_ajaran',
+            'mata_kuliah',
+            'cpmk',
+            'cpl',
+            'btp'
+        )->firstWhere([
+            ['tahun_ajaran_id', '=', $id_ta],
+            ['mata_kuliah_id', '=', $id_mk],
+            ['semester', '=', $semester],
+            ['cpmk_id', '=', $id_cpmk],
+            ['cpl_id', '=', $id_cpl],
+            ['btp_id', '=', $id_btp],
+        ]);
         $sum_bobot = $tampil->sum('bobot_cpl') + $bobot;
-        if ($id_btp !== '0' && isset($id_btp) && $sum_bobot <= 100.1) {
+        if ($id_btp !== '0' && isset($id_btp) && is_null($cek) && $sum_bobot <= 100.1) {
             $bcpl = Bobotcpl::Create(
                 [
                     'tahun_ajaran_id' => $id_ta,
@@ -167,8 +181,11 @@ class BcplController extends Controller
         $id = $request->id;
         $id_ta = $request->id_ta;
         $id_mk = $request->id_mk;
+        $id_cpmk_ori = $request->id_cpmk_ori;
         $id_cpmk = $request->id_cpmk;
+        $id_cpl_ori = $request->id_cpl_ori;
         $id_cpl = $request->id_cpl;
+        $id_btp_ori = $request->id_btp_ori;
         $id_btp = $request->id_btp;
         $semester = $request->semester;
         $bobot = $request->bobot;
@@ -183,9 +200,36 @@ class BcplController extends Controller
             ['mata_kuliah_id', '=', $id_mk],
             ['semester', '=', $semester],
         ])->get();
+
+        if ($id_cpmk_ori !== $id_cpmk || $id_cpl_ori !== $id_cpl || $id_btp_ori !== $id_btp)
+        {
+            $cek = Bobotcpl::with(
+                'tahun_ajaran',
+                'mata_kuliah',
+                'cpmk',
+                'cpl',
+                'btp'
+            )->firstWhere([
+                ['tahun_ajaran_id', '=', $id_ta],
+                ['mata_kuliah_id', '=', $id_mk],
+                ['semester', '=', $semester],
+                ['cpmk_id', '=', $id_cpmk],
+                ['cpl_id', '=', $id_cpl],
+                ['btp_id', '=', $id_btp],
+            ]);
+        } else {
+            $cek = null;
+        }
+
         $sum_bobot = $tampil->whereNotIn('id', [$id])->sum('bobot_cpl') + $bobot;
-        if ($id_btp !== '0' && isset($id_btp) && $sum_bobot <= 100.1) {
-            $btp = Bobotcpl::find($id);
+        if ($id_btp !== '0' && isset($id_btp) && is_null($cek) &&  $sum_bobot <= 100.1) {
+            $btp = Bobotcpl::with('cpl')->firstWhere('id', $id);
+            $Kcpl = Kcpl::firstWhere([
+                ['tahun_ajaran_id', '=', $id_ta],
+                ['mata_kuliah_id', '=', $id_mk],
+                ['semester', '=', $semester],
+                ['bobotcpl_id', '=', $id],
+            ]);
             $btp->tahun_ajaran_id = $id_ta;
             $btp->mata_kuliah_id = $id_mk;
             $btp->cpmk_id = $id_cpmk;
@@ -193,9 +237,16 @@ class BcplController extends Controller
             $btp->btp_id = $id_btp;
             $btp->semester = (string) $semester;
             $btp->bobot_cpl = $bobot;
-            $save = $btp->save();
+            $btp->save();
+            $btp1 = Bobotcpl::with('cpl')->firstWhere('id', $id);
+            if (isset($Kcpl))
+            {
+                $Kcpl->cpl_id = $id_cpl;
+                $Kcpl->kode_cpl = $btp1->cpl->kode_cpl;
+                $Kcpl->save();
+            }
 
-            return Response()->json($save);
+            return Response()->json();
         }
 
         return back()->with('error', 'Bobot Yang Ditambahkan Melebihi 100.');
@@ -205,11 +256,11 @@ class BcplController extends Controller
     {
         $id_bcpl = $request->id;
         $hapus_bcpl = Bobotcpl::find($id_bcpl)->delete();
-        $hapus_kcpl = kcpl::where('bobotcpl_id', $id_bcpl)->get();
-        foreach ($hapus_kcpl as $li) {
+        $hapus_Kcpl = Kcpl::where('bobotcpl_id', $id_bcpl)->get();
+        foreach ($hapus_Kcpl as $li) {
             $li->delete();
         }
 
-        return Response()->json([$hapus_bcpl, $hapus_kcpl]);
+        return Response()->json([$hapus_bcpl, $hapus_Kcpl]);
     }
 }

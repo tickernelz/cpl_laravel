@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class kcpl extends Model
+class Kcpmk extends Model
 {
     use HasFactory;
 
@@ -23,18 +23,18 @@ class kcpl extends Model
         return $this->belongsTo(MataKuliah::class);
     }
 
+    public function cpmk()
+    {
+        return $this->belongsTo(Cpmk::class);
+    }
+
     public function mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class);
     }
 
-    public function bobotcpl()
+    public function btp()
     {
-        return $this->belongsTo(Bobotcpl::class);
-    }
-
-    public function cpl()
-    {
-        return $this->belongsTo(Cpl::class);
+        return $this->belongsTo(Btp::class);
     }
 }

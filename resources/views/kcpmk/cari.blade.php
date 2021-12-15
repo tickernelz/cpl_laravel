@@ -203,7 +203,7 @@
                                         <td>{{ $li->mahasiswa->nama }}</td>
                                         @foreach($getkolom->sortBy('kode_cpmk', SORT_NATURAL) as $lii)
                                             @php
-                                                $get_kcpmk = $kcpmk::where([
+                                                $get_kcpmk = $Kcpmk::where([
                                                     ['mahasiswa_id', '=', $li->mahasiswa->id],
                                                     ['tahun_ajaran_id', '=', Crypt::decrypt(Request::get('tahunajaran'))],
                                                     ['mata_kuliah_id', '=', Crypt::decrypt(Request::get('mk'))],
